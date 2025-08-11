@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
       margin: 0,
       padding: 0
     }}>
-      <h1>JYJAM</h1>
+      <h1>Julian</h1>
     </div>
   );
 };
