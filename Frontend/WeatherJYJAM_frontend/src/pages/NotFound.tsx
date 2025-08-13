@@ -1,5 +1,12 @@
+import Button from '../components/Button'
+
 const NotFound = () => {
-  return <h1>NotFound</h1>
+  return (
+    <div>
+      <h1>NotFound</h1>
+      <Button>NotFound</Button>
+    </div>
+  )
 }
 
 export default NotFound
