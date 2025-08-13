@@ -1,0 +1,48 @@
+name: Frontend checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "Frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "Frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend/WeatherJYJAM_frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Frontend/WeatherJYJAM_frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Prettier check
+        run: npm run format:check
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Stylelint
+        run: npm run lint:css
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Build
+        run: npm run build
