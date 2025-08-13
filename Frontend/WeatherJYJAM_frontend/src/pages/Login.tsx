@@ -1,12 +1,16 @@
+import type { FC } from 'react'
+import styled from 'styled-components'
 import Button from '../components/Button'
 
-const Login = () => {
-  return (
-    <div>
-      <h1>Login</h1>
-      <Button>Login</Button>
-    </div>
-  )
-}
+const LoginContainer = styled.div``
+
+const Title = styled.h1``
+
+const Login: FC = () => (
+  <LoginContainer>
+    <Title>Login</Title>
+    <Button>Login</Button>
+  </LoginContainer>
+)
 
 export default Login

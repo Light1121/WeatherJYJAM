@@ -1,12 +1,16 @@
+import type { FC } from 'react'
+import styled from 'styled-components'
 import Button from '../components/Button'
 
-const Profile = () => {
-  return (
-    <div>
-      <h1>Profile</h1>
-      <Button>Profile</Button>
-    </div>
-  )
-}
+const ProfileContainer = styled.div``
+
+const Title = styled.h1``
+
+const Profile: FC = () => (
+  <ProfileContainer>
+    <Title>Profile</Title>
+    <Button>Profile</Button>
+  </ProfileContainer>
+)
 
 export default Profile

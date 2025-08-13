@@ -1,22 +1,36 @@
+import type { FC } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import Button from '../components/Button'
 
-const Home = () => {
+const HomeContainer = styled.div``
+
+const Title = styled.h1``
+
+const ButtonGroup = styled.div`
+  margin-bottom: 20px;
+`
+
+const Spacer = styled.span`
+  margin: 0 10px;
+`
+
+const Home: FC = () => {
   const { tabId } = useParams()
   const navigate = useNavigate()
 
   return (
-    <div>
-      <h1>Home Map {tabId ? `- Tab: ${tabId}` : ''}</h1>
-
-      <div style={{ marginBottom: '20px' }}>
+    <HomeContainer>
+      <Title>Home Map {tabId ? `- Tab: ${tabId}` : ''}</Title>
+      
+      <ButtonGroup>
         <Button onClick={() => navigate('/tab1')}>tab1</Button>
-        <span style={{ margin: '0 10px' }}></span>
+        <Spacer />
         <Button onClick={() => navigate('/tab2')}>+</Button>
-      </div>
-
+      </ButtonGroup>
+      
       <Button>Home</Button>
-    </div>
+    </HomeContainer>
   )
 }
 
