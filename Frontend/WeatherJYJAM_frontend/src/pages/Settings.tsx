@@ -1,5 +1,12 @@
+import Button from '../components/Button'
+
 const Settings = () => {
-  return <h1>Settings</h1>
+  return (
+    <div>
+      <h1>Settings</h1>
+      <Button>Settings</Button>
+    </div>
+  )
 }
 
 export default Settings

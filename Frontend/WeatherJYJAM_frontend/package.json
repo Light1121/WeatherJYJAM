@@ -11,8 +11,8 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint:css": "stylelint \"**/*.{css,scss}\"",
-    "lint:css:fix": "stylelint \"**/*.{css,scss}\" --fix",
+    "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
+    "lint:css:fix": "stylelint \"**/*.{css,scss}\" --fix --allow-empty-input",
     "type-check": "tsc --noEmit",
     "pre-commit": "npm run format && npm run lint:fix && npm run lint:css:fix && npm run type-check"
   },

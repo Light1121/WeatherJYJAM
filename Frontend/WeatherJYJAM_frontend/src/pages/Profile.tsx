@@ -1,5 +1,12 @@
+import Button from '../components/Button'
+
 const Profile = () => {
-  return <h1>Profile</h1>
+  return (
+    <div>
+      <h1>Profile</h1>
+      <Button>Profile</Button>
+    </div>
+  )
 }
 
 export default Profile
