@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import Button from '../components/Button'
+import Button from '../../_components/Button'
 
 const HomeContainer = styled.div``
 
@@ -22,13 +22,13 @@ const Home: FC = () => {
   return (
     <HomeContainer>
       <Title>Home Map {tabId ? `- Tab: ${tabId}` : ''}</Title>
-      
+
       <ButtonGroup>
         <Button onClick={() => navigate('/tab1')}>tab1</Button>
         <Spacer />
         <Button onClick={() => navigate('/tab2')}>+</Button>
       </ButtonGroup>
-      
+
       <Button>Home</Button>
     </HomeContainer>
   )

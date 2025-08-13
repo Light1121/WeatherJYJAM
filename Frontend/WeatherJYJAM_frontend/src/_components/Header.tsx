@@ -28,7 +28,7 @@ const MenuButton = styled.div`
   font-size: 18px;
 `
 
-const Header: FC = () =>  (
+const Header: FC = () => (
   <StyledHeader>
     <AppIcon>🏠 JYJAM</AppIcon>
     <SearchBar>🔍 Search...</SearchBar>

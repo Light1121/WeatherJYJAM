@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import Button from '../components/Button'
+import Button from '../../_components/Button'
 
 const LoginContainer = styled.div``
 
