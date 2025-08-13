@@ -8,18 +8,12 @@ import NotFound from './pages/NotFound'
 
 const App = () => {
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+    <div>
       <Nav />
-      <div style={{ flex: 1, padding: 16 }}>
+      <div>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/:tabId" element={<Home />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
