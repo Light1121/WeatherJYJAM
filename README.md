@@ -10,3 +10,10 @@ Group Member: J Y J A M
 - **J**oshua
 - **A**n
 - **M**adelyn
+
+
+WeatherJYJAM/
+├── Frontend/ # React frontend application
+├── Backend/ # Python backend services
+├── Others/ # Data processing and utilities
+└── .github/ # CI/CD workflows
