@@ -13,10 +13,10 @@ Group Member: J Y J A M
 
 ## Project Structure
 WeatherJYJAM/
-├── Frontend/ # React frontend application
-├── Backend/ # Python backend services
-├── Others/ # Data processing and utilities
-└── .github/ # CI/CD workflows
+- Frontend/ # React frontend application
+- Backend/ # Python backend services
+- Others/ # Data processing and utilities
+- .github/ # CI/CD workflows
 
 ### Getting Started
 **⚠️ IMPORTANT: Follow this order for first-time setup:**
