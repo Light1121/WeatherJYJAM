@@ -13,13 +13,20 @@ const GroupContainer = styled.div`
 
 interface TabGroupProps {
   tabs: TabData[]
+  currentTabId?: string
   onAddTab: () => void
 }
 
-const TabGroup: FC<TabGroupProps> = ({ tabs, onAddTab }) => (
+const TabGroup: FC<TabGroupProps> = ({ tabs, currentTabId, onAddTab }) => (
   <GroupContainer>
     {tabs.map((tab) => (
-      <Tab key={tab.id} tab={tab} />
+      <Tab
+        key={tab.id}
+        tab={tab}
+        isActive={
+          currentTabId === tab.id || (!currentTabId && tab.id === 'tab1')
+        }
+      />
     ))}
     <AddTabButton onClick={onAddTab} />
   </GroupContainer>

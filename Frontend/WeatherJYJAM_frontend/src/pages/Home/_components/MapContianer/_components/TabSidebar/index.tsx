@@ -2,9 +2,10 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
 import TabGroup from './_components/TabGroup'
+import { useNavigate } from 'react-router-dom'
 
 export interface TabData {
-  id: number
+  id: string
   title: string
 }
 
@@ -19,25 +20,36 @@ const SidebarContainer = styled.div`
 `
 
 const DEFAULT_TABS: TabData[] = [
-  { id: 1, title: 'Tab1' },
-  { id: 2, title: 'Tab2' },
-  { id: 3, title: 'Tab3' },
+  { id: 'tab1', title: 'Tab1' },
+  { id: 'tab2', title: 'Tab2' },
+  { id: 'tab3', title: 'Tab3' },
 ] as const
 
-const TabSidebar: FC = () => {
+interface TabSidebarProps {
+  currentTabId?: string
+}
+
+const TabSidebar: FC<TabSidebarProps> = ({ currentTabId }) => {
   const [tabs, setTabs] = useState<TabData[]>(DEFAULT_TABS)
+  const navigate = useNavigate()
 
   const addNewTab = () => {
-    const newTab = {
-      id: Date.now(),
-      title: `Tab${tabs.length + 1}`,
+    const newTabNumber = tabs.length + 1
+    const newTabId = `tab${newTabNumber}`
+
+    const newTab: TabData = {
+      id: newTabId,
+      title: `Tab${newTabNumber}`,
     }
-    setTabs([...tabs, newTab])
+
+    setTabs((prevTabs) => [...prevTabs, newTab])
+
+    navigate(`/${newTabId}`)
   }
 
   return (
     <SidebarContainer>
-      <TabGroup tabs={tabs} onAddTab={addNewTab} />
+      <TabGroup tabs={tabs} currentTabId={currentTabId} onAddTab={addNewTab} />
     </SidebarContainer>
   )
 }

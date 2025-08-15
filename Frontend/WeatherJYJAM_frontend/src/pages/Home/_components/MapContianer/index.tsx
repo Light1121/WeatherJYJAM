@@ -12,10 +12,14 @@ const MapSection = styled.div`
   position: relative;
 `
 
-const MapContainer: FC = () => (
+interface MapContainerProps {
+  currentTabId?: string
+}
+
+const MapContainer: FC<MapContainerProps> = ({ currentTabId }) => (
   <MapSection>
-    <TabSidebar />
-    <MapView />
+    <TabSidebar currentTabId={currentTabId} />
+    <MapView currentTabId={currentTabId} />
   </MapSection>
 )
 
