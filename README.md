@@ -13,10 +13,15 @@ Group Member: J Y J A M
 
 ## Project Structure
 WeatherJYJAM/
-- Frontend/ # React frontend application
-- Backend/ # Python backend services
-- Others/ # Data processing and utilities
 - .github/ # CI/CD workflows
+- .husky/ # Git hooks (pre-commit code checks)
+- Backend/ # Python backend services
+- Frontend/ # React frontend application
+- Others/ # Data processing and utilities
+- .gitignore # Git ignore rules for root directory
+- package-lock.json.json # Root dependencies (husky configuration)
+- package.json # Root dependencies (husky configuration)
+
 
 ### Getting Started
 **⚠️ IMPORTANT: Follow this order for first-time setup:**
