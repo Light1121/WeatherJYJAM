@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import logoImage from '../_asset/WeatherJYJAM_Logo.jpg'
+import logoImage from './_asset/WeatherJYJAM_Logo.jpg'
 
 const LogoImage = styled.img`
   width: 100px;
