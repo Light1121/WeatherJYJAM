@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import australiaMap from '../_asset/Australia_map.svg.png'
+import australiaMap from './_asset/Australia_map.svg.png'
 
 const MapContainer = styled.div`
   width: 100%;

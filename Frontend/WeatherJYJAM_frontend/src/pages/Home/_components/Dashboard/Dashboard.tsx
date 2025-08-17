@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import TabSidebar from './_components/TabSidebar'
-import MapView from './_components/MapView'
+import TabSidebar from './TabSidebar'
+import MapView from './MapView'
 import { styled } from 'styled-components'
 
 const MapSection = styled.div`
@@ -12,15 +12,15 @@ const MapSection = styled.div`
   position: relative;
 `
 
-interface MapContainerProps {
+interface DashboardProps {
   currentTabId?: string
 }
 
-const MapContainer: FC<MapContainerProps> = ({ currentTabId }) => (
+const Dashboard: FC<DashboardProps> = ({ currentTabId }) => (
   <MapSection>
     <TabSidebar currentTabId={currentTabId} />
     <MapView currentTabId={currentTabId} />
   </MapSection>
 )
 
-export default MapContainer
+export default Dashboard
