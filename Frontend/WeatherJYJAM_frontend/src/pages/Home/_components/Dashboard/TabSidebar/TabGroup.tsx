@@ -1,14 +1,20 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Tab from './Tab'
-import AddTabButton from './AddTabButton'
-import type { TabData } from '../index'
+import Button from '../../../../../_components/Button'
+import type { TabData } from './_hooks/useTabs'
 
 const GroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 10px;
+`
+
+const AddButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
 `
 
 interface TabGroupProps {
@@ -20,15 +26,13 @@ interface TabGroupProps {
 const TabGroup: FC<TabGroupProps> = ({ tabs, currentTabId, onAddTab }) => (
   <GroupContainer>
     {tabs.map((tab) => (
-      <Tab
-        key={tab.id}
-        tab={tab}
-        isActive={
-          currentTabId === tab.id || (!currentTabId && tab.id === 'tab1')
-        }
-      />
+      <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
     ))}
-    <AddTabButton onClick={onAddTab} />
+    <AddButtonContainer>
+      <Button variant="add" onClick={onAddTab}>
+        +
+      </Button>
+    </AddButtonContainer>
   </GroupContainer>
 )
 

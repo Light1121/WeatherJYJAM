@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import Map from './_components/Map'
+import Map from './Map'
 
 const MapContainer = styled.div`
   width: 100%;

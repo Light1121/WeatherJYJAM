@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import FullScreenLayout from '../../_components/FullScreenLayout'
 import Header from './_components/Header'
-import MapContainer from './_components/MapContianer'
+import Dashboard from './_components/Dashboard'
 import BottomSheet from './_components/BottomSheet'
 
 const Home: FC = () => {
@@ -11,7 +11,7 @@ const Home: FC = () => {
   return (
     <FullScreenLayout>
       <Header />
-      <MapContainer currentTabId={tabId} />
+      <Dashboard currentTabId={tabId} />
       <BottomSheet />
     </FullScreenLayout>
   )
