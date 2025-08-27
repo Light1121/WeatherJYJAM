@@ -19,7 +19,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background-color: #c2fdffff; 
+  background-color: #e1feffff; 
   border-radius: 8px;
 `
 
