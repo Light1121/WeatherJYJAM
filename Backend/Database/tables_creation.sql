@@ -1,4 +1,4 @@
------
+------STATIONS TABLE------
 PRAGMA foreign_keys = 0;
 
 CREATE TABLE sqlitestudio_temp_table AS SELECT *
@@ -7,9 +7,9 @@ CREATE TABLE sqlitestudio_temp_table AS SELECT *
 DROP TABLE stations;
 
 CREATE TABLE stations (
-    station_id   NUMERIC (8)    PRIMARY KEY
-                                NOT NULL,
-    station_name TEXT (30)      NOT NULL,
+    station_id   NUMERIC (8)    NOT NULL,
+    station_name TEXT (30)      NOT NULL
+                                PRIMARY KEY,
     state        TEXT (3)       NOT NULL,
     dist         NUMERIC (3)    NOT NULL,
     lat          NUMERIC (8, 3) NOT NULL,
@@ -36,6 +36,7 @@ INSERT INTO stations (
 DROP TABLE sqlitestudio_temp_table;
 
 PRAGMA foreign_keys = 1;
+
 
 
 
@@ -74,28 +75,28 @@ PRAGMA foreign_keys = 1;
 PRAGMA foreign_keys = 0;
 
 CREATE TABLE sqlitestudio_temp_table AS SELECT *
-                                          FROM station_data;
+                                          FROM weather_data;
 
-DROP TABLE station_data;
+DROP TABLE weather_data;
 
-CREATE TABLE station_data (
-    Date                  DATE        CONSTRAINT date_station_data_fk REFERENCES Dates (Date) ON DELETE CASCADE
-                                                                                              ON UPDATE CASCADE
-                                      NOT NULL,
-    station_id            NUMERIC (8) CONSTRAINT stations_station_data_fk REFERENCES stations (station_id) ON DELETE CASCADE
-                                                                                                           ON UPDATE CASCADE
-                                      NOT NULL,
-    Rain                  NUMERIC     NOT NULL,
-    Max_temp              NUMERIC     NOT NULL,
-    Min_temp              NUMERIC     NOT NULL,
-    Max_relative_humidity NUMERIC     NOT NULL,
-    Min_relative_humidity NUMERIC     NOT NULL,
-    Avg_10m_windspeed     NUMERIC     NOT NULL
+CREATE TABLE weather_data (
+    station_name          TEXT (30) REFERENCES stations (station_name) ON DELETE CASCADE
+                                                                       ON UPDATE CASCADE
+                                    NOT NULL,
+    Date                  DATE      REFERENCES Dates (Date) ON DELETE CASCADE
+                                                            ON UPDATE CASCADE
+                                    NOT NULL,
+    Rain                  NUMERIC   NOT NULL,
+    Max_temp              NUMERIC   NOT NULL,
+    Min_temp              NUMERIC   NOT NULL,
+    Max_relative_humidity NUMERIC   NOT NULL,
+    Min_relative_humidity NUMERIC   NOT NULL,
+    Avg_10m_windspeed     NURMERIC  NOT NULL
 );
 
-INSERT INTO station_data (
+INSERT INTO weather_data (
+                             station_name,
                              Date,
-                             station_id,
                              Rain,
                              Max_temp,
                              Min_temp,
@@ -103,8 +104,8 @@ INSERT INTO station_data (
                              Min_relative_humidity,
                              Avg_10m_windspeed
                          )
-                         SELECT Date,
-                                station_id,
+                         SELECT station_name,
+                                Date,
                                 Rain,
                                 Max_temp,
                                 Min_temp,
@@ -116,3 +117,5 @@ INSERT INTO station_data (
 DROP TABLE sqlitestudio_temp_table;
 
 PRAGMA foreign_keys = 1;
+
+
