@@ -4,10 +4,8 @@ import LogoComponent from "../Home/_components/Header/Logo/Logo";
 
 const SignUpContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: center; 
-  padding: 2rem;
   height: 100vh;
   width: 100%;
   background: #f9f9f9;
@@ -15,18 +13,10 @@ const SignUpContainer = styled.div`
   overflow: hidden;
 `;
 
-
-const LogoWrapper = styled.div`
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
-
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1.5rem;
   width: 100%;
   max-width: 800px;
@@ -34,6 +24,12 @@ const FormContainer = styled.div`
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+`;
+
+const Logo = styled(LogoComponent)`
+  width: 200px; 
+  height: auto;
+  margin-bottom: 2rem;
 `;
 
 const FormTitle = styled.h2`
@@ -63,7 +59,7 @@ const Field = styled.div`
 const Label = styled.label`
   font-size: 0.95rem;
   color: #3C3939;
-  font-weight: 400;
+  font-weight: 400; 
 `;
 
 const Input = styled.input`
@@ -82,7 +78,6 @@ const Input = styled.input`
 
 const Button = styled.button`
   width: 160px;
-  align-self: center;
   padding: 0.6rem;
   background: #87dbfd;
   color: #3C3939;
@@ -91,6 +86,7 @@ const Button = styled.button`
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  align-self: center;
 
   &:hover {
     background: #6ec7eb;
@@ -120,11 +116,9 @@ const FooterText = styled.p`
 const Header: FC = () => {
   return (
     <SignUpContainer>
-      <LogoWrapper>
-        <LogoComponent />
-      </LogoWrapper>
-
       <FormContainer>
+        <Logo /> 
+
         <FormTitle>Sign In</FormTitle>
 
         <Grid>
