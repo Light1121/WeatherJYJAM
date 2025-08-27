@@ -19,7 +19,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background-color: #e0f2fe; /* light blue background */
+  background-color: #95f8fcff; 
   border-radius: 8px;
 `
 
@@ -28,7 +28,7 @@ const Circle = styled.div`
   height: 28px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid #2563eb; 
+  border: 2px solid #256392ff; 
 `
 
 const Title = styled.h1`

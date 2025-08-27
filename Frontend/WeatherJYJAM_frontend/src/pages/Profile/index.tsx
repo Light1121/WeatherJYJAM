@@ -6,7 +6,7 @@ import FavouriteLocations from "./FavouriteLocations";
 
 const ProfileContainer = styled.div`
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: #ffffffff;
   padding: 2rem;
 `;
 
