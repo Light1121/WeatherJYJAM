@@ -6,15 +6,18 @@ const SignUpContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; 
   padding: 2rem;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   background: #f9f9f9;
   font-family: 'Instrument Sans', sans-serif;
+  overflow: hidden;
 `;
 
+
 const LogoWrapper = styled.div`
-  margin-top: 4rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
   display: flex;
   justify-content: center;
