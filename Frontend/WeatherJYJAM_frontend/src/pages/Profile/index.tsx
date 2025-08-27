@@ -6,10 +6,10 @@ import FavouriteLocations from "./FavouriteLocations";
 
 const ProfileContainer = styled.div`
   min-height: 100vh;
-  background-color: #ecfeffff;
-  padding: 2rem;
+  background-color: #f4feffff;
+  padding: 3rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 `;
 
 const ContentGrid = styled.div`
