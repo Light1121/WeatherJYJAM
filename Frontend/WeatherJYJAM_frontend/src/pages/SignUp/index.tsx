@@ -14,12 +14,11 @@ const SignUpContainer = styled.div`
 `;
 
 const LogoWrapper = styled.div`
-  margin-top: 4rem; 
-  margin-bottom: 3rem;
-  width: 300px;
-  height: auto;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
+  width: 100%;
 `;
 
 const FormContainer = styled.div`
@@ -48,7 +47,7 @@ const Grid = styled.div`
   gap: 1.5rem;
 
   @media (max-width: 600px) {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -61,12 +60,12 @@ const Field = styled.div`
 const Label = styled.label`
   font-size: 0.95rem;
   color: #3C3939;
-  font-weight: 400; 
+  font-weight: 400;
 `;
 
 const Input = styled.input`
   padding: 0.75rem 1rem;
-  border: none; 
+  border: none;
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
@@ -79,7 +78,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  width: 160px; 
+  width: 160px;
   align-self: center;
   padding: 0.6rem;
   background: #87dbfd;
@@ -105,9 +104,13 @@ const FooterText = styled.p`
   a {
     display: block;
     margin-top: 0.25rem;
-    color: #3C3939;
+    color: #395D9F; 
     font-weight: 500;
     text-decoration: none;
+
+    &:hover {
+      color: #3C3939; 
+    }
   }
 `;
 
