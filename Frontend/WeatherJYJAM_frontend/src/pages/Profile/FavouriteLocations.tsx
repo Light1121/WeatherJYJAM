@@ -6,6 +6,7 @@ const Section = styled.div`
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const Title = styled.h2`
@@ -14,19 +15,32 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `
 
-const List = styled.ul`
-  padding-left: 1.25rem;
-  list-style: disc;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 1rem;
+`
+
+const Item = styled.div`
+  background-color: #ffffffcc;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
 `
 
 const FavouriteLocations: FC = () => (
   <Section>
     <Title>Favourite Locations</Title>
-    <List>
-      <li>Location</li>
-      <li>Location</li>
-      <li>Location</li>
-    </List>
+    <Grid>
+      <Item>Location 1</Item>
+      <Item>Location 2</Item>
+      <Item>Location 3</Item>
+      <Item>Location 4</Item>
+      <Item>Location 5</Item>
+      <Item>Location 6</Item>
+    </Grid>
   </Section>
 )
 

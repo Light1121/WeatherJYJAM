@@ -2,10 +2,11 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 
 const Section = styled.div`
-  background-color: #c8f4f7ff;
+  background-color: #c8f4f7ff; 
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const Title = styled.h2`
@@ -14,19 +15,32 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `
 
-const List = styled.ul`
-  padding-left: 1.25rem;
-  list-style: disc;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 1rem;
+`
+
+const Item = styled.div`
+  background-color: #ffffffcc;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
 `
 
 const FavouriteComparisons: FC = () => (
   <Section>
     <Title>Favourite Comparisons</Title>
-    <List>
-      <li>Comparison</li>
-      <li>Comparison</li>
-      <li>Comparison</li>
-    </List>
+    <Grid>
+      <Item>Comparison 1</Item>
+      <Item>Comparison 2</Item>
+      <Item>Comparison 3</Item>
+      <Item>Comparison 4</Item>
+      <Item>Comparison 5</Item>
+      <Item>Comparison 6</Item>
+    </Grid>
   </Section>
 )
 
