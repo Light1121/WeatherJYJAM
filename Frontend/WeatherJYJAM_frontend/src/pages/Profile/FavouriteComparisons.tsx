@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.div`
   background-color: #c8f4f7ff; 
   border-radius: 1rem;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 2.5rem 1.5rem; 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   font-family: 'Instrument Sans', sans-serif;
 `
@@ -18,7 +18,6 @@ const Title = styled.h2`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, auto);
   gap: 1rem;
 `
 
@@ -39,7 +38,6 @@ const FavouriteComparisons: FC = () => (
       <Item>Comparison 3</Item>
       <Item>Comparison 4</Item>
       <Item>Comparison 5</Item>
-      <Item>Comparison 6</Item>
     </Grid>
   </Section>
 )
