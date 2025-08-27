@@ -9,10 +9,18 @@ const HeaderContainer = styled.header`
   margin-bottom: 2rem;
 `
 
-const Left = styled.div`
+const ProfileBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const UserContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: #e0f2fe; /* light blue background */
+  border-radius: 8px;
 `
 
 const Circle = styled.div`
@@ -28,12 +36,21 @@ const Title = styled.h1`
   font-weight: 600;
 `
 
+const EmailText = styled.span`
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #333;
+`
+
 const Header: FC = () => (
   <HeaderContainer>
-    <Left>
-      <Circle />
-      <Title>Hello, Username</Title>
-    </Left>
+    <ProfileBox>
+      <UserContainer>
+        <Circle />
+        <Title>Hello, Username</Title>
+      </UserContainer>
+      <EmailText>Email | username@gmail.com</EmailText>
+    </ProfileBox>
     <LogoComponent />
   </HeaderContainer>
 )
