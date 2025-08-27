@@ -22,7 +22,7 @@ const Grid = styled.div`
 `
 
 const Item = styled.div`
-  background-color: #ffffffcc;
+  background-color: #fffffff6;
   padding: 0.75rem;
   border-radius: 6px;
   text-align: center;
