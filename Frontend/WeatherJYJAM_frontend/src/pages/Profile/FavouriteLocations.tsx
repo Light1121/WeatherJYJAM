@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 
 const Section = styled.div`
-  background-color: #c5f1f3ff; 
+  background-color: #c8f4f7ff; 
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
