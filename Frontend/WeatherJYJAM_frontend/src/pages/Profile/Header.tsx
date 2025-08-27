@@ -34,12 +34,14 @@ const Circle = styled.div`
 const Title = styled.h1`
   font-size: 1.5rem;
   font-weight: 600;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const EmailText = styled.span`
   margin-top: 0.5rem;
   font-size: 0.95rem;
   color: #333;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const Header: FC = () => (
