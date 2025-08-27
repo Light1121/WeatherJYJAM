@@ -38,7 +38,7 @@ const Title = styled.h1`
 `
 
 const EmailText = styled.span`
-  margin-top: 0.5rem;
+  margin-top: 1rem; 
   font-size: 0.95rem;
   color: #333;
   font-family: 'Instrument Sans', sans-serif;
