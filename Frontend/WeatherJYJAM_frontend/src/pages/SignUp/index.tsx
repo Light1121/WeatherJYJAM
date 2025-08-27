@@ -2,15 +2,27 @@ import type { FC } from "react";
 import styled from "styled-components";
 import LogoComponent from "../Home/_components/Header/Logo/Logo";
 
-const SignUpContainer = styled.div`
+const PageContainer = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
   width: 100%;
   background: #f9f9f9;
   font-family: 'Instrument Sans', sans-serif;
   overflow: hidden;
+`;
+
+const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center; 
+  width: 100%;
+`;
+
+const Logo = styled(LogoComponent)`
+  width: 250px;
+  height: auto;
+  display: block;
 `;
 
 const FormContainer = styled.div`
@@ -24,12 +36,7 @@ const FormContainer = styled.div`
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-`;
-
-const Logo = styled(LogoComponent)`
-  width: 200px;
-  height: auto;
-  margin-bottom: 0;  
+  margin-top: 0; 
 `;
 
 const FormTitle = styled.h2`
@@ -59,7 +66,7 @@ const Field = styled.div`
 const Label = styled.label`
   font-size: 0.95rem;
   color: #3C3939;
-  font-weight: 400; 
+  font-weight: 400;
 `;
 
 const Input = styled.input`
@@ -115,8 +122,10 @@ const FooterText = styled.p`
 
 const Header: FC = () => {
   return (
-    <SignUpContainer>
-      <Logo /> 
+    <PageContainer>
+      <LogoWrapper>
+        <Logo />
+      </LogoWrapper>
 
       <FormContainer>
         <FormTitle>Sign In</FormTitle>
@@ -151,9 +160,8 @@ const Header: FC = () => {
           <a href="/login">Log in here</a>
         </FooterText>
       </FormContainer>
-    </SignUpContainer>
+    </PageContainer>
   );
 };
-
 
 export default Header;
