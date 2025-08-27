@@ -1,3 +1,4 @@
+-- SQLite
 ------STATIONS TABLE------
 PRAGMA foreign_keys = 0;
 
@@ -52,7 +53,8 @@ CREATE TABLE Dates (
     Date  DATE        NOT NULL
                       PRIMARY KEY,
     Month TEXT (3)    NOT NULL,
-    Year  NUMERIC (4) NOT NULL
+    Year  NUMERIC (4) NOT NULL,
+    Quarter NUMERIC(1) NOT NULL
 );
 
 INSERT INTO Dates (
@@ -86,12 +88,14 @@ CREATE TABLE weather_data (
     Date                  DATE      REFERENCES Dates (Date) ON DELETE CASCADE
                                                             ON UPDATE CASCADE
                                     NOT NULL,
-    Rain                  NUMERIC   NOT NULL,
-    Max_temp              NUMERIC   NOT NULL,
-    Min_temp              NUMERIC   NOT NULL,
-    Max_relative_humidity NUMERIC   NOT NULL,
-    Min_relative_humidity NUMERIC   NOT NULL,
-    Avg_10m_windspeed     NURMERIC  NOT NULL
+    Rain                  NUMERIC   ,
+    Max_temp              NUMERIC   ,
+    Min_temp              NUMERIC   ,
+    Max_relative_humidity NUMERIC   ,
+    Min_relative_humidity NUMERIC   ,
+    Avg_10m_windspeed     NUMERIC   ,
+
+    PRIMARY KEY (station_name, Date)
 );
 
 INSERT INTO weather_data (
@@ -117,5 +121,7 @@ INSERT INTO weather_data (
 DROP TABLE sqlitestudio_temp_table;
 
 PRAGMA foreign_keys = 1;
+
+DROP TABLE sqlitestudio_temp_table
 
 
