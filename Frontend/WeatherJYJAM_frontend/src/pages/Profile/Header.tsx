@@ -1,7 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import logoImage from './_asset/WeatherJYJAM_Logo.jpg'
-
+import LogoComponent from '../Home/_components/Header/Logo/Logo'
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -21,17 +20,12 @@ const Circle = styled.div`
   height: 28px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid #2563eb; /* optional blue border */
+  border: 2px solid #2563eb; 
 `
 
 const Title = styled.h1`
   font-size: 1.5rem;
   font-weight: 600;
-`
-
-const Logo = styled.img`
-  height: 40px;
-  object-fit: contain;
 `
 
 const Header: FC = () => (
@@ -40,7 +34,7 @@ const Header: FC = () => (
       <Circle />
       <Title>Hello, Username</Title>
     </Left>
-    <Logo src={logoImage} alt="Logo" />
+    <LogoComponent />
   </HeaderContainer>
 )
 
