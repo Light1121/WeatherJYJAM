@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import WeatherJYJAM_Logo from '../../_components/Header/Logo/_asset/WeatherJYJAM_Logo.png'
+import logoImage from './_asset/WeatherJYJAM_Logo.jpg'
+
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -39,7 +40,7 @@ const Header: FC = () => (
       <Circle />
       <Title>Hello, Username</Title>
     </Left>
-    <Logo src={WeatherJYJAM_Logo} alt="Logo" />
+    <Logo src={logoImage} alt="Logo" />
   </HeaderContainer>
 )
 
