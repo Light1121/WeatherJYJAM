@@ -14,9 +14,12 @@ const SignUpContainer = styled.div`
 `;
 
 const LogoWrapper = styled.div`
-  margin-top: 2rem; 
-  width: 500px; 
+  margin-top: 4rem; 
+  margin-bottom: 3rem;
+  width: 300px;
   height: auto;
+  display: flex;
+  justify-content: center; 
 `;
 
 const FormContainer = styled.div`
