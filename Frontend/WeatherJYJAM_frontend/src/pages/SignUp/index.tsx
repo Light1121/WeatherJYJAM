@@ -27,9 +27,9 @@ const FormContainer = styled.div`
 `;
 
 const Logo = styled(LogoComponent)`
-  width: 200px; 
+  width: 200px;
   height: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 0;  
 `;
 
 const FormTitle = styled.h2`
@@ -116,9 +116,9 @@ const FooterText = styled.p`
 const Header: FC = () => {
   return (
     <SignUpContainer>
-      <FormContainer>
-        <Logo /> 
+      <Logo /> 
 
+      <FormContainer>
         <FormTitle>Sign In</FormTitle>
 
         <Grid>
@@ -154,5 +154,6 @@ const Header: FC = () => {
     </SignUpContainer>
   );
 };
+
 
 export default Header;
