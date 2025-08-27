@@ -8,38 +8,63 @@ const SignUpContainer = styled.div`
   align-items: center;
   padding: 2rem;
   min-height: 100vh;
+  width: 100%;
   background: #f9f9f9;
   font-family: 'Instrument Sans', sans-serif;
+`;
+
+const LogoWrapper = styled.div`
+  margin-top: 4rem; 
+  margin-bottom: 2rem;
 `;
 
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
   padding: 2rem;
-  margin-top: 2rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 `;
 
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+`;
+
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Label = styled.label`
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 400; 
+`;
+
 const Input = styled.input`
   padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
+  border: none; 
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
   background-color: #ccf1ff;
 
   &:focus {
-    border-color: #0070f3;
+    outline: 2px solid #0070f3;
   }
 `;
 
 const Button = styled.button`
-  padding: 0.75rem;
+  width: 160px; 
+  align-self: center;
+  padding: 0.6rem;
   background: #87dbfd;
   color: #000;
   font-size: 1rem;
@@ -58,8 +83,11 @@ const FooterText = styled.p`
   font-size: 0.9rem;
   color: #555;
   text-align: center;
+  line-height: 1.6;
 
   a {
+    display: block;
+    margin-top: 0.25rem;
     color: #0070f3;
     font-weight: 500;
     text-decoration: none;
@@ -69,13 +97,34 @@ const FooterText = styled.p`
 const Header: FC = () => {
   return (
     <SignUpContainer>
-      <LogoComponent />
+      <LogoWrapper>
+        <LogoComponent />
+      </LogoWrapper>
 
       <FormContainer>
-        <Input type="text" placeholder="Username" />
-        <Input type="email" placeholder="Email" />
-        <Input type="password" placeholder="Password" />
-        <Input type="password" placeholder="Confirm Password" />
+        <Grid>
+          <Field>
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" type="text" placeholder="Enter username" />
+          </Field>
+          <Field>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" placeholder="Enter email" />
+          </Field>
+          <Field>
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" placeholder="Enter password" />
+          </Field>
+          <Field>
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="Confirm password"
+            />
+          </Field>
+        </Grid>
+
         <Button>Sign Up</Button>
 
         <FooterText>
