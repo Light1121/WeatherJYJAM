@@ -1,16 +1,33 @@
-import type { FC } from 'react'
-import styled from 'styled-components'
-import Button from '../../_components/Button'
+import type { FC } from "react";
+import styled from "styled-components";
+import Header from "./Header";
+import FavouriteComparisons from "./FavouriteComparisons";
+import FavouriteLocations from "./FavouriteLocations";
 
-const ProfileContainer = styled.div``
+const ProfileContainer = styled.div`
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 2rem;
+`;
 
-const Title = styled.h1``
+const ContentGrid = styled.div`
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
 
 const Profile: FC = () => (
   <ProfileContainer>
-    <Title>Profile</Title>
-    <Button>Profile</Button>
+    <Header />
+    <ContentGrid>
+      <FavouriteLocations />
+      <FavouriteComparisons />
+    </ContentGrid>
   </ProfileContainer>
-)
+);
 
-export default Profile
+export default Profile;
