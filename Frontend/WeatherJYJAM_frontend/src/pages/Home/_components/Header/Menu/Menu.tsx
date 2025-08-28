@@ -51,6 +51,9 @@ const Menu = () => {
           <MenuItem to="/login" onClick={closeMenu}>
             Login
           </MenuItem>
+          <MenuItem to="/signup" onClick={closeMenu}>
+            Sign Up
+          </MenuItem>
         </SideMenu>
       )}
     </>

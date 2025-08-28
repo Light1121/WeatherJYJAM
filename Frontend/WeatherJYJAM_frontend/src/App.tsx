@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
+import SignUp from './pages/SignUp'
 
 const App: FC = () => (
   <Routes>
@@ -12,6 +13,7 @@ const App: FC = () => (
     <Route path="/login" element={<Login />} />
     <Route path="/settings" element={<Settings />} />
     <Route path="/profile" element={<Profile />} />
+    <Route path="/signup" element={<SignUp />} />
   </Routes>
 )
 
