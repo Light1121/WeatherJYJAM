@@ -1,6 +1,6 @@
-import type { FC } from "react";
-import styled from "styled-components";
-import LogoComponent from "../Home/_components/Header/Logo/Logo";
+import type { FC } from 'react'
+import styled from 'styled-components'
+import LogoComponent from '../Home/_components/Header/Logo/Logo'
 
 const PageContainer = styled.div`
   display: flex;
@@ -11,19 +11,19 @@ const PageContainer = styled.div`
   background: #f9f9f9;
   font-family: 'Instrument Sans', sans-serif;
   overflow: hidden;
-`;
+`
 
 const LogoWrapper = styled.div`
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   width: 100%;
-`;
+`
 
 const Logo = styled(LogoComponent)`
   width: 250px;
   height: auto;
   display: block;
-`;
+`
 
 const FormContainer = styled.div`
   display: flex;
@@ -36,16 +36,16 @@ const FormContainer = styled.div`
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  margin-top: 0; 
-`;
+  margin-top: 0;
+`
 
 const FormTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 500;
-  color: #3C3939;
+  color: #3c3939;
   margin-bottom: 1.5rem;
   text-align: center;
-`;
+`
 
 const Grid = styled.div`
   display: grid;
@@ -55,19 +55,19 @@ const Grid = styled.div`
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
-`;
+`
 
 const Field = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`;
+`
 
 const Label = styled.label`
   font-size: 0.95rem;
-  color: #3C3939;
+  color: #3c3939;
   font-weight: 400;
-`;
+`
 
 const Input = styled.input`
   padding: 0.75rem 1rem;
@@ -76,18 +76,18 @@ const Input = styled.input`
   font-size: 1rem;
   outline: none;
   background-color: #ccf1ff;
-  color: #3C3939;
+  color: #3c3939;
 
   &:focus {
     outline: 2px solid #0070f3;
   }
-`;
+`
 
 const Button = styled.button`
   width: 160px;
   padding: 0.6rem;
   background: #87dbfd;
-  color: #3C3939;
+  color: #3c3939;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
@@ -98,27 +98,27 @@ const Button = styled.button`
   &:hover {
     background: #6ec7eb;
   }
-`;
+`
 
 const FooterText = styled.p`
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: #3C3939;
+  color: #3c3939;
   text-align: center;
   line-height: 1.6;
 
   a {
     display: block;
     margin-top: 0.25rem;
-    color: #395D9F; 
+    color: #395d9f;
     font-weight: 500;
     text-decoration: none;
 
     &:hover {
-      color: #3C3939; 
+      color: #3c3939;
     }
   }
-`;
+`
 
 const Header: FC = () => {
   return (
@@ -161,7 +161,7 @@ const Header: FC = () => {
         </FooterText>
       </FormContainer>
     </PageContainer>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
