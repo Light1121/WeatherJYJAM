@@ -1,0 +1,133 @@
+-- SQLite
+DROP TABLE IF EXISTS sqlitestudio_temp_table;
+
+------USERS TABLE------
+PRAGMA foreign_keys = 0;
+
+CREATE TABLE sqlitestudio_temp_table AS SELECT *
+                                          FROM users;
+
+DROP TABLE users;
+
+CREATE TABLE users (
+    username        TEXT (30)   PRIMARY KEY
+                                NOT NULL,
+    email           TEXT (30)   NOT NULL,
+    password        TEXT        NOT NULL,
+    current_tab     NUMERIC (4),
+    last_login_date DATE        NOT NULL
+);
+
+INSERT INTO users (
+                      username,
+                      email,
+                      password,
+                      current_tab,
+                      last_login_date
+                  )
+                  SELECT username,
+                         email,
+                         password,
+                         current_tab,
+                         last_login_date
+                    FROM sqlitestudio_temp_table;
+
+DROP TABLE sqlitestudio_temp_table;
+
+PRAGMA foreign_keys = 1;
+
+------
+
+
+------SETTINGS TABLE------
+PRAGMA foreign_keys = 0;
+
+CREATE TABLE sqlitestudio_temp_table AS SELECT *
+                                          FROM settings;
+
+DROP TABLE settings;
+
+CREATE TABLE settings (
+    username            TEXT (30) PRIMARY KEY
+                                  REFERENCES users (username) ON DELETE CASCADE
+                                                              ON UPDATE CASCADE,
+    zoom_steps          NUMERIC,
+    colourblind_setting INTEGER,
+    hotkeys_setting     INTEGER,
+    dark_theme_setting  INTEGER,
+    language_setting    INTEGER
+);
+
+INSERT INTO settings (
+                         username,
+                         zoom_steps,
+                         colourblind_setting,
+                         hotkeys_setting,
+                         dark_theme_setting,
+                         language_setting
+                     )
+                     SELECT username,
+                            zoom_steps,
+                            colourblind_setting,
+                            hotkeys_setting,
+                            dark_theme_setting,
+                            language_setting
+                       FROM sqlitestudio_temp_table;
+
+DROP TABLE sqlitestudio_temp_table;
+
+PRAGMA foreign_keys = 1;
+
+
+------
+
+
+------USERS_TABS TABLE------
+PRAGMA foreign_keys = 0;
+
+CREATE TABLE sqlitestudio_temp_table AS SELECT *
+                                          FROM users_tabs;
+
+DROP TABLE users_tabs;
+
+CREATE TABLE users_tabs (
+    username         TEXT (30)   PRIMARY KEY
+                                 REFERENCES users (username),
+    tab_id           INTEGER (2),
+    zoom_granularity NUMERIC (5),
+    view_type        INTEGER (2),
+    center_coord_lat NUMERIC,
+    center_coord_lon NUMERIC,
+    p1_coord_lat     NUMERIC,
+    p1_coord_lon     NUMERIC,
+    p2_coord_lat     NUMERIC,
+    p2_coord_lon     NUMERIC
+);
+
+INSERT INTO users_tabs (
+                           username,
+                           tab_id,
+                           zoom_granularity,
+                           view_type,
+                           center_coord_lat,
+                           center_coord_lon,
+                           p1_coord_lat,
+                           p1_coord_lon,
+                           p2_coord_lat,
+                           p2_coord_lon
+                       )
+                       SELECT username,
+                              tab_id,
+                              zoom_granularity,
+                              view_type,
+                              center_coord_lat,
+                              center_coord_lon,
+                              p1_coord_lat,
+                              p1_coord_lon,
+                              p2_coord_lat,
+                              p2_coord_lon
+                         FROM sqlitestudio_temp_table;
+
+DROP TABLE sqlitestudio_temp_table;
+
+PRAGMA foreign_keys = 1;
