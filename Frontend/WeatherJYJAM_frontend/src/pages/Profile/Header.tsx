@@ -19,7 +19,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background-color: #C2E9FF; 
+  background-color: #c2e9ff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 `
@@ -29,7 +29,7 @@ const Circle = styled.div`
   height: 28px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid #256392ff; 
+  border: 2px solid #256392ff;
 `
 
 const Title = styled.h1`
@@ -39,7 +39,7 @@ const Title = styled.h1`
 `
 
 const EmailText = styled.span`
-  margin-top: 1rem; 
+  margin-top: 1rem;
   font-size: 0.95rem;
   color: #333;
   font-family: 'Instrument Sans', sans-serif;
