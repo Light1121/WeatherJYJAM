@@ -1,7 +1,7 @@
-import React, { FC, ImgHTMLAttributes } from 'react'
+import type { ImgHTMLAttributes } from 'react'
 import logoImg from './logoJYJAM.png'
 
-const Logo: FC<ImgHTMLAttributes<HTMLImageElement>> = (props) => {
+const Logo = (props: ImgHTMLAttributes<HTMLImageElement>) => {
   return <img src={logoImg} alt="Logo" {...props} />
 }
 

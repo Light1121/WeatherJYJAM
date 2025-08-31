@@ -127,7 +127,11 @@ const Login: FC = () => {
             <a href="#">Forgot password?</a>
           </LinkRow>
 
-          <Button type="submit">Log in</Button>
+          <Button
+            onClick={() => document.querySelector('form')?.requestSubmit()}
+          >
+            Log in
+          </Button>
         </form>
 
         <FooterLink>
