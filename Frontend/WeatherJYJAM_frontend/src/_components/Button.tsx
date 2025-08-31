@@ -1,19 +1,19 @@
-// src/_components/Button.tsx - 按设计优化
-import type { FC } from 'react'
+import type { FC, ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 type Variant = 'primary' | 'tab' | 'add'
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: string
   variant?: Variant
   isActive?: boolean
-  onClick?: () => void
 }
 
 const StyledButton = styled.button<{ $variant: Variant; $isActive?: boolean }>`
   cursor: pointer;
   font-size: 14px;
+  border: none;
+  padding: 8px 16px;
 
   ${(props) =>
     props.$variant === 'primary' &&
@@ -46,9 +46,9 @@ const Button: FC<ButtonProps> = ({
   children,
   variant = 'primary',
   isActive,
-  onClick,
+  ...props
 }) => (
-  <StyledButton $variant={variant} $isActive={isActive} onClick={onClick}>
+  <StyledButton $variant={variant} $isActive={isActive} {...props}>
     {children}
   </StyledButton>
 )
