@@ -49,14 +49,17 @@ const MenuItem = styled(Link)`
   text-decoration: none;
 `
 const ButtonItem = styled.button`
-  display: block;
   width: 100%;
-  padding: 16px 12px;
-  background: none;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  color: #333;
+  background: #c2e9ff;
   border: none;
-  text-align: left;
-  font-size: 16px;
+  text-align: middle;
+  font-size: 14px;
   cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 interface ToggleButtonProps {
@@ -68,10 +71,17 @@ const ToggleButton = styled.button<ToggleButtonProps>`
   padding: 10px;
   border: none;
   cursor: pointer;
-
+  margin-bottom: 12px;
   &:hover {
     background-color: ${({ $active }) => ($active ? '#45a049' : '#aaa')};
   }
+`
+const LocTitle = styled.h4`
+  border: none;
+  text-align: middle;
+  margin: 4px 0;
+  font-size: 14px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -101,6 +111,7 @@ const Menu = () => {
           <MenuItem to="/settings" onClick={closeMenu}>
             Settings
           </MenuItem>
+          <LocTitle>Set locations to compare</LocTitle>
           <ButtonItem
             onClick={() => {
               toggleLoc1()
