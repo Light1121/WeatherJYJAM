@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import LocSearchBar from './LocSearchBar'
 
 const MenuButton = styled.div`
   cursor: pointer;
@@ -24,17 +25,69 @@ const SideMenu = styled.div`
     transform: translateX(0);
   }
 `
+const SubMenu = styled.div`
+  position: fixed;
+  top: 160px;
+  right: 280px;
+  height: calc(40vh - 80px);
+  width: 280px;
+  background: #f9f9f9;
+  border-left: 1px solid #ddd;
+  z-index: 1002;
+  padding: 20px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+
+  &.open {
+    transform: translateX(0);
+  }
+`
 
 const MenuItem = styled(Link)`
   display: block;
   padding: 16px 12px;
   text-decoration: none;
 `
+const ButtonItem = styled.button`
+  display: block;
+  width: 100%;
+  padding: 16px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+`
 
+interface ToggleButtonProps {
+  $active: boolean
+}
+const ToggleButton = styled.button<ToggleButtonProps>`
+  background-color: ${({ $active }) => ($active ? 'green' : 'gray')};
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ $active }) => ($active ? '#45a049' : '#aaa')};
+  }
+`
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
+
+  const [isLoc1Open, setIsLoc1Open] = useState(false)
+  const toggleLoc1 = () => setIsLoc1Open(!isLoc1Open)
+  const closeLoc1 = () => setIsLoc1Open(false)
+
+  const [isLoc2Open, setIsLoc2Open] = useState(false)
+  const toggleLoc2 = () => setIsLoc2Open(!isLoc2Open)
+  const closeLoc2 = () => setIsLoc2Open(false)
+
+  const [isLocOne, setIsLocOne] = useState(false)
+  const [isLocTwo, setIsLocTwo] = useState(false)
 
   return (
     <>
@@ -48,6 +101,22 @@ const Menu = () => {
           <MenuItem to="/settings" onClick={closeMenu}>
             Settings
           </MenuItem>
+          <ButtonItem
+            onClick={() => {
+              toggleLoc1()
+              closeLoc2()
+            }}
+          >
+            Set Location 1
+          </ButtonItem>
+          <ButtonItem
+            onClick={() => {
+              toggleLoc2()
+              closeLoc1()
+            }}
+          >
+            Set Location 2
+          </ButtonItem>
           <MenuItem to="/login" onClick={closeMenu}>
             Login
           </MenuItem>
@@ -55,6 +124,34 @@ const Menu = () => {
             Sign Up
           </MenuItem>
         </SideMenu>
+      )}
+
+      {isLoc1Open && (
+        <SubMenu className="open">
+          <LocSearchBar />
+
+          <ToggleButton
+            $active={isLocOne}
+            onClick={() => setIsLocOne(!isLocOne)}
+          >
+            {isLocOne ? 'Active' : 'Inactive'}
+          </ToggleButton>
+          <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
+        </SubMenu>
+      )}
+
+      {isLoc2Open && (
+        <SubMenu className="open">
+          <LocSearchBar />
+
+          <ToggleButton
+            $active={isLocTwo}
+            onClick={() => setIsLocTwo(!isLocTwo)}
+          >
+            {isLocTwo ? 'Active' : 'Inactive'}
+          </ToggleButton>
+          <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>
+        </SubMenu>
       )}
     </>
   )

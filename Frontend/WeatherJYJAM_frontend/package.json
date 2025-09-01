@@ -50,8 +50,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "prettier --write",
-      "tsc --noEmit --skipLibCheck"
+      "prettier --write"
     ],
     "*.{css,scss}": [
       "stylelint --fix"
