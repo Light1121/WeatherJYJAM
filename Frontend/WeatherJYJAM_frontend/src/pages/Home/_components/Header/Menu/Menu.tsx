@@ -2,8 +2,8 @@ import { useState, type FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from './LocSearchBar'
-import getLocOneContext from '@/_components/ContextHooks/LocOneContext'
-import getLocTwoContext from '@/_components/ContextHooks/LocTwoContext'
+import useLocOneContext from '@/_components/ContextHooks/LocOneContext'
+import useLocTwoContext from '@/_components/ContextHooks/LocTwoContext'
 
 const MenuButton = styled.div`
   cursor: pointer;
@@ -86,8 +86,8 @@ const LocTitle = styled.h4`
   font-family: 'Instrument Sans', sans-serif;
 `
 const Menu: FC = () => {
-  const { isLocOne, LocOnetoggle } = getLocOneContext(false)
-  const { isLocTwo, LocTwotoggle } = getLocTwoContext(false)
+  const { isLocOne, LocOnetoggle } = useLocOneContext(false)
+  const { isLocTwo, LocTwotoggle } = useLocTwoContext(false)
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
