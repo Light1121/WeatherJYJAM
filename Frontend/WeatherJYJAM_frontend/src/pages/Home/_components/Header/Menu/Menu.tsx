@@ -51,13 +51,13 @@ const MenuItem = styled(Link)`
   padding: 16px 12px;
   text-decoration: none;
 `
-const ButtonItem = styled.button`
+const ButtonItem = styled.button<ToggleButtonProps>`
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 8px;
   color: #333;
-  background: #c2e9ff;
+  background-color: ${({ $active }) => ($active ? '#9cbbceff' : '#c2e9ff')};
   border: none;
   text-align: middle;
   font-size: 14px;
@@ -116,6 +116,7 @@ const Menu: FC = () => {
           </MenuItem>
           <LocTitle>Set locations to compare</LocTitle>
           <ButtonItem
+            $active={isLoc1Open}
             onClick={() => {
               toggleLoc1()
               closeLoc2()
@@ -124,6 +125,7 @@ const Menu: FC = () => {
             Set Location 1
           </ButtonItem>
           <ButtonItem
+            $active={isLoc2Open}
             onClick={() => {
               toggleLoc2()
               closeLoc1()
@@ -151,7 +153,9 @@ const Menu: FC = () => {
             {isLocOne ? 'Active' : 'Inactive'}
           </ToggleButton>
 
-          <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
+          <ButtonItem $active={!isLoc1Open} onClick={() => closeLoc1()}>
+            Close
+          </ButtonItem>
         </SubMenu>
       )}
 
@@ -165,7 +169,9 @@ const Menu: FC = () => {
           >
             {isLocTwo ? 'Active' : 'Inactive'}
           </ToggleButton>
-          <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>
+          <ButtonItem $active={!isLoc2Open} onClick={() => closeLoc2()}>
+            Close
+          </ButtonItem>
         </SubMenu>
       )}
     </>
