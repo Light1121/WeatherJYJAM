@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, type FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from './LocSearchBar'
+import getLocOneContext from '@/_components/ContextHooks/LocOneContext'
+import getLocTwoContext from '@/_components/ContextHooks/LocTwoContext'
 
 const MenuButton = styled.div`
   cursor: pointer;
@@ -83,7 +85,10 @@ const LocTitle = styled.h4`
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
 `
-const Menu = () => {
+const Menu: FC = () => {
+  const { isLocOne, LocOnetoggle } = getLocOneContext(false)
+  const { isLocTwo, LocTwotoggle } = getLocTwoContext(false)
+
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
@@ -95,9 +100,6 @@ const Menu = () => {
   const [isLoc2Open, setIsLoc2Open] = useState(false)
   const toggleLoc2 = () => setIsLoc2Open(!isLoc2Open)
   const closeLoc2 = () => setIsLoc2Open(false)
-
-  const [isLocOne, setIsLocOne] = useState(false)
-  const [isLocTwo, setIsLocTwo] = useState(false)
 
   return (
     <>
@@ -141,10 +143,7 @@ const Menu = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton
-            $active={isLocOne}
-            onClick={() => setIsLocOne(!isLocOne)}
-          >
+          <ToggleButton $active={isLocOne} onClick={() => LocOnetoggle()}>
             {isLocOne ? 'Active' : 'Inactive'}
           </ToggleButton>
           <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
@@ -155,10 +154,7 @@ const Menu = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton
-            $active={isLocTwo}
-            onClick={() => setIsLocTwo(!isLocTwo)}
-          >
+          <ToggleButton $active={isLocTwo} onClick={() => LocTwotoggle()}>
             {isLocTwo ? 'Active' : 'Inactive'}
           </ToggleButton>
           <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>
