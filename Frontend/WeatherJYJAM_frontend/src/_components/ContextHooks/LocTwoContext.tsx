@@ -1,8 +1,11 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import { LocTwoContext } from './LocTwoContext.1'
 
-export default function useLocTwoContext(initialOpen = false) {
-  const [isLocTwo, setLocTwo] = useState(initialOpen)
-
-  const LocTwotoggle = useCallback(() => setLocTwo((v) => !v), [])
-  return { isLocTwo, LocTwotoggle }
+export const LocTwoProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isLocTwo, setIsLocTwo] = useState(false)
+  return (
+    <LocTwoContext.Provider value={{ isLocTwo, setIsLocTwo }}>
+      {children}
+    </LocTwoContext.Provider>
+  )
 }

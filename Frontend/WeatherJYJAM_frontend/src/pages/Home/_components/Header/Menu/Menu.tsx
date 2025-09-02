@@ -2,8 +2,9 @@ import { useState, type FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from './LocSearchBar'
-import useLocOneContext from '@/_components/ContextHooks/LocOneContext'
-import useLocTwoContext from '@/_components/ContextHooks/LocTwoContext'
+
+import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
+import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
 
 const MenuButton = styled.div`
   cursor: pointer;
@@ -86,8 +87,8 @@ const LocTitle = styled.h4`
   font-family: 'Instrument Sans', sans-serif;
 `
 const Menu: FC = () => {
-  const { isLocOne, LocOnetoggle } = useLocOneContext(false)
-  const { isLocTwo, LocTwotoggle } = useLocTwoContext(false)
+  const { isLocOne, setIsLocOne } = useLocOneContext()
+  const { isLocTwo, setIsLocTwo } = useLocTwoContext()
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -143,9 +144,13 @@ const Menu: FC = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton $active={isLocOne} onClick={() => LocOnetoggle()}>
+          <ToggleButton
+            $active={isLocOne}
+            onClick={() => setIsLocOne(!isLocOne)}
+          >
             {isLocOne ? 'Active' : 'Inactive'}
           </ToggleButton>
+
           <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
         </SubMenu>
       )}
@@ -154,7 +159,10 @@ const Menu: FC = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton $active={isLocTwo} onClick={() => LocTwotoggle()}>
+          <ToggleButton
+            $active={isLocTwo}
+            onClick={() => setIsLocTwo(!isLocTwo)}
+          >
             {isLocTwo ? 'Active' : 'Inactive'}
           </ToggleButton>
           <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>

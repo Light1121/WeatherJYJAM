@@ -6,6 +6,8 @@ import {
   WindBar,
   HumidityBar,
 } from '@/_components/WeatherDataBar'
+import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
+import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -99,11 +101,30 @@ interface WeatherStatsProps {
 }
 
 const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
+  const { isLocOne } = useLocOneContext()
+  const { isLocTwo } = useLocTwoContext()
   return (
     <>
       <HeaderRow>
-        <Location>Monash University Clayton Campus</Location>
-        <NowTemp>20°C</NowTemp>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline' }}>
+          {isLocOne && (
+            <>
+              <Location>Monash University Clayton Campus</Location>
+              <NowTemp>20°C</NowTemp>
+            </>
+          )}
+          {isLocTwo && (
+            <>
+              <Location>Caulfield Campus</Location>
+              <NowTemp>20°C</NowTemp>
+            </>
+          )}
+          {!isLocOne && !isLocTwo && (
+            <div style={{ fontSize: '14px', color: '#666' }}>
+              No locations selected.
+            </div>
+          )}
+        </div>
       </HeaderRow>
 
       {isExpanded && (
