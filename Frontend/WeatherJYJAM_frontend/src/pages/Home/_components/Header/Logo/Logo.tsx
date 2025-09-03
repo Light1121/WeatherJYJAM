@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import logoImage from './_asset/WeatherJYJAM_Logo.png'
 
 const LogoImage = styled.img`
-  width: 100px;
+  width: 180px;
   height: 100px;
   object-fit: contain;
   border-radius: 8px;

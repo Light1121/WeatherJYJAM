@@ -23,7 +23,7 @@ const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
 
 const EmailText = styled.span`
   display: block;
-  margin: 1.5rem 0;
+  margin: 1.5rem;
   font-size: 0.95rem;
   color: #333;
   font-family: 'Instrument Sans', sans-serif;
@@ -90,7 +90,7 @@ const Profile: FC = () => {
       </FadeDiv>
 
       <FadeDiv visible={emailVisible} delay={100}>
-        <EmailText>email | username@gmail.com</EmailText>
+        <EmailText>Email | username@gmail.com</EmailText>
       </FadeDiv>
 
       <FadeDiv visible={contentVisible} delay={200}>
