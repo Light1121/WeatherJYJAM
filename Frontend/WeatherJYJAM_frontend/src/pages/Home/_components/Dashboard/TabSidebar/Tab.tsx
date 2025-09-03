@@ -14,28 +14,37 @@ const TabButton = styled.button<{ $active: boolean; $color: string }>`
   background: ${({ $color }) => $color};
   border: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 6px 0 0 6px; /* top-left and bottom-left rounded */
   cursor: pointer;
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
   text-align: center;
   font-weight: 400;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /*transitions*/
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    z-index 0.2s ease;
+  position: relative;
+
+  &:hover {
+    box-shadow: 6px rgba(0, 0, 0, 0.3);
+    transform: ${({ $active }) => ($active ? 'scale(1.45)' : 'scale(1.05)')};
+    z-index: ${({ $active }) => ($active ? 10 : 1)};
+  }
 
   ${({ $active }) =>
     $active &&
     css`
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transform: translateY(-1px);
+      transform: scale(1.4);
+      z-index: 10; /*active tab above others */
     `}
-
-  &:hover {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  }
 `
 
 const Input = styled.input`
@@ -83,7 +92,7 @@ const Tab: FC<TabProps> = ({ tab, currentTabId, onRenameTab }) => {
     <TabButton
       $active={isActive}
       $color={tab.color}
-      onDoubleClick={() => setEditing(true)}
+      onDoubleClick={() => tab.id !== 'tab1' && setEditing(true)} //prevent Home edit
       onClick={() => !editing && navigate(getTabPath(tab.id))}
     >
       {editing ? (

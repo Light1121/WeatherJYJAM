@@ -1,17 +1,19 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Map from './Map'
+import type { TabData } from '../TabSidebar/_hooks/useTabs'
 
-const MapContainer2 = styled.div`
+const MapContainer2 = styled.div<{ $bgColor?: string }>`
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: #fffafa;
+  background-color: ${({ $bgColor }) => $bgColor || '#fffafa'};
   overflow: hidden;
   padding: 10px;
   box-sizing: border-box;
   border-radius: 0 15px 15px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease;
 `
 
 const MapContainer = styled.div`
@@ -39,20 +41,27 @@ const MapTitle = styled.div`
 
 interface MapViewProps {
   currentTabId?: string
+  tabs: TabData[]
 }
 
-const getMapTitle = (currentTabId?: string): string => {
-  if (!currentTabId) return 'map1'
-  return `map${currentTabId.replace('tab', '')}`
-}
+const MapView: FC<MapViewProps> = ({ currentTabId, tabs }) => {
+  const selectedTab = tabs.find((tab) => tab.id === currentTabId)
+  const bgColor = selectedTab?.color || '#fffafa'
 
-const MapView: FC<MapViewProps> = ({ currentTabId }) => (
-  <MapContainer2>
-    <MapContainer>
-      <MapTitle>{getMapTitle(currentTabId)}</MapTitle>
-      <Map />
-    </MapContainer>
-  </MapContainer2>
-)
+  const getMapTitle = () => {
+    if (!currentTabId || currentTabId === 'tab1') return 'Home'
+    const tabNumber = parseInt(currentTabId.replace('tab', '')) - 1
+    return `Map ${tabNumber}`
+  }
+
+  return (
+    <MapContainer2 $bgColor={bgColor}>
+      <MapContainer>
+        <MapTitle>{getMapTitle()}</MapTitle>
+        <Map />
+      </MapContainer>
+    </MapContainer2>
+  )
+}
 
 export default MapView

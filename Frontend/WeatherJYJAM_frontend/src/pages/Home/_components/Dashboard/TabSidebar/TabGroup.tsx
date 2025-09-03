@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import styled from 'styled-components'
 import Tab from './Tab'
 import { AddButtonWithTooltip } from './AddButton'
 import type { TabData } from './_hooks/useTabs'
+import styled from 'styled-components'
 
 const GroupContainer = styled.div`
   display: flex;
