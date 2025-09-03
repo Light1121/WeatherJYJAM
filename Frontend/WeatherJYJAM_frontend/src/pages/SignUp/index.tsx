@@ -62,17 +62,16 @@ const Label = styled.label`
   color: #3c3939;
   font-weight: 400;
   text-align: left;
-  margin-left: 8px;
+  margin-left: 1px;
 `
 
 const InputWrapper = styled.div`
   position: relative;
-  width: 100%;
-  margin: 0 auto;
+  width: 90%;
 `
 
 const Input = styled.input`
-  padding: 0.75rem 1rem; 
+  padding: 0.75rem; 
   border: 1px solid #cfeaf7;
   border-radius: 6px;
   font-size: 1rem;
@@ -89,7 +88,7 @@ const Input = styled.input`
 
 const ToggleButton = styled.button<{ active: boolean }>`
   position: absolute;
-  right: 1px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
