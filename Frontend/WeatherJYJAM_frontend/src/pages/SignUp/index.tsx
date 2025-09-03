@@ -2,6 +2,8 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 import LogoComponent from '../../_components/Logo'
 
+//test check update
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
