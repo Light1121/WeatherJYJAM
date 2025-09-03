@@ -2,7 +2,6 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 import LogoComponent from '../../_components/Logo'
 
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -15,7 +14,7 @@ const Wrapper = styled.div`
 
 const Box = styled.div`
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
   background: #fff;
   padding: 60px 24px 24px;
   border-radius: 8px;
@@ -33,17 +32,15 @@ const LogoWrapper = styled(LogoComponent)`
   height: auto;
 `
 
-const FormTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 500;
+const FormTitle = styled.h1`
+  margin-bottom: 20px;
   color: #3c3939;
-  margin-bottom: 1.5rem;
   text-align: center;
 `
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);  
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
 `
 
@@ -77,38 +74,31 @@ const Input = styled.input`
 `
 
 const Button = styled.button`
-  padding: 0.75rem 2rem;  
+  padding: 0.75rem 2rem;
   background: #87dbfd;
   color: #3c3939;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 400; 
-  margin-top: 1.5rem;    
+  font-weight: 400;
+  margin-top: 1.5rem;
 
   &:hover {
     background: #6ec7eb;
   }
 `
 
-
 const FooterText = styled.p`
-  margin-top: 1rem;
+  margin-top: 20px;
   font-size: 0.9rem;
-  color: #3c3939;
-  text-align: center;
-  line-height: 1.6;
 
   a {
-    display: block;
-    margin-top: 0.25rem;
-    color: #395d9f;
-    font-weight: 500;
+    color: #0077cc;
     text-decoration: none;
 
     &:hover {
-      color: #3c3939;
+      text-decoration: underline;
     }
   }
 `
@@ -123,25 +113,22 @@ const Header: FC = () => {
         <Grid>
           <Field>
             <Label htmlFor="username">Username</Label>
-            <Input id="username" type="text"/>
+            <Input id="username" type="text" />
           </Field>
 
           <Field>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password"/>
+            <Input id="password" type="password" />
           </Field>
 
           <Field>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email"/>
+            <Input id="email" type="email" />
           </Field>
 
           <Field>
             <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-            />
+            <Input id="confirm-password" type="password" />
           </Field>
         </Grid>
 

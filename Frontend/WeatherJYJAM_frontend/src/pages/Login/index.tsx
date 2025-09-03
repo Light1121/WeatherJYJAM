@@ -14,11 +14,11 @@ const Wrapper = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  background-color: #87dbfd !important; 
+  background-color: #87dbfd !important;
   border: none;
-  color: #3c3939; 
+  color: #3c3939;
   &:hover {
-    background-color: #6ec9f2; 
+    background-color: #6ec9f2;
   }
 `
 
@@ -139,11 +139,10 @@ const Login: FC = () => {
           </LinkRow>
 
           <StyledButton
-          onClick={() => document.querySelector('form')?.requestSubmit()}
+            onClick={() => document.querySelector('form')?.requestSubmit()}
           >
             Log in
           </StyledButton>
-
         </form>
 
         <FooterLink>
