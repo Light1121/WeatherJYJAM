@@ -39,10 +39,15 @@ const FormTitle = styled.h1`
   text-align: center;
 `
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+const Table = styled.table`
+  width: 100%;
+  border-spacing: 1.5rem;
+  margin-bottom: 1rem;
+`
+
+const Td = styled.td`
+  vertical-align: top;
+  width: 50%;
 `
 
 const Field = styled.div`
@@ -112,7 +117,7 @@ const Button = styled.button`
   width: auto;
 
   &:hover {
-    background: #6ec7eb;
+    background: #54b1d6ff;
   }
 `
 
@@ -122,7 +127,7 @@ const FooterText = styled.p`
   text-align: center;
 
   a {
-    display: block;
+    display: block;   
     margin-top: 0.25rem;
     color: #0077cc;
     text-decoration: none;
@@ -143,51 +148,62 @@ const Header: FC = () => {
         <LogoWrapper />
         <FormTitle>Sign Up</FormTitle>
 
-        <Grid>
-          <Field>
-            <Label htmlFor="username">Username</Label>
-            <InputWrapper>
-              <Input id="username" type="text" />
-            </InputWrapper>
-          </Field>
-
-          <Field>
-            <Label htmlFor="password">Password</Label>
-            <InputWrapper>
-              <Input
-                id="password"
-                type={passwordVisible ? 'text' : 'password'}
-              />
-              <ToggleButton
-                active={passwordVisible}
-                type="button"
-                onClick={() => setPasswordVisible(!passwordVisible)}
-              />
-            </InputWrapper>
-          </Field>
-
-          <Field>
-            <Label htmlFor="email">Email</Label>
-            <InputWrapper>
-              <Input id="email" type="email" />
-            </InputWrapper>
-          </Field>
-
-          <Field>
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <InputWrapper>
-              <Input
-                id="confirm-password"
-                type={confirmVisible ? 'text' : 'password'}
-              />
-              <ToggleButton
-                active={confirmVisible}
-                type="button"
-                onClick={() => setConfirmVisible(!confirmVisible)}
-              />
-            </InputWrapper>
-          </Field>
-        </Grid>
+        <Table>
+          <tbody>
+            <tr>
+              <Td>
+                <Field>
+                  <Label htmlFor="username">Username</Label>
+                  <InputWrapper>
+                    <Input id="username" type="text" />
+                  </InputWrapper>
+                </Field>
+              </Td>
+              <Td>
+                <Field>
+                  <Label htmlFor="password">Password</Label>
+                  <InputWrapper>
+                    <Input
+                      id="password"
+                      type={passwordVisible ? 'text' : 'password'}
+                    />
+                    <ToggleButton
+                      active={passwordVisible}
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  </InputWrapper>
+                </Field>
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <Field>
+                  <Label htmlFor="email">Email</Label>
+                  <InputWrapper>
+                    <Input id="email" type="email" />
+                  </InputWrapper>
+                </Field>
+              </Td>
+              <Td>
+                <Field>
+                  <Label htmlFor="confirm-password">Confirm Password</Label>
+                  <InputWrapper>
+                    <Input
+                      id="confirm-password"
+                      type={confirmVisible ? 'text' : 'password'}
+                    />
+                    <ToggleButton
+                      active={confirmVisible}
+                      type="button"
+                      onClick={() => setConfirmVisible(!confirmVisible)}
+                    />
+                  </InputWrapper>
+                </Field>
+              </Td>
+            </tr>
+          </tbody>
+        </Table>
 
         <Button>Sign Up</Button>
 
