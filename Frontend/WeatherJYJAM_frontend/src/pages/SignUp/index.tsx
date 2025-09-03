@@ -67,7 +67,7 @@ const Label = styled.label`
 
 const InputWrapper = styled.div`
   position: relative;
-  width: 85%;
+  width: 100%;
   margin: 0 auto;
 `
 
