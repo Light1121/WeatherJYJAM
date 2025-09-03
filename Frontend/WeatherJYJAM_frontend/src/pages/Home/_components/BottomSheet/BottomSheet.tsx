@@ -18,6 +18,7 @@ const StyledBottomSheet = styled.div`
 
 const HandleButton = styled.button`
   position: absolute;
+  cursor: pointer;
   top: -35px;
   width: 60px;
   height: 28px;
