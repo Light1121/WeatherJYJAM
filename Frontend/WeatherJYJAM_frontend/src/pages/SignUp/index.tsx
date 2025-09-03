@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import LogoComponent from '../../_components/Logo'
 
@@ -48,6 +49,7 @@ const Field = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 `
 
 const Label = styled.label`
@@ -58,7 +60,11 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
-const Input = styled.input`
+const InputWrapper = styled.div`
+  position: relative;
+`
+
+const Input = styled.input<{ type?: string }>`
   padding: 0.75rem 1rem;
   border: 1px solid #cfeaf7;
   border-radius: 6px;
@@ -66,10 +72,29 @@ const Input = styled.input`
   outline: none;
   background-color: #d4f5ff;
   color: #3c3939;
+  width: 100%;
 
   &:focus {
     outline: none;
     border-color: #0077cc;
+  }
+`
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? '#fff' : '#87dbfd')};
+  transition: background-color 0.2s;
+
+  &:focus {
+    outline: none;
   }
 `
 
@@ -95,7 +120,7 @@ const FooterText = styled.p`
   text-align: center;
 
   a {
-    display: block;   
+    display: block;
     margin-top: 0.25rem;
     color: #0077cc;
     text-decoration: none;
@@ -106,8 +131,10 @@ const FooterText = styled.p`
   }
 `
 
-
 const Header: FC = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmVisible, setConfirmVisible] = useState(false)
+
   return (
     <Wrapper>
       <Box>
@@ -122,7 +149,17 @@ const Header: FC = () => {
 
           <Field>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
+            <InputWrapper>
+              <Input
+                id="password"
+                type={passwordVisible ? 'text' : 'password'}
+              />
+              <ToggleButton
+                active={passwordVisible}
+                type="button"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              />
+            </InputWrapper>
           </Field>
 
           <Field>
@@ -132,7 +169,17 @@ const Header: FC = () => {
 
           <Field>
             <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input id="confirm-password" type="password" />
+            <InputWrapper>
+              <Input
+                id="confirm-password"
+                type={confirmVisible ? 'text' : 'password'}
+              />
+              <ToggleButton
+                active={confirmVisible}
+                type="button"
+                onClick={() => setConfirmVisible(!confirmVisible)}
+              />
+            </InputWrapper>
           </Field>
         </Grid>
 
