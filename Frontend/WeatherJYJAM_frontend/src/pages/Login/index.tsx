@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   align-items: center;
   min-height: 100vh;
   background: #e3f5fb;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const Box = styled.div`
@@ -135,7 +136,7 @@ const Login: FC = () => {
         </form>
 
         <FooterLink>
-          New to JYJAM? <a href="#">Sign up</a>
+          New to JYJAM? <a href="/signup">Sign up</a>
         </FooterLink>
       </Box>
     </Wrapper>
