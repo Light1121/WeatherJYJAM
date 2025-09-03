@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import Button from '../../_components/Button'
 import Logo from '../../_components/Logo'
 
-//test check update 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -15,9 +14,9 @@ const Wrapper = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  background-color: #87DBFD !important; 
+  background-color: #87dbfd !important; 
   border: none;
-  color: #3C3939; 
+  color: #3c3939; 
   &:hover {
     background-color: #6ec9f2; 
   }
@@ -43,7 +42,7 @@ const LogoWrapper = styled(Logo)`
 
 const Heading = styled.h1`
   margin-bottom: 20px;
-  color: #3C3939;
+  color: #3c3939;
 `
 
 const Label = styled.label`

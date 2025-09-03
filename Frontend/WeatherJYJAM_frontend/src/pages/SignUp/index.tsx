@@ -2,7 +2,6 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 import LogoComponent from '../../_components/Logo'
 
-//test check update
 
 const Wrapper = styled.div`
   display: flex;
@@ -124,17 +123,17 @@ const Header: FC = () => {
         <Grid>
           <Field>
             <Label htmlFor="username">Username</Label>
-            <Input id="username" type="text" placeholder="Enter username" />
+            <Input id="username" type="text"/>
           </Field>
 
           <Field>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="Enter password" />
+            <Input id="password" type="password"/>
           </Field>
 
           <Field>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="Enter email" />
+            <Input id="email" type="email"/>
           </Field>
 
           <Field>
@@ -142,7 +141,6 @@ const Header: FC = () => {
             <Input
               id="confirm-password"
               type="password"
-              placeholder="Confirm password"
             />
           </Field>
         </Grid>
