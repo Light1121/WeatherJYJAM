@@ -13,7 +13,8 @@ const Wrapper = styled.div`
 `
 
 const Box = styled.div`
-  width: 420px;
+  width: 100%;
+  max-width: 600px; 
   background: #fff;
   padding: 60px 24px 24px;
   border-radius: 8px;
@@ -83,7 +84,8 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 400; 
+  font-weight: 400;
+  margin-top: 1.5rem; 
 
   &:hover {
     background: #6ec7eb;
