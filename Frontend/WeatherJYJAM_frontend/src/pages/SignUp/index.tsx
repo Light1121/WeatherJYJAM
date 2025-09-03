@@ -92,8 +92,11 @@ const Button = styled.button`
 const FooterText = styled.p`
   margin-top: 20px;
   font-size: 0.9rem;
+  text-align: center;
 
   a {
+    display: block;   
+    margin-top: 0.25rem;
     color: #0077cc;
     text-decoration: none;
 
@@ -102,6 +105,7 @@ const FooterText = styled.p`
     }
   }
 `
+
 
 const Header: FC = () => {
   return (
