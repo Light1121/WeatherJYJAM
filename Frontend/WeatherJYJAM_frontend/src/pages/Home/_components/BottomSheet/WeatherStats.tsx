@@ -9,6 +9,7 @@ import {
 
 const HeaderRow = styled.div`
   display: flex;
+  font-family: 'Instrument Sans', sans-serif;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
@@ -18,21 +19,25 @@ const Location = styled.h3`
   margin: 0;
   font-size: 20px;
   font-weight: 700;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const NowTemp = styled.div`
   font-size: 18px;
+  font-family: 'Instrument Sans', sans-serif;
   font-weight: 600;
 `
 
 const BarsRow = styled.div`
   display: grid;
+  font-family: 'Instrument Sans', sans-serif;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
 `
 
 const PastGrid = styled.div`
   display: grid;
+  font-family: 'Instrument Sans', sans-serif;
   grid-template-columns: 1.3fr 1fr;
   gap: 20px;
 
@@ -44,6 +49,7 @@ const PastGrid = styled.div`
 const SectionTitle = styled.h4`
   margin: 4px 0;
   font-size: 16px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const Filters = styled.div`
@@ -55,6 +61,7 @@ const Filters = styled.div`
 
 const FilterButton = styled.button`
   height: 36px;
+  font-family: 'Instrument Sans', sans-serif;
   padding: 0 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -66,6 +73,7 @@ const FilterButton = styled.button`
 
 const Menu = styled.ul`
   list-style: none;
+  font-family: 'Instrument Sans', sans-serif;
   margin: 0;
   padding: 0;
   display: grid;
@@ -74,6 +82,7 @@ const Menu = styled.ul`
 
 const MenuItem = styled.li`
   font-size: 14px;
+  font-family: 'Instrument Sans', sans-serif;
   padding: 6px 8px;
   border-radius: 6px;
   cursor: default;
@@ -92,6 +101,7 @@ const GraphBox = styled.div`
   min-height: 220px;
   color: #666;
   font-size: 14px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 interface WeatherStatsProps {

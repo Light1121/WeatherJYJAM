@@ -27,6 +27,7 @@ const SideMenu = styled.div`
 
 const MenuItem = styled(Link)`
   display: block;
+  font-family: 'Instrument Sans', sans-serif;
   padding: 16px 12px;
   text-decoration: none;
 `

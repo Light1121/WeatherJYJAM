@@ -13,6 +13,7 @@ const GroupContainer = styled.div`
 
 const AddButtonContainer = styled.div`
   display: flex;
+  font-family: 'Instrument Sans', sans-serif;
   justify-content: center;
   margin-top: 8px;
 `

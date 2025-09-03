@@ -6,6 +6,7 @@ import { useTabs } from './_hooks/useTabs'
 
 const SidebarContainer = styled.div`
   display: flex;
+  font-family: 'Instrument Sans', sans-serif;
   flex-direction: column;
   height: 100%;
   width: 12%;

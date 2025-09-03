@@ -10,6 +10,7 @@ const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-family: 'Instrument Sans', sans-serif;
   height: 80px;
 `
 

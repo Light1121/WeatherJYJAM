@@ -11,6 +11,7 @@ const MapContainer = styled.div`
 
 const MapTitle = styled.div`
   position: absolute;
+  font-family: 'Instrument Sans', sans-serif;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);

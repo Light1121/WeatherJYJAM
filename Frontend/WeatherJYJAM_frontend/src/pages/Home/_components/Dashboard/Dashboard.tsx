@@ -10,6 +10,7 @@ const MapSection = styled.div`
   justify-content: center;
   padding: 20px;
   position: relative;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 interface DashboardProps {
