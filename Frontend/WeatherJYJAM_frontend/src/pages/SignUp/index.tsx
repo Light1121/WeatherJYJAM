@@ -62,10 +62,11 @@ const Label = styled.label`
 
 const InputWrapper = styled.div`
   position: relative;
+  width: 100%;
 `
 
-const Input = styled.input<{ type?: string }>`
-  padding: 0.75rem 1rem;
+const Input = styled.input`
+  padding: 0.75rem 2.5rem 0.75rem 1rem; 
   border: 1px solid #cfeaf7;
   border-radius: 6px;
   font-size: 1rem;
@@ -82,7 +83,7 @@ const Input = styled.input<{ type?: string }>`
 
 const ToggleButton = styled.button<{ active: boolean }>`
   position: absolute;
-  right: 8px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
@@ -108,6 +109,7 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: 400;
   margin-top: 1.5rem;
+  width: auto;
 
   &:hover {
     background: #6ec7eb;
@@ -144,7 +146,9 @@ const Header: FC = () => {
         <Grid>
           <Field>
             <Label htmlFor="username">Username</Label>
-            <Input id="username" type="text" />
+            <InputWrapper>
+              <Input id="username" type="text" />
+            </InputWrapper>
           </Field>
 
           <Field>
@@ -164,7 +168,9 @@ const Header: FC = () => {
 
           <Field>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" />
+            <InputWrapper>
+              <Input id="email" type="email" />
+            </InputWrapper>
           </Field>
 
           <Field>
@@ -187,7 +193,7 @@ const Header: FC = () => {
 
         <FooterText>
           Already have an account?
-          <a href="/login">Log in here</a>
+          <a href="/login">Sign in now</a>
         </FooterText>
       </Box>
     </Wrapper>
