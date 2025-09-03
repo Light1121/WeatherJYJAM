@@ -13,12 +13,21 @@ const Wrapper = styled.div`
   font-family: 'Instrument Sans', sans-serif;
 `
 
+
 const StyledButton = styled(Button)`
-  background-color: #87dbfd !important;
-  border: none;
+  padding: 0.75rem 2rem;
+  background: #87dbfd !important;
   color: #3c3939;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 400;
+  margin-top: 1.5rem;
+  width: auto;
+
   &:hover {
-    background-color: #6ec9f2;
+    background: #54b1d6ff;
   }
 `
 
@@ -48,16 +57,21 @@ const Heading = styled.h1`
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin: 12px 0 6px 16px;
+  margin: 12px 0 6px 25px;
   font-size: 0.9rem;
   font-weight: 500;
   color: #333;
 `
 
+const InputWrapper = styled.div`
+  position: relative;
+  width: 80%;
+  margin: 0 25px 14px;
+`
+
 const Input = styled.input`
   display: block;
-  width: 90%;
-  margin: 0 auto 14px;
+  width: 100%;
   padding: 14px;
   border: 1px solid #cfeaf7;
   border-radius: 6px;
@@ -66,6 +80,24 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: #0077cc;
+  }
+`
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? '#fff' : '#87dbfd')};
+  transition: background-color 0.2s;
+
+  &:focus {
+    outline: none;
   }
 `
 
@@ -101,6 +133,7 @@ const FooterLink = styled.div`
 const Login: FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState(false)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -115,24 +148,33 @@ const Login: FC = () => {
         <Heading>Login</Heading>
         <form onSubmit={handleSubmit}>
           <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
-          />
+          <InputWrapper>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+            />
+          </InputWrapper>
 
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
-          />
+          <InputWrapper>
+            <Input
+              id="password"
+              type={passwordVisible ? 'text' : 'password'}
+              value={password}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
+            <ToggleButton
+              active={passwordVisible}
+              type="button"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            />
+          </InputWrapper>
 
           <LinkRow>
             <a href="#">Forgot password?</a>
