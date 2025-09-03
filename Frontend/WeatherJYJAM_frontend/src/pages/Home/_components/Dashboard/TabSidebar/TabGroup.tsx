@@ -13,7 +13,6 @@ const GroupContainer = styled.div`
 
 const AddButtonContainer = styled.div`
   display: flex;
-  font-family: 'Instrument Sans', sans-serif;
   justify-content: center;
   margin-top: 8px;
 `
@@ -22,12 +21,23 @@ interface TabGroupProps {
   tabs: TabData[]
   currentTabId?: string
   onAddTab: () => void
+  onRenameTab: (id: string, newTitle: string) => void
 }
 
-const TabGroup: FC<TabGroupProps> = ({ tabs, currentTabId, onAddTab }) => (
+const TabGroup: FC<TabGroupProps> = ({
+  tabs,
+  currentTabId,
+  onAddTab,
+  onRenameTab,
+}) => (
   <GroupContainer>
     {tabs.map((tab) => (
-      <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
+      <Tab
+        key={tab.id}
+        tab={tab}
+        currentTabId={currentTabId}
+        onRenameTab={onRenameTab}
+      />
     ))}
     <AddButtonContainer>
       <AddButtonWithTooltip onClick={onAddTab} />

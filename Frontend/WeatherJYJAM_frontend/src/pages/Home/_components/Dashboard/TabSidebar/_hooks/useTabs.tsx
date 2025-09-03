@@ -31,8 +31,15 @@ export const useTabs = () => {
     navigate(`/${newTabId}`)
   }
 
+  const renameTab = (id: string, newTitle: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((t) => (t.id === id ? { ...t, title: newTitle } : t)),
+    )
+  }
+
   return {
     tabs,
     addNewTab,
+    renameTab,
   }
 }

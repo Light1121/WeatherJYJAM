@@ -1,7 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import Tab from './Tab'
-import { AddButtonWithTooltip } from './AddButton'
+import TabGroup from './TabGroup'
 import { useTabs } from './_hooks/useTabs'
 
 const SidebarContainer = styled.div`
@@ -9,16 +8,15 @@ const SidebarContainer = styled.div`
   font-family: 'Instrument Sans', sans-serif;
   flex-direction: column;
   height: 100%;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   width: 12%;
   flex-shrink: 0;
-  background: #b5b7b9ff;
+  background: #ccc6c6ff;
   gap: 8px;
   padding: 10px;
-
-  > *:last-child {
-    align-self: center;
-    margin-top: 8px;
-  }
 `
 
 interface TabSidebarProps {
@@ -26,15 +24,16 @@ interface TabSidebarProps {
 }
 
 const TabSidebar: FC<TabSidebarProps> = ({ currentTabId }) => {
-  const { tabs, addNewTab } = useTabs()
+  const { tabs, addNewTab, renameTab } = useTabs()
 
   return (
     <SidebarContainer>
-      {tabs.map((tab) => (
-        <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
-      ))}
-
-      <AddButtonWithTooltip onClick={addNewTab} />
+      <TabGroup
+        tabs={tabs}
+        currentTabId={currentTabId}
+        onAddTab={addNewTab}
+        onRenameTab={renameTab}
+      />
     </SidebarContainer>
   )
 }
