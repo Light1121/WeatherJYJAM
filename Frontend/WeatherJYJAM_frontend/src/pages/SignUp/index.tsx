@@ -83,8 +83,7 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  margin-top: 1rem;
+  font-weight: 400; 
 
   &:hover {
     background: #6ec7eb;
@@ -123,14 +122,17 @@ const Header: FC = () => {
             <Label htmlFor="username">Username</Label>
             <Input id="username" type="text" placeholder="Enter username" />
           </Field>
+
           <Field>
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" placeholder="Enter password" />
           </Field>
+
           <Field>
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="Enter email" />
           </Field>
+
           <Field>
             <Label htmlFor="confirm-password">Confirm Password</Label>
             <Input
