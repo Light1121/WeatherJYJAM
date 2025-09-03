@@ -66,7 +66,7 @@ const InputWrapper = styled.div`
 `
 
 const Input = styled.input`
-  padding: 0.75rem 2.5rem 0.75rem 1rem; 
+  padding: 0.75rem 1rem; 
   border: 1px solid #cfeaf7;
   border-radius: 6px;
   font-size: 1rem;
@@ -83,7 +83,7 @@ const Input = styled.input`
 
 const ToggleButton = styled.button<{ active: boolean }>`
   position: absolute;
-  right: 4px;
+  right: 1px;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
