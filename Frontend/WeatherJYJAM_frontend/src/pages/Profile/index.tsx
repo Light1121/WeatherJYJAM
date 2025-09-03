@@ -1,4 +1,6 @@
 import type { FC } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Header from './Header'
 import FavouriteComparisons from './FavouriteComparisons'
@@ -11,6 +13,20 @@ const ProfileContainer = styled.div`
   margin: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+`
+
+const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transition: opacity 0.5s ease ${({ delay }) => (delay ? `${delay}ms` : '0ms')};
+`
+
+const EmailText = styled.span`
+  display: block;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  color: #333;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const ContentGrid = styled.div`
@@ -23,14 +39,68 @@ const ContentGrid = styled.div`
   }
 `
 
-const Profile: FC = () => (
-  <ProfileContainer>
-    <Header />
-    <ContentGrid>
-      <FavouriteLocations />
-      <FavouriteComparisons />
-    </ContentGrid>
-  </ProfileContainer>
-)
+const Profile: FC = () => {
+  const [headerVisible, setHeaderVisible] = useState(false)
+  const [emailVisible, setEmailVisible] = useState(false)
+  const [contentVisible, setContentVisible] = useState(false)
+  const [leaving, setLeaving] = useState(false)
+  const [navigatePath, setNavigatePath] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  //Fade-in sequence: header -> email -> content
+  useEffect(() => {
+    const fadeInHeader = setTimeout(() => setHeaderVisible(true), 10)
+    const fadeInEmail = setTimeout(() => setEmailVisible(true), 400)
+    const fadeInContent = setTimeout(() => setContentVisible(true), 600)
+
+    return () => {
+      clearTimeout(fadeInHeader)
+      clearTimeout(fadeInEmail)
+      clearTimeout(fadeInContent)
+    }
+  }, [])
+
+  //Fade-out and navigation when leaving
+  useEffect(() => {
+    if (!leaving || !navigatePath) return
+
+    //Fade-out order: content -> email -> header
+    setContentVisible(false)
+    const fadeEmail = setTimeout(() => setEmailVisible(false), 500)
+    const fadeHeader = setTimeout(() => setHeaderVisible(false), 1000)
+    const doNavigate = setTimeout(() => navigate(navigatePath), 1500)
+
+    return () => {
+      clearTimeout(fadeEmail)
+      clearTimeout(fadeHeader)
+      clearTimeout(doNavigate)
+    }
+  }, [leaving, navigatePath, navigate])
+
+  //function to leave the page
+  const leavePage = (path: string) => {
+    setNavigatePath(path)
+    setLeaving(true)
+  }
+
+  return (
+    <ProfileContainer>
+      <FadeDiv visible={headerVisible}>
+        <Header onLeave={leavePage} />
+      </FadeDiv>
+
+      <FadeDiv visible={emailVisible} delay={100}>
+        <EmailText>email | username@gmail.com</EmailText>
+      </FadeDiv>
+
+      <FadeDiv visible={contentVisible} delay={200}>
+        <ContentGrid>
+          <FavouriteLocations />
+          <FavouriteComparisons />
+        </ContentGrid>
+      </FadeDiv>
+    </ProfileContainer>
+  )
+}
 
 export default Profile

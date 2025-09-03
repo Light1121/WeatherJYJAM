@@ -11,11 +11,19 @@ const LogoImage = styled.img`
   cursor: pointer;
 `
 
-const Logo: FC = () => {
+interface LogoProps {
+  onLeave?: (path: string) => void
+}
+
+const Logo: FC<LogoProps> = ({ onLeave }) => {
   const navigate = useNavigate()
 
   const handleLogoClick = () => {
-    navigate('/')
+    if (onLeave) {
+      onLeave('/') // trigger fade-out sequence (created for the profile page animation)
+    } else {
+      navigate('/')
+    }
   }
 
   return (

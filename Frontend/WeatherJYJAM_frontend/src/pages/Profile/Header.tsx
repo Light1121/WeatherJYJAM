@@ -38,24 +38,23 @@ const Title = styled.h1`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-const EmailText = styled.span`
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #333;
-  font-family: 'Instrument Sans', sans-serif;
-`
+interface HeaderProps {
+  onLeave?: (path: string) => void
+}
 
-const Header: FC = () => (
-  <HeaderContainer>
-    <ProfileBox>
-      <UserContainer>
-        <Circle />
-        <Title>Hello, Username</Title>
-      </UserContainer>
-      <EmailText>Email | username@gmail.com</EmailText>
-    </ProfileBox>
-    <LogoComponent />
-  </HeaderContainer>
-)
+const Header: FC<HeaderProps> = ({ onLeave }) => {
+  return (
+    <HeaderContainer>
+      <ProfileBox>
+        <UserContainer>
+          <Circle />
+          <Title>Hello, Username</Title>
+        </UserContainer>
+      </ProfileBox>
+
+      <LogoComponent onLeave={onLeave} />
+    </HeaderContainer>
+  )
+}
 
 export default Header
