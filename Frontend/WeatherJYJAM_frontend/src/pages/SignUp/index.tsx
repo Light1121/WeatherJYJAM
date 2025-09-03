@@ -76,21 +76,21 @@ const Input = styled.input`
 `
 
 const Button = styled.button`
-  width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 2rem;  
   background: #87dbfd;
   color: #3c3939;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 400;
-  margin-top: 1.5rem; 
+  font-weight: 400; 
+  margin-top: 1.5rem;    
 
   &:hover {
     background: #6ec7eb;
   }
 `
+
 
 const FooterText = styled.p`
   margin-top: 1rem;
