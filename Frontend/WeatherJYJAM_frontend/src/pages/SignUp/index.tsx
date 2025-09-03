@@ -1,42 +1,34 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import LogoComponent from '../Home/_components/Header/Logo/Logo'
+import LogoComponent from '../../_components/Logo'
 
-const PageContainer = styled.div`
+const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  background: #f9f9f9;
+  min-height: 100vh;
+  background: #e3f5fb;
   font-family: 'Instrument Sans', sans-serif;
   overflow: hidden;
 `
 
-const LogoWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`
-
-const Logo = styled(LogoComponent)`
-  width: 250px;
-  height: auto;
-  display: block;
-`
-
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
+const Box = styled.div`
+  width: 420px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  margin-top: 0;
+  padding: 60px 24px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+`
+
+const LogoWrapper = styled(LogoComponent)`
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: auto;
 `
 
 const FormTitle = styled.h2`
@@ -49,12 +41,8 @@ const FormTitle = styled.h2`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
+  gap: 1rem;
 `
 
 const Field = styled.div`
@@ -67,25 +55,28 @@ const Label = styled.label`
   font-size: 0.95rem;
   color: #3c3939;
   font-weight: 400;
+  text-align: left;
+  margin-left: 8px;
 `
 
 const Input = styled.input`
   padding: 0.75rem 1rem;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid #cfeaf7;
+  border-radius: 6px;
   font-size: 1rem;
   outline: none;
-  background-color: #ccf1ff;
+  background-color: #d4f5ff;
   color: #3c3939;
 
   &:focus {
-    outline: 2px solid #0070f3;
+    outline: none;
+    border-color: #0077cc;
   }
 `
 
 const Button = styled.button`
-  width: 160px;
-  padding: 0.6rem;
+  width: 100%;
+  padding: 0.75rem;
   background: #87dbfd;
   color: #3c3939;
   font-size: 1rem;
@@ -93,7 +84,7 @@ const Button = styled.button`
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  align-self: center;
+  margin-top: 1rem;
 
   &:hover {
     background: #6ec7eb;
@@ -122,13 +113,10 @@ const FooterText = styled.p`
 
 const Header: FC = () => {
   return (
-    <PageContainer>
-      <LogoWrapper>
-        <Logo />
-      </LogoWrapper>
-
-      <FormContainer>
-        <FormTitle>Sign In</FormTitle>
+    <Wrapper>
+      <Box>
+        <LogoWrapper />
+        <FormTitle>Sign Up</FormTitle>
 
         <Grid>
           <Field>
@@ -159,8 +147,8 @@ const Header: FC = () => {
           Already have an account?
           <a href="/login">Log in here</a>
         </FooterText>
-      </FormContainer>
-    </PageContainer>
+      </Box>
+    </Wrapper>
   )
 }
 
