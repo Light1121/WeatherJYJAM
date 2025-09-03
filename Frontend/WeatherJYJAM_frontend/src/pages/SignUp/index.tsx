@@ -41,8 +41,8 @@ const FormTitle = styled.h2`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);  
+  gap: 1.5rem;
 `
 
 const Field = styled.div`
