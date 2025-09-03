@@ -13,6 +13,15 @@ const Wrapper = styled.div`
   font-family: 'Instrument Sans', sans-serif;
 `
 
+const StyledButton = styled(Button)`
+  background-color: #87DBFD !important; 
+  border: none;
+  color: #3C3939; 
+  &:hover {
+    background-color: #6ec9f2; 
+  }
+`
+
 const Box = styled.div`
   width: 420px;
   background: #fff;
@@ -33,6 +42,7 @@ const LogoWrapper = styled(Logo)`
 
 const Heading = styled.h1`
   margin-bottom: 20px;
+  color: #3C3939;
 `
 
 const Label = styled.label`
@@ -128,11 +138,12 @@ const Login: FC = () => {
             <a href="#">Forgot password?</a>
           </LinkRow>
 
-          <Button
-            onClick={() => document.querySelector('form')?.requestSubmit()}
+          <StyledButton
+          onClick={() => document.querySelector('form')?.requestSubmit()}
           >
             Log in
-          </Button>
+          </StyledButton>
+
         </form>
 
         <FooterLink>
