@@ -1,5 +1,6 @@
 import type { FC, ChangeEvent, FormEvent } from 'react'
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from '../../_components/Button'
 import Logo from '../../_components/Logo'
@@ -12,7 +13,6 @@ const Wrapper = styled.div`
   background: #e3f5fb;
   font-family: 'Instrument Sans', sans-serif;
 `
-
 
 const StyledButton = styled(Button)`
   padding: 0.75rem 2rem;
@@ -39,6 +39,12 @@ const Box = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   position: relative;
+`
+
+//Box with animation
+const BoxAnimated = styled(Box)<{ fadeOut: boolean; fadeIn: boolean }>`
+  opacity: ${({ fadeIn, fadeOut }) => (fadeOut ? 0 : fadeIn ? 1 : 0)};
+  transition: opacity 0.5s ease;
 `
 
 const LogoWrapper = styled(Logo)`
@@ -134,6 +140,16 @@ const Login: FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    //Trigger fade-in when entering page
+    const timeout = setTimeout(() => setFadeIn(true), 10)
+    return () => clearTimeout(timeout)
+  }, [])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -141,9 +157,15 @@ const Login: FC = () => {
     console.log('password:', password)
   }
 
+  const handleSignupClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setFadeOut(true)
+    setTimeout(() => navigate('/signup'), 500)
+  }
+
   return (
     <Wrapper>
-      <Box>
+      <BoxAnimated fadeOut={fadeOut} fadeIn={fadeIn}>
         <LogoWrapper />
         <Heading>Login</Heading>
         <form onSubmit={handleSubmit}>
@@ -188,9 +210,12 @@ const Login: FC = () => {
         </form>
 
         <FooterLink>
-          New to JYJAM? <a href="/signup">Sign up</a>
+          New to JYJAM?{' '}
+          <a href="/signup" onClick={handleSignupClick}>
+            Sign up
+          </a>
         </FooterLink>
-      </Box>
+      </BoxAnimated>
     </Wrapper>
   )
 }

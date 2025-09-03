@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import LogoComponent from '../../_components/Logo'
 
@@ -22,6 +23,12 @@ const Box = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   position: relative;
+`
+
+//Box with fade animation
+const BoxAnimated = styled(Box)<{ fadeIn: boolean; fadeOut: boolean }>`
+  opacity: ${({ fadeIn, fadeOut }) => (fadeOut ? 0 : fadeIn ? 1 : 0)};
+  transition: opacity 0.5s ease;
 `
 
 const LogoWrapper = styled(LogoComponent)`
@@ -71,7 +78,7 @@ const InputWrapper = styled.div`
 `
 
 const Input = styled.input`
-  padding: 0.75rem; 
+  padding: 0.75rem;
   border: 1px solid #cfeaf7;
   border-radius: 6px;
   font-size: 1rem;
@@ -127,7 +134,7 @@ const FooterText = styled.p`
   text-align: center;
 
   a {
-    display: block;   
+    display: block;
     margin-top: 0.25rem;
     color: #0077cc;
     text-decoration: none;
@@ -138,13 +145,29 @@ const FooterText = styled.p`
   }
 `
 
-const Header: FC = () => {
+const SignUp: FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmVisible, setConfirmVisible] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    //trigger fade-in
+    const timeout = setTimeout(() => setFadeIn(true), 10)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  const handleLoginClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setFadeOut(true)
+    setTimeout(() => navigate('/login'), 500)
+  }
 
   return (
     <Wrapper>
-      <Box>
+      <BoxAnimated fadeIn={fadeIn} fadeOut={fadeOut}>
         <LogoWrapper />
         <FormTitle>Sign Up</FormTitle>
 
@@ -209,11 +232,13 @@ const Header: FC = () => {
 
         <FooterText>
           Already have an account?
-          <a href="/login">Sign in now</a>
+          <a href="/login" onClick={handleLoginClick}>
+            Sign in now
+          </a>
         </FooterText>
-      </Box>
+      </BoxAnimated>
     </Wrapper>
   )
 }
 
-export default Header
+export default SignUp
