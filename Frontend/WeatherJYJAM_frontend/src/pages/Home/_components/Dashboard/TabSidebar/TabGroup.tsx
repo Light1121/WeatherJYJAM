@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Tab from './Tab'
-import Button from '../../../../../_components/Button'
+import { AddButtonWithTooltip } from './AddButton'
 import type { TabData } from './_hooks/useTabs'
 
 const GroupContainer = styled.div`
@@ -30,9 +30,7 @@ const TabGroup: FC<TabGroupProps> = ({ tabs, currentTabId, onAddTab }) => (
       <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
     ))}
     <AddButtonContainer>
-      <Button variant="add" onClick={onAddTab}>
-        +
-      </Button>
+      <AddButtonWithTooltip onClick={onAddTab} />
     </AddButtonContainer>
   </GroupContainer>
 )

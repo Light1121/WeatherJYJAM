@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Tab from './Tab'
-import Button from '../../../../../_components/Button'
+import { AddButtonWithTooltip } from './AddButton'
 import { useTabs } from './_hooks/useTabs'
 
 const SidebarContainer = styled.div`
@@ -11,8 +11,7 @@ const SidebarContainer = styled.div`
   height: 100%;
   width: 12%;
   flex-shrink: 0;
-  background: #f8f9fa;
-  border-right: 1px solid #dee2e6;
+  background: #b5b7b9ff;
   gap: 8px;
   padding: 10px;
 
@@ -34,9 +33,8 @@ const TabSidebar: FC<TabSidebarProps> = ({ currentTabId }) => {
       {tabs.map((tab) => (
         <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
       ))}
-      <Button variant="add" onClick={addNewTab}>
-        +
-      </Button>
+
+      <AddButtonWithTooltip onClick={addNewTab} />
     </SidebarContainer>
   )
 }
