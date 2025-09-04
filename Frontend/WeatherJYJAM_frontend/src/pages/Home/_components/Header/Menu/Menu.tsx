@@ -7,25 +7,32 @@ import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
 
 const MenuButton = styled.div`
   cursor: pointer;
-  padding: 4px;
+  padding: 16px;
+  background-color: #def8ffff;
+  border-radius: 25px;
+  user-select: none;
+  position: fixed;
+  top: 20px; // distance from top of the screen
+  right: 20px; // distance from right edge
+  z-index: 10000;
 `
 
-const SideMenu = styled.div`
+const SideMenu = styled.div<{ isOpen: boolean }>`
   position: fixed;
-  top: 80px;
+  top: 0;
   right: 0;
-  height: calc(100vh - 80px);
+  height: 100vh;
   width: 280px;
   background: white;
   border-left: 1px solid #eee;
-  z-index: 1001;
+  z-index: 9999;
   padding: 20px;
-  transform: translateX(100%);
+  transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
   transition: transform 0.3s ease;
-
-  &.open {
-    transform: translateX(0);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
 `
 const SubMenu = styled.div`
   position: fixed;
@@ -35,38 +42,47 @@ const SubMenu = styled.div`
   width: 280px;
   background: #f9f9f9;
   border-left: 1px solid #ddd;
-  z-index: 1002;
+  z-index:1;
   padding: 20px;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-
+  transition: transform 0.1s ease;
   &.open {
     transform: translateX(0);
+    transform: opacity: 1;
+  }
+  &.closed {
+    transform: translateX(100%);
+    opacity: 0;
   }
 `
 
-const MenuItem = styled(Link)`
-  display: block;
-  padding: 16px 12px;
-  text-decoration: none;
-`
-const ButtonItem = styled.button`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  color: #333;
-  background: #c2e9ff;
-  border: none;
-  text-align: middle;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: 'Instrument Sans', sans-serif;
+const MenuItemContainer = styled.div<{ active?: boolean }>`
+  background-color: ${({ active }) => (active ? '#def8ff' : 'transparent')};
+  border-radius: 10px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 `
 
+const MenuItemText = styled(Link)`
+  display: block;
+  font-family: 'Instrument Sans', sans-serif;
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+  &:hover {
+    background-color: #def8ffff;
+    transform: scale(1.02);
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+`
 interface ToggleButtonProps {
   $active: boolean
 }
+
 const ToggleButton = styled.button<ToggleButtonProps>`
   background-color: ${({ $active }) => ($active ? 'green' : 'gray')};
   color: white;
@@ -85,13 +101,24 @@ const LocTitle = styled.h4`
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
 `
-const Menu: FC = () => {
-  const { isLocOne, setIsLocOne } = useLocOneContext()
-  const { isLocTwo, setIsLocTwo } = useLocTwoContext()
 
+const Menu: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [activeItem, setActiveItem] = useState<string | null>(null)
+
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
+
+  const menuItems = [
+    { to: '/profile', label: 'Profile' },
+    { to: '/settings', label: 'Settings' },
+    { to: '', label: 'Set Location 1' },
+    { to: '', label: 'Set Location 2' },
+    { to: '/login', label: 'Login' },
+  ]
+
+  const { isLocOne, setIsLocOne } = useLocOneContext()
+  const { isLocTwo, setIsLocTwo } = useLocTwoContext()
 
   const [isLoc1Open, setIsLoc1Open] = useState(false)
   const toggleLoc1 = () => setIsLoc1Open(!isLoc1Open)
@@ -105,61 +132,69 @@ const Menu: FC = () => {
     <>
       <MenuButton onClick={toggleMenu}>☰ Menu</MenuButton>
 
-      {isOpen && (
-        <SideMenu className="open">
-          <MenuItem to="/profile" onClick={closeMenu}>
-            Profile
-          </MenuItem>
-          <MenuItem to="/settings" onClick={closeMenu}>
-            Settings
-          </MenuItem>
-          <LocTitle>Set locations to compare</LocTitle>
-          <ButtonItem
-            onClick={() => {
-              toggleLoc1()
-              closeLoc2()
-            }}
+      <SideMenu isOpen={isOpen}>
+        {menuItems.map((item) => (
+          <MenuItemContainer
+            key={item.to}
+            active={activeItem === item.to}
+            onClick={() => setActiveItem(item.to)}
           >
-            Set Location 1
-          </ButtonItem>
-          <ButtonItem
-            onClick={() => {
-              toggleLoc2()
-              closeLoc1()
-            }}
-          >
-            Set Location 2
-          </ButtonItem>
-          <MenuItem to="/login" onClick={closeMenu}>
-            Login
-          </MenuItem>
-          <MenuItem to="/signup" onClick={closeMenu}>
-            Sign Up
-          </MenuItem>
-        </SideMenu>
-      )}
-
-      {isLoc1Open && (
-        <SubMenu className="open">
-          <LocSearchBar />
-
-          <ToggleButton $active={isLocOne} onClick={() => setIsLocOne(!isLocOne)}>
-            {isLocOne ? 'Active' : 'Inactive'}
-          </ToggleButton>
-          <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
-        </SubMenu>
-      )}
-
-      {isLoc2Open && (
-        <SubMenu className="open">
-          <LocSearchBar />
-
-          <ToggleButton $active={isLocTwo} onClick={() => setIsLocTwo(!isLocTwo)}>
-            {isLocTwo ? 'Active' : 'Inactive'}
-          </ToggleButton>
-          <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>
-        </SubMenu>
-      )}
+            {item.label === 'Set Location 1' ? (
+              <>
+                <MenuItemText
+                  to=""
+                  onClick={() => {
+                    toggleLoc1()
+                    closeLoc2()
+                  }}
+                >
+                  {item.label}
+                </MenuItemText>
+                {isLoc1Open && (
+                  <SubMenu className={isLoc1Open ? 'open' : 'closed'}>
+                    <LocTitle>Set Location 1</LocTitle>
+                    <ToggleButton
+                      $active={isLocOne}
+                      onClick={() => setIsLocOne(!isLocOne)}
+                    >
+                      {isLocOne ? 'Disable Location 1' : 'Enable Location 1'}
+                    </ToggleButton>
+                    <LocSearchBar />
+                  </SubMenu>
+                )}
+              </>
+            ) : item.label === 'Set Location 2' ? (
+              <>
+                <MenuItemText
+                  to=""
+                  onClick={() => {
+                    toggleLoc2()
+                    closeLoc1()
+                  }}
+                >
+                  {item.label}
+                </MenuItemText>
+                {isLoc2Open && (
+                  <SubMenu className={isLoc2Open ? 'open' : 'closed'}>
+                    <LocTitle>Set Location 2</LocTitle>
+                    <ToggleButton
+                      $active={isLocTwo}
+                      onClick={() => setIsLocTwo(!isLocTwo)}
+                    >
+                      {isLocOne ? 'Disable Location 2' : 'Enable Location 2'}
+                    </ToggleButton>
+                    <LocSearchBar />
+                  </SubMenu>
+                )}
+              </>
+            ) : (
+              <MenuItemText to={item.to} onClick={closeMenu}>
+                {item.label}
+              </MenuItemText>
+            )}
+          </MenuItemContainer>
+        ))}
+      </SideMenu>
     </>
   )
 }
