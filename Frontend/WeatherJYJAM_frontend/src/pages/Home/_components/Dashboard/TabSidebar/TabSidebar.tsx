@@ -1,8 +1,7 @@
 import type { FC } from 'react'
+import TabGroup from './TabGroup'
+import type { TabData } from './_hooks/useTabs'
 import styled from 'styled-components'
-import Tab from './Tab'
-import Button from '../../../../../_components/Button'
-import { useTabs } from './_hooks/useTabs'
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -10,32 +9,37 @@ const SidebarContainer = styled.div`
   height: 100%;
   width: 12%;
   flex-shrink: 0;
-  background: #f8f9fa;
-  border-right: 1px solid #dee2e6;
+  font-family: 'Instrument Sans', sans-serif;
+  background: #ccc6c6ff;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   gap: 8px;
   padding: 10px;
-
-  > *:last-child {
-    align-self: center;
-    margin-top: 8px;
-  }
 `
 
 interface TabSidebarProps {
+  tabs: TabData[]
   currentTabId?: string
+  onAddTab: () => void
+  onRenameTab: (id: string, newTitle: string) => void
 }
 
-const TabSidebar: FC<TabSidebarProps> = ({ currentTabId }) => {
-  const { tabs, addNewTab } = useTabs()
-
+const TabSidebar: FC<TabSidebarProps> = ({
+  tabs,
+  currentTabId,
+  onAddTab,
+  onRenameTab,
+}) => {
   return (
     <SidebarContainer>
-      {tabs.map((tab) => (
-        <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
-      ))}
-      <Button variant="add" onClick={addNewTab}>
-        +
-      </Button>
+      <TabGroup
+        tabs={tabs}
+        currentTabId={currentTabId}
+        onAddTab={onAddTab}
+        onRenameTab={onRenameTab}
+      />
     </SidebarContainer>
   )
 }
