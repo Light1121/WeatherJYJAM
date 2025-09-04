@@ -6,9 +6,9 @@
   },
   "scripts": {
     "prepare": "husky",
-    "frontend:dev": "cd Frontend && npm run dev",
-    "frontend:build": "cd Frontend && npm run build",
-    "frontend:preview": "cd Frontend && npm run preview",
-    "frontend:precommit": "cd Frontend && npm run pre-commit"
+    "frontend:dev": "cd _Frontend && npm run dev",
+    "frontend:build": "cd _Frontend && npm run build",
+    "frontend:preview": "cd _Frontend && npm run preview",
+    "frontend:precommit": "cd _Frontend && npm run pre-commit"
   }
 }
