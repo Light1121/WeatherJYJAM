@@ -17,7 +17,7 @@ const MapTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  z-index: 1000;
+  z-index: 10;
   background: rgba(255, 255, 255, 0.9);
   padding: 8px 16px;
   border-radius: 4px;
