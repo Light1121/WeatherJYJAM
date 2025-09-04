@@ -1,167 +1,244 @@
 import type { FC } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import LogoComponent from '../Home/_components/Header/Logo/Logo'
+import LogoComponent from '../../_components/Logo'
 
-const PageContainer = styled.div`
+const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  background: #f9f9f9;
+  min-height: 100vh;
+  background: #e3f5fb;
   font-family: 'Instrument Sans', sans-serif;
   overflow: hidden;
 `
 
-const LogoWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+const Box = styled.div`
   width: 100%;
-`
-
-const Logo = styled(LogoComponent)`
-  width: 250px;
-  height: auto;
-  display: block;
-`
-
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
+  max-width: 600px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  margin-top: 0;
+  padding: 60px 24px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
 `
 
-const FormTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 500;
+//Box with fade animation
+const BoxAnimated = styled(Box)<{ fadeIn: boolean; fadeOut: boolean }>`
+  opacity: ${({ fadeIn, fadeOut }) => (fadeOut ? 0 : fadeIn ? 1 : 0)};
+  transition: opacity 0.5s ease;
+`
+
+const LogoWrapper = styled(LogoComponent)`
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: auto;
+`
+
+const FormTitle = styled.h1`
+  margin-bottom: 20px;
   color: #3c3939;
-  margin-bottom: 1.5rem;
   text-align: center;
 `
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+const Table = styled.table`
+  width: 100%;
+  border-spacing: 1.5rem;
+  margin-bottom: 1rem;
+`
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
+const Td = styled.td`
+  vertical-align: top;
+  width: 50%;
 `
 
 const Field = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 `
 
 const Label = styled.label`
   font-size: 0.95rem;
   color: #3c3939;
   font-weight: 400;
+  text-align: left;
+  margin-left: 1px;
+`
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 90%;
 `
 
 const Input = styled.input`
-  padding: 0.75rem 1rem;
-  border: none;
-  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid #cfeaf7;
+  border-radius: 6px;
   font-size: 1rem;
   outline: none;
-  background-color: #ccf1ff;
+  background-color: #d4f5ff;
   color: #3c3939;
+  width: 100%;
 
   &:focus {
-    outline: 2px solid #0070f3;
+    outline: none;
+    border-color: #0077cc;
+  }
+`
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? '#fff' : '#87dbfd')};
+  transition: background-color 0.2s;
+
+  &:focus {
+    outline: none;
   }
 `
 
 const Button = styled.button`
-  width: 160px;
-  padding: 0.6rem;
+  padding: 0.75rem 2rem;
   background: #87dbfd;
   color: #3c3939;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  align-self: center;
+  font-weight: 400;
+  margin-top: 1.5rem;
+  width: auto;
 
   &:hover {
-    background: #6ec7eb;
+    background: #54b1d6ff;
   }
 `
 
 const FooterText = styled.p`
-  margin-top: 1rem;
+  margin-top: 20px;
   font-size: 0.9rem;
-  color: #3c3939;
   text-align: center;
-  line-height: 1.6;
 
   a {
     display: block;
     margin-top: 0.25rem;
-    color: #395d9f;
-    font-weight: 500;
+    color: #0077cc;
     text-decoration: none;
 
     &:hover {
-      color: #3c3939;
+      text-decoration: underline;
     }
   }
 `
 
-const Header: FC = () => {
+const SignUp: FC = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmVisible, setConfirmVisible] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    //trigger fade-in
+    const timeout = setTimeout(() => setFadeIn(true), 10)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  const handleLoginClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setFadeOut(true)
+    setTimeout(() => navigate('/login'), 500)
+  }
+
   return (
-    <PageContainer>
-      <LogoWrapper>
-        <Logo />
-      </LogoWrapper>
+    <Wrapper>
+      <BoxAnimated fadeIn={fadeIn} fadeOut={fadeOut}>
+        <LogoWrapper />
+        <FormTitle>Sign Up</FormTitle>
 
-      <FormContainer>
-        <FormTitle>Sign In</FormTitle>
-
-        <Grid>
-          <Field>
-            <Label htmlFor="username">Username</Label>
-            <Input id="username" type="text" placeholder="Enter username" />
-          </Field>
-          <Field>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="Enter password" />
-          </Field>
-          <Field>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="Enter email" />
-          </Field>
-          <Field>
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              placeholder="Confirm password"
-            />
-          </Field>
-        </Grid>
+        <Table>
+          <tbody>
+            <tr>
+              <Td>
+                <Field>
+                  <Label htmlFor="username">Username</Label>
+                  <InputWrapper>
+                    <Input id="username" type="text" />
+                  </InputWrapper>
+                </Field>
+              </Td>
+              <Td>
+                <Field>
+                  <Label htmlFor="password">Password</Label>
+                  <InputWrapper>
+                    <Input
+                      id="password"
+                      type={passwordVisible ? 'text' : 'password'}
+                    />
+                    <ToggleButton
+                      active={passwordVisible}
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  </InputWrapper>
+                </Field>
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <Field>
+                  <Label htmlFor="email">Email</Label>
+                  <InputWrapper>
+                    <Input id="email" type="email" />
+                  </InputWrapper>
+                </Field>
+              </Td>
+              <Td>
+                <Field>
+                  <Label htmlFor="confirm-password">Confirm Password</Label>
+                  <InputWrapper>
+                    <Input
+                      id="confirm-password"
+                      type={confirmVisible ? 'text' : 'password'}
+                    />
+                    <ToggleButton
+                      active={confirmVisible}
+                      type="button"
+                      onClick={() => setConfirmVisible(!confirmVisible)}
+                    />
+                  </InputWrapper>
+                </Field>
+              </Td>
+            </tr>
+          </tbody>
+        </Table>
 
         <Button>Sign Up</Button>
 
         <FooterText>
           Already have an account?
-          <a href="/login">Log in here</a>
+          <a href="/login" onClick={handleLoginClick}>
+            Sign in now
+          </a>
         </FooterText>
-      </FormContainer>
-    </PageContainer>
+      </BoxAnimated>
+    </Wrapper>
   )
 }
 
-export default Header
+export default SignUp

@@ -3,52 +3,59 @@ import { styled } from 'styled-components'
 import useBottomSheet from './_hooks/useBottomSheet'
 import WeatherStats from './WeatherStats'
 
-const StyledBottomSheet = styled.div`
+const BottomSheetWrapper = styled.div`
   position: absolute;
-  bottom: 20px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 400;
-  background: white;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   width: min(92vw, 980px);
 `
 
 const HandleButton = styled.button`
-  position: absolute;
-  top: -35px;
+  cursor: pointer;
   width: 60px;
   height: 28px;
   border-radius: 20%;
   border: 1px solid #ddd;
   background: white;
+  margin-bottom: -5px;
+  margin-left: 16px;
+  z-index: 500;
+  font-size: 16px;
+  line-height: 1;
 `
 
-const Page = styled.div`
-  display: grid;
-  gap: 16px;
+const StyledBottomSheet = styled.div<{ isOpen: boolean }>`
+  background: white;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: ${({ isOpen }) => (isOpen ? '16px 20px' : '8px 20px')};
+  width: 100%;
+  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '60px')};
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    padding 0.3s ease;
   position: relative;
 `
 
 const BottomSheet: FC = () => {
-  const { isOpen, toggle } = useBottomSheet(true)
+  const { isOpen, toggle } = useBottomSheet(false)
 
   return (
-    <StyledBottomSheet>
-      <Page>
-        <HandleButton
-          onClick={toggle}
-          aria-expanded={isOpen}
-          aria-label="Toggle bottom sheet"
-        >
-          {isOpen ? '▴' : '▾'}
-        </HandleButton>
+    <BottomSheetWrapper>
+      <HandleButton onClick={toggle} aria-label="Toggle bottom sheet">
+        {isOpen ? '▾' : '▴'}
+      </HandleButton>
 
+      <StyledBottomSheet isOpen={isOpen}>
         <WeatherStats isExpanded={isOpen} />
-      </Page>
-    </StyledBottomSheet>
+      </StyledBottomSheet>
+    </BottomSheetWrapper>
   )
 }
 

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-export default function useBottomSheet(initialOpen = true) {
+export default function useBottomSheet(initialOpen = false) {
   const [isOpen, setIsOpen] = useState(initialOpen)
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])

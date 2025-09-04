@@ -18,7 +18,7 @@ const UserContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 2rem;
   background-color: #c2e9ff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -38,24 +38,23 @@ const Title = styled.h1`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-const EmailText = styled.span`
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #333;
-  font-family: 'Instrument Sans', sans-serif;
-`
+interface HeaderProps {
+  onLeave?: (path: string) => void
+}
 
-const Header: FC = () => (
-  <HeaderContainer>
-    <ProfileBox>
-      <UserContainer>
-        <Circle />
-        <Title>Hello, Username</Title>
-      </UserContainer>
-      <EmailText>Email | username@gmail.com</EmailText>
-    </ProfileBox>
-    <LogoComponent />
-  </HeaderContainer>
-)
+const Header: FC<HeaderProps> = ({ onLeave }) => {
+  return (
+    <HeaderContainer>
+      <ProfileBox>
+        <UserContainer>
+          <Circle />
+          <Title>Hello, Username</Title>
+        </UserContainer>
+      </ProfileBox>
+
+      <LogoComponent onLeave={onLeave} />
+    </HeaderContainer>
+  )
+}
 
 export default Header

@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import styled from 'styled-components'
 import Tab from './Tab'
-import Button from '../../../../../_components/Button'
+import { AddButtonWithTooltip } from './AddButton'
 import type { TabData } from './_hooks/useTabs'
+import styled from 'styled-components'
 
 const GroupContainer = styled.div`
   display: flex;
@@ -21,17 +21,26 @@ interface TabGroupProps {
   tabs: TabData[]
   currentTabId?: string
   onAddTab: () => void
+  onRenameTab: (id: string, newTitle: string) => void
 }
 
-const TabGroup: FC<TabGroupProps> = ({ tabs, currentTabId, onAddTab }) => (
+const TabGroup: FC<TabGroupProps> = ({
+  tabs,
+  currentTabId,
+  onAddTab,
+  onRenameTab,
+}) => (
   <GroupContainer>
     {tabs.map((tab) => (
-      <Tab key={tab.id} tab={tab} currentTabId={currentTabId} />
+      <Tab
+        key={tab.id}
+        tab={tab}
+        currentTabId={currentTabId}
+        onRenameTab={onRenameTab}
+      />
     ))}
     <AddButtonContainer>
-      <Button variant="add" onClick={onAddTab}>
-        +
-      </Button>
+      <AddButtonWithTooltip onClick={onAddTab} />
     </AddButtonContainer>
   </GroupContainer>
 )

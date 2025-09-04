@@ -2,9 +2,8 @@ import { useState, type FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from './LocSearchBar'
-
-import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
-import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
+import useLocOneContext from '@/_components/ContextHooks/LocOneContext'
+import useLocTwoContext from '@/_components/ContextHooks/LocTwoContext'
 
 const MenuButton = styled.div`
   cursor: pointer;
@@ -51,13 +50,13 @@ const MenuItem = styled(Link)`
   padding: 16px 12px;
   text-decoration: none;
 `
-const ButtonItem = styled.button<ToggleButtonProps>`
+const ButtonItem = styled.button`
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 8px;
   color: #333;
-  background-color: ${({ $active }) => ($active ? '#9cbbceff' : '#c2e9ff')};
+  background: #c2e9ff;
   border: none;
   text-align: middle;
   font-size: 14px;
@@ -87,8 +86,8 @@ const LocTitle = styled.h4`
   font-family: 'Instrument Sans', sans-serif;
 `
 const Menu: FC = () => {
-  const { isLocOne, setIsLocOne } = useLocOneContext()
-  const { isLocTwo, setIsLocTwo } = useLocTwoContext()
+  const { isLocOne, LocOnetoggle } = useLocOneContext(false)
+  const { isLocTwo, LocTwotoggle } = useLocTwoContext(false)
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -116,7 +115,6 @@ const Menu: FC = () => {
           </MenuItem>
           <LocTitle>Set locations to compare</LocTitle>
           <ButtonItem
-            $active={isLoc1Open}
             onClick={() => {
               toggleLoc1()
               closeLoc2()
@@ -125,7 +123,6 @@ const Menu: FC = () => {
             Set Location 1
           </ButtonItem>
           <ButtonItem
-            $active={isLoc2Open}
             onClick={() => {
               toggleLoc2()
               closeLoc1()
@@ -146,16 +143,10 @@ const Menu: FC = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton
-            $active={isLocOne}
-            onClick={() => setIsLocOne(!isLocOne)}
-          >
+          <ToggleButton $active={isLocOne} onClick={() => LocOnetoggle()}>
             {isLocOne ? 'Active' : 'Inactive'}
           </ToggleButton>
-
-          <ButtonItem $active={!isLoc1Open} onClick={() => closeLoc1()}>
-            Close
-          </ButtonItem>
+          <ButtonItem onClick={() => closeLoc1()}>Close</ButtonItem>
         </SubMenu>
       )}
 
@@ -163,15 +154,10 @@ const Menu: FC = () => {
         <SubMenu className="open">
           <LocSearchBar />
 
-          <ToggleButton
-            $active={isLocTwo}
-            onClick={() => setIsLocTwo(!isLocTwo)}
-          >
+          <ToggleButton $active={isLocTwo} onClick={() => LocTwotoggle()}>
             {isLocTwo ? 'Active' : 'Inactive'}
           </ToggleButton>
-          <ButtonItem $active={!isLoc2Open} onClick={() => closeLoc2()}>
-            Close
-          </ButtonItem>
+          <ButtonItem onClick={() => closeLoc2()}>Close</ButtonItem>
         </SubMenu>
       )}
     </>

@@ -1,5 +1,6 @@
 import type { FC, ChangeEvent, FormEvent } from 'react'
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from '../../_components/Button'
 import Logo from '../../_components/Logo'
@@ -10,6 +11,24 @@ const Wrapper = styled.div`
   align-items: center;
   min-height: 100vh;
   background: #e3f5fb;
+  font-family: 'Instrument Sans', sans-serif;
+`
+
+const StyledButton = styled(Button)`
+  padding: 0.75rem 2rem;
+  background: #87dbfd !important;
+  color: #3c3939;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 400;
+  margin-top: 1.5rem;
+  width: auto;
+
+  &:hover {
+    background: #54b1d6ff;
+  }
 `
 
 const Box = styled.div`
@@ -22,6 +41,12 @@ const Box = styled.div`
   position: relative;
 `
 
+//Box with animation
+const BoxAnimated = styled(Box)<{ fadeOut: boolean; fadeIn: boolean }>`
+  opacity: ${({ fadeIn, fadeOut }) => (fadeOut ? 0 : fadeIn ? 1 : 0)};
+  transition: opacity 0.5s ease;
+`
+
 const LogoWrapper = styled(Logo)`
   position: absolute;
   top: -100px;
@@ -32,21 +57,27 @@ const LogoWrapper = styled(Logo)`
 
 const Heading = styled.h1`
   margin-bottom: 20px;
+  color: #3c3939;
 `
 
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin: 12px 0 6px 16px;
+  margin: 12px 0 6px 25px;
   font-size: 0.9rem;
   font-weight: 500;
   color: #333;
 `
 
+const InputWrapper = styled.div`
+  position: relative;
+  width: 80%;
+  margin: 0 25px 14px;
+`
+
 const Input = styled.input`
   display: block;
-  width: 90%;
-  margin: 0 auto 14px;
+  width: 100%;
   padding: 14px;
   border: 1px solid #cfeaf7;
   border-radius: 6px;
@@ -55,6 +86,24 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: #0077cc;
+  }
+`
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? '#fff' : '#87dbfd')};
+  transition: background-color 0.2s;
+
+  &:focus {
+    outline: none;
   }
 `
 
@@ -90,6 +139,17 @@ const FooterLink = styled.div`
 const Login: FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    //Trigger fade-in when entering page
+    const timeout = setTimeout(() => setFadeIn(true), 10)
+    return () => clearTimeout(timeout)
+  }, [])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -97,47 +157,65 @@ const Login: FC = () => {
     console.log('password:', password)
   }
 
+  const handleSignupClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setFadeOut(true)
+    setTimeout(() => navigate('/signup'), 500)
+  }
+
   return (
     <Wrapper>
-      <Box>
+      <BoxAnimated fadeOut={fadeOut} fadeIn={fadeIn}>
         <LogoWrapper />
         <Heading>Login</Heading>
         <form onSubmit={handleSubmit}>
           <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
-          />
+          <InputWrapper>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+            />
+          </InputWrapper>
 
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
-          />
+          <InputWrapper>
+            <Input
+              id="password"
+              type={passwordVisible ? 'text' : 'password'}
+              value={password}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
+            <ToggleButton
+              active={passwordVisible}
+              type="button"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            />
+          </InputWrapper>
 
           <LinkRow>
             <a href="#">Forgot password?</a>
           </LinkRow>
 
-          <Button
+          <StyledButton
             onClick={() => document.querySelector('form')?.requestSubmit()}
           >
             Log in
-          </Button>
+          </StyledButton>
         </form>
 
         <FooterLink>
-          New to JYJAM? <a href="#">Sign up</a>
+          New to JYJAM?{' '}
+          <a href="/signup" onClick={handleSignupClick}>
+            Sign up
+          </a>
         </FooterLink>
-      </Box>
+      </BoxAnimated>
     </Wrapper>
   )
 }

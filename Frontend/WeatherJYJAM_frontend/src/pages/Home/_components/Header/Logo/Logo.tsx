@@ -1,21 +1,29 @@
 import type { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import logoImage from './_asset/WeatherJYJAM_Logo.jpg'
+import logoImage from './_asset/WeatherJYJAM_Logo.png'
 
 const LogoImage = styled.img`
-  width: 100px;
+  width: 180px;
   height: 100px;
   object-fit: contain;
   border-radius: 8px;
   cursor: pointer;
 `
 
-const Logo: FC = () => {
+interface LogoProps {
+  onLeave?: (path: string) => void
+}
+
+const Logo: FC<LogoProps> = ({ onLeave }) => {
   const navigate = useNavigate()
 
   const handleLogoClick = () => {
-    navigate('/')
+    if (onLeave) {
+      onLeave('/') // trigger fade-out sequence (created for the profile page animation)
+    } else {
+      navigate('/')
+    }
   }
 
   return (
