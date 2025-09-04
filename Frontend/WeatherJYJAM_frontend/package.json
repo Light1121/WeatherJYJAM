@@ -47,11 +47,11 @@
     "vite": "^7.1.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    ".{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,scss}": [
+    ".{css,scss}": [
       "stylelint --fix"
     ],
     "*.{json,md}": [

@@ -5,7 +5,7 @@ const SearchInput = styled.input`
   width: 300px;
   height: 40px;
   padding: 8px 16px;
-  background-color: #f5f5f5;
+  background-color: #def8ffff;
   border: none;
   border-radius: 20px;
   outline: none;
@@ -23,13 +23,13 @@ const SearchInput = styled.input`
 
   &:focus {
     width: 600px;
-    background-color: #fff;
+    background-color: #def8ffff;
     box-shadow: 0 0 0 2px #e3f2fd;
   }
 `
 
 const SearchBar: FC = () => {
-  return <SearchInput type="text" placeholder="Search..." />
+  return <SearchInput type="text" placeholder="Search Location..." />
 }
 
 export default SearchBar
