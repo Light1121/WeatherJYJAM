@@ -34,14 +34,11 @@ INSERT INTO users (
 
 DROP TABLE sqlitestudio_temp_table;
 
-PRAGMA foreign_keys = 1;
 
 ------
 
 
 ------SETTINGS TABLE------
-PRAGMA foreign_keys = 0;
-
 CREATE TABLE sqlitestudio_temp_table AS SELECT *
                                           FROM settings;
 
@@ -76,15 +73,11 @@ INSERT INTO settings (
 
 DROP TABLE sqlitestudio_temp_table;
 
-PRAGMA foreign_keys = 1;
-
 
 ------
 
 
 ------USERS_TABS TABLE------
-PRAGMA foreign_keys = 0;
-
 CREATE TABLE sqlitestudio_temp_table AS SELECT *
                                           FROM users_tabs;
 
