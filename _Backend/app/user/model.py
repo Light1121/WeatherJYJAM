@@ -27,12 +27,14 @@ class User(db.Model):
     
     def set_password(self, password: str) -> None:
         """Hash and set password"""
-        salt = bcrypt.gensalt()
-        self.password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+        # salt = bcrypt.gensalt()
+        # self.password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+        self.password = password
     
     def check_password(self, password: str) -> bool:
         """Check if provided password matches stored hash"""
-        return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
+        # return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
+        return self.password == password
     
     def to_dict(self) -> dict:
         """Convert model to dictionary"""
@@ -40,5 +42,6 @@ class User(db.Model):
             'user_id': self.user_id,
             'username': self.username,
             'email': self.email,
+            'password': self.password, # WARNING: don't return password in production
             'created_at': self.created_at.isoformat() if self.created_at else None
         }

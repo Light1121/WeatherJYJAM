@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react'
+import { useState, useRef, useEffect, type FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from './LocSearchBar'
@@ -14,7 +14,18 @@ const MenuButton = styled.div`
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 10000;
+  z-index: 900;
+`
+
+const MenuOverlay = styled.div<{ isOpen: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9000;
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
 `
 
 const SideMenu = styled.div<{ isOpen: boolean }>`
@@ -105,16 +116,42 @@ const LocTitle = styled.h4`
 const Menu: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [activeItem, setActiveItem] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => setIsOpen(!isOpen)
-  const closeMenu = () => setIsOpen(false)
+  const closeMenu = () => {
+    setIsOpen(false)
+    setIsLoc1Open(false)
+    setIsLoc2Open(false)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        isOpen
+      ) {
+        closeMenu()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   const menuItems = [
     { to: '/profile', label: 'Profile' },
-    { to: '/settings', label: 'Settings' },
+    { to: '/login', label: 'Login' },
     { to: '', label: 'Set Location 1' },
     { to: '', label: 'Set Location 2' },
-    { to: '/login', label: 'Login' },
+    { to: '/settings', label: 'Settings' },
   ]
 
   const { isLocOne, setIsLocOne } = useLocOneContext()
@@ -132,7 +169,9 @@ const Menu: FC = () => {
     <>
       <MenuButton onClick={toggleMenu}>☰ Menu</MenuButton>
 
-      <SideMenu isOpen={isOpen}>
+      <MenuOverlay isOpen={isOpen} onClick={closeMenu} />
+
+      <SideMenu isOpen={isOpen} ref={menuRef}>
         {menuItems.map((item) => (
           <MenuItemContainer
             key={item.to}
