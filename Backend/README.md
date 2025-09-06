@@ -1,1 +1,0 @@
-# WeatherJYJAM Backend README

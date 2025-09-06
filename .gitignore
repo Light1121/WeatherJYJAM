@@ -19,3 +19,12 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Backend
+.venv/
+__pycache__/
+.pycache/
+db/*.db
+*.sqlite
+*.sqlite3
+*.csv
