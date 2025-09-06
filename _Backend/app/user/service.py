@@ -1,76 +1,56 @@
-import os
 from typing import List, Optional
-from datetime import datetime
 
 from app.user.model import User
-from app._utils.csv_db import CSVDatabase
-from app._utils.serializer import to_csv, from_csv, new_uuid
+from app.database import db
 
 
 class UserService:
-    # User service layer for business logic
-    
-    def __init__(self):
-        # Use environment variable or default path
-        csv_path = os.getenv('USER_CSV_PATH', './data/user.csv')
-        self.csv_db = CSVDatabase(csv_path)
+    """User service layer for business logic"""
     
     def create_user(self, username: str, email: str, password: str) -> User:
-        # Create new user
-        user = User(
-            username=username,
-            email=email,
-            password=password,
-            created_at=datetime.now()
-        )
+        """Create a new user"""
+        user = User(username=username, email=email)
+        user.set_password(password)
         
-        # Generate UUID for new user
-        user.user_id = new_uuid()
-        
-        # Insert into CSV file
-        csv_row = to_csv(user)
-        self.csv_db.insert_row(csv_row)
+        db.session.add(user)
+        db.session.commit()
         
         return user
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:
-        # Get user by ID
-        row = self.csv_db.find_by_id(user_id)
-        if row:
-            return from_csv(row)
-        return None
+        """Get user by ID"""
+        return db.session.get(User, user_id)
     
     def get_user_by_username(self, username: str) -> Optional[User]:
-        # Get user by username
-        row = self.csv_db.find_by_username(username)
-        if row:
-            return from_csv(row)
-        return None
-    
-    def get_user_by_email(self, email: str) -> Optional[User]:
-        # Get user by email
-        row = self.csv_db.find_by_email(email)
-        if row:
-            return from_csv(row)
-        return None
+        """Get user by username"""
+        return db.session.query(User).filter_by(username=username).first()
     
     def get_all_users(self) -> List[User]:
-        # Get all users
-        rows = self.csv_db.read_all_rows()
-        users = []
-        for row in rows:
-            users.append(from_csv(row))
-        return users
+        """Get all users"""
+        return db.session.query(User).all()
     
-    def create_dummy_user(self) -> User:
-        # Create dummy user for testing
-        import random
-        import string
+    def update_user(self, user_id: str, username: str = None, email: str = None, password: str = None) -> Optional[User]:
+        """Update user information"""
+        user = self.get_user_by_id(user_id)
+        if not user:
+            return None
         
-        # Generate random username and email
-        random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
-        username = f"dummy_{random_suffix}"
-        email = f"dummy_{random_suffix}@example.com"
-        password = "dummy_password"
+        if username:
+            user.username = username
+        if email:
+            user.email = email
+        if password:
+            user.set_password(password)
         
-        return self.create_user(username, email, password)
+        db.session.commit()
+        return user
+    
+    def delete_user(self, user_id: str) -> bool:
+        """Delete user by ID"""
+        user = self.get_user_by_id(user_id)
+        if not user:
+            return False
+        
+        db.session.delete(user)
+        db.session.commit()
+        return True
