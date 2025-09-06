@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react'
 import type { TabData } from '../types'
 import { TAB_COLORS, BASE_TITLE, DEFAULT_TAB_COLOR } from '../tabConstants'
-import { 
-  findMinAvailableNumber, 
-  generateTitle, 
-  generateTabId, 
-  selectTabColor 
+import {
+  findMinAvailableNumber,
+  generateTitle,
+  generateTabId,
+  selectTabColor,
 } from '../tabUtils'
 
 const DEFAULT_TABS: TabData[] = [
@@ -20,11 +20,11 @@ export const useTabsState = () => {
     tabIdCounterRef.current += 1
     const newTabId = generateTabId(tabIdCounterRef.current)
 
-    const existingTitles = tabs.map(tab => tab.title)
+    const existingTitles = tabs.map((tab) => tab.title)
     const availableNumber = findMinAvailableNumber(existingTitles, BASE_TITLE)
     const newTitle = generateTitle(BASE_TITLE, availableNumber)
     const newColor = selectTabColor(tabs.length, TAB_COLORS)
-    
+
     const newTab: TabData = {
       id: newTabId,
       title: newTitle,

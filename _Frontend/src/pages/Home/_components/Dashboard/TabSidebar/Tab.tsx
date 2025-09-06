@@ -96,12 +96,12 @@ const Input = styled.input`
   text-align: center;
 `
 
-const Tab: FC<TabProps> = ({ 
-  tab, 
-  currentTabId, 
-  onRenameTab, 
-  onCloseTab, 
-  onToggleFavorite 
+const Tab: FC<TabProps> = ({
+  tab,
+  currentTabId,
+  onRenameTab,
+  onCloseTab,
+  onToggleFavorite,
 }) => {
   const {
     isActive,
@@ -122,7 +122,7 @@ const Tab: FC<TabProps> = ({
     tab.title,
     onRenameTab,
     onCloseTab,
-    onToggleFavorite
+    onToggleFavorite,
   )
 
   return (
@@ -135,7 +135,7 @@ const Tab: FC<TabProps> = ({
       <HeartButton
         $isFavorite={isFavorite}
         onClick={handleHeartClick}
-        title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
         ♥
       </HeartButton>
@@ -154,10 +154,7 @@ const Tab: FC<TabProps> = ({
         )}
       </TabTitle>
 
-      <CloseButton
-        onClick={handleCloseClick}
-        title="Close tab"
-      >
+      <CloseButton onClick={handleCloseClick} title="Close tab">
         ×
       </CloseButton>
     </TabContainer>

@@ -8,7 +8,7 @@ export const useTabFavorites = () => {
   }
 
   const toggleFavorite = (tabId: string) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = new Set(prev)
       if (newFavorites.has(tabId)) {
         newFavorites.delete(tabId)

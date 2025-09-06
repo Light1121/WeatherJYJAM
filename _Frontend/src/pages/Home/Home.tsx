@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import FullScreenLayout from '../../_components/FullScreenLayout'
-import Header from './_components/Header'
+import MainLayout from '../../_components/MainLayout'
 import Dashboard from './_components/Dashboard'
 import BottomSheet from './_components/BottomSheet'
 
@@ -10,9 +10,10 @@ const Home: FC = () => {
 
   return (
     <FullScreenLayout>
-      <Header />
-      <Dashboard currentTabId={tabId} />
-      <BottomSheet />
+      <MainLayout>
+        <Dashboard currentTabId={tabId} />
+        <BottomSheet />
+      </MainLayout>
     </FullScreenLayout>
   )
 }

@@ -1,17 +1,24 @@
-export const findMinAvailableNumber = (existingTitles: string[], baseName: string): number => {
+export const findMinAvailableNumber = (
+  existingTitles: string[],
+  baseName: string,
+): number => {
   const usedNumbers = new Set<number>()
-  
-  existingTitles.forEach(title => {
+
+  existingTitles.forEach((title) => {
     if (title === baseName) {
       usedNumbers.add(0)
     } else {
-      const match = title.match(new RegExp(`^${baseName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\((\\d+)\\)$`))
+      const match = title.match(
+        new RegExp(
+          `^${baseName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\((\\d+)\\)$`,
+        ),
+      )
       if (match) {
         usedNumbers.add(parseInt(match[1], 10))
       }
     }
   })
-  
+
   let number = 0
   while (usedNumbers.has(number)) {
     number++

@@ -1,19 +1,19 @@
 import type { FC } from 'react'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import Header from './_components/Header'
+import FullScreenLayout from '../../_components/FullScreenLayout'
+import MainLayout from '../../_components/MainLayout'
 import FavouriteComparisons from './_components/FavouriteComparisons'
 import FavouriteLocations from './_components/FavouriteLocations'
 
 const ProfileContainer = styled.div`
-  min-height: 100vh;
+  flex: 1;
   background-color: #f6fcff;
-  padding: 3rem;
-  margin: 2rem;
+  padding: 2rem;
+  margin: 1rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  overflow: auto;
 `
 
 const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
@@ -21,12 +21,43 @@ const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
   transition: opacity 0.5s ease ${({ delay }) => (delay ? `${delay}ms` : '0ms')};
 `
 
-const EmailText = styled.span`
-  display: block;
-  margin: 1.5rem;
-  font-size: 0.95rem;
-  color: #333;
+const UserSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background-color: #c2e9ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 2rem;
   font-family: 'Instrument Sans', sans-serif;
+`
+
+const Circle = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #256392ff;
+`
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`
+
+const WelcomeText = styled.h2`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+`
+
+const EmailText = styled.span`
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
 `
 
 const ContentGrid = styled.div`
@@ -40,62 +71,34 @@ const ContentGrid = styled.div`
 `
 
 const Profile: FC = () => {
-  const [headerVisible, setHeaderVisible] = useState(false)
-  const [emailVisible, setEmailVisible] = useState(false)
   const [contentVisible, setContentVisible] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const [navigatePath, setNavigatePath] = useState<string | null>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
-    const fadeInHeader = setTimeout(() => setHeaderVisible(true), 10)
-    const fadeInEmail = setTimeout(() => setEmailVisible(true), 400)
-    const fadeInContent = setTimeout(() => setContentVisible(true), 600)
-
-    return () => {
-      clearTimeout(fadeInHeader)
-      clearTimeout(fadeInEmail)
-      clearTimeout(fadeInContent)
-    }
+    const fadeInContent = setTimeout(() => setContentVisible(true), 300)
+    return () => clearTimeout(fadeInContent)
   }, [])
 
-  useEffect(() => {
-    if (!leaving || !navigatePath) return
-
-    setContentVisible(false)
-    const fadeEmail = setTimeout(() => setEmailVisible(false), 500)
-    const fadeHeader = setTimeout(() => setHeaderVisible(false), 1000)
-    const doNavigate = setTimeout(() => navigate(navigatePath), 1500)
-
-    return () => {
-      clearTimeout(fadeEmail)
-      clearTimeout(fadeHeader)
-      clearTimeout(doNavigate)
-    }
-  }, [leaving, navigatePath, navigate])
-
-  const leavePage = (path: string) => {
-    setNavigatePath(path)
-    setLeaving(true)
-  }
-
   return (
-    <ProfileContainer>
-      <FadeDiv visible={headerVisible}>
-        <Header onLeave={leavePage} />
-      </FadeDiv>
+    <FullScreenLayout>
+      <MainLayout>
+        <ProfileContainer>
+          <UserSection>
+            <Circle />
+            <UserInfo>
+              <WelcomeText>Hello, Username</WelcomeText>
+              <EmailText>username@gmail.com</EmailText>
+            </UserInfo>
+          </UserSection>
 
-      <FadeDiv visible={emailVisible} delay={100}>
-        <EmailText>Email | username@gmail.com</EmailText>
-      </FadeDiv>
-
-      <FadeDiv visible={contentVisible} delay={200}>
-        <ContentGrid>
-          <FavouriteLocations />
-          <FavouriteComparisons />
-        </ContentGrid>
-      </FadeDiv>
-    </ProfileContainer>
+          <FadeDiv visible={contentVisible} delay={200}>
+            <ContentGrid>
+              <FavouriteLocations />
+              <FavouriteComparisons />
+            </ContentGrid>
+          </FadeDiv>
+        </ProfileContainer>
+      </MainLayout>
+    </FullScreenLayout>
   )
 }
 

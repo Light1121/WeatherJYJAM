@@ -20,7 +20,7 @@ const Logo: FC<LogoProps> = ({ onLeave }) => {
 
   const handleLogoClick = () => {
     if (onLeave) {
-      onLeave('/') 
+      onLeave('/')
     } else {
       navigate('/')
     }

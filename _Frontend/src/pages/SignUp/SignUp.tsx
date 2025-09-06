@@ -2,23 +2,25 @@ import type { FC } from 'react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import LogoComponent from '../../_components/Logo'
+import FullScreenLayout from '../../_components/FullScreenLayout'
+import MainLayout from '../../_components/MainLayout'
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  flex: 1;
   background: #e3f5fb;
   font-family: 'Instrument Sans', sans-serif;
   overflow: hidden;
+  padding: 2rem 0;
 `
 
 const Box = styled.div`
   width: 100%;
   max-width: 600px;
   background: #fff;
-  padding: 60px 24px 24px;
+  padding: 24px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -28,15 +30,6 @@ const Box = styled.div`
 const BoxAnimated = styled(Box)<{ fadeIn: boolean; fadeOut: boolean }>`
   opacity: ${({ fadeIn, fadeOut }) => (fadeOut ? 0 : fadeIn ? 1 : 0)};
   transition: opacity 0.5s ease;
-`
-
-const LogoWrapper = styled(LogoComponent)`
-  position: absolute;
-  top: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  height: auto;
 `
 
 const FormTitle = styled.h1`
@@ -164,78 +157,81 @@ const SignUp: FC = () => {
   }
 
   return (
-    <Wrapper>
-      <BoxAnimated fadeIn={fadeIn} fadeOut={fadeOut}>
-        <LogoWrapper />
-        <FormTitle>Sign Up</FormTitle>
+    <FullScreenLayout>
+      <MainLayout>
+        <Wrapper>
+          <BoxAnimated fadeIn={fadeIn} fadeOut={fadeOut}>
+            <FormTitle>Sign Up</FormTitle>
 
-        <Table>
-          <tbody>
-            <tr>
-              <Td>
-                <Field>
-                  <Label htmlFor="username">Username</Label>
-                  <InputWrapper>
-                    <Input id="username" type="text" />
-                  </InputWrapper>
-                </Field>
-              </Td>
-              <Td>
-                <Field>
-                  <Label htmlFor="password">Password</Label>
-                  <InputWrapper>
-                    <Input
-                      id="password"
-                      type={passwordVisible ? 'text' : 'password'}
-                    />
-                    <ToggleButton
-                      active={passwordVisible}
-                      type="button"
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                    />
-                  </InputWrapper>
-                </Field>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <Field>
-                  <Label htmlFor="email">Email</Label>
-                  <InputWrapper>
-                    <Input id="email" type="email" />
-                  </InputWrapper>
-                </Field>
-              </Td>
-              <Td>
-                <Field>
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <InputWrapper>
-                    <Input
-                      id="confirm-password"
-                      type={confirmVisible ? 'text' : 'password'}
-                    />
-                    <ToggleButton
-                      active={confirmVisible}
-                      type="button"
-                      onClick={() => setConfirmVisible(!confirmVisible)}
-                    />
-                  </InputWrapper>
-                </Field>
-              </Td>
-            </tr>
-          </tbody>
-        </Table>
+            <Table>
+              <tbody>
+                <tr>
+                  <Td>
+                    <Field>
+                      <Label htmlFor="username">Username</Label>
+                      <InputWrapper>
+                        <Input id="username" type="text" />
+                      </InputWrapper>
+                    </Field>
+                  </Td>
+                  <Td>
+                    <Field>
+                      <Label htmlFor="password">Password</Label>
+                      <InputWrapper>
+                        <Input
+                          id="password"
+                          type={passwordVisible ? 'text' : 'password'}
+                        />
+                        <ToggleButton
+                          active={passwordVisible}
+                          type="button"
+                          onClick={() => setPasswordVisible(!passwordVisible)}
+                        />
+                      </InputWrapper>
+                    </Field>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>
+                    <Field>
+                      <Label htmlFor="email">Email</Label>
+                      <InputWrapper>
+                        <Input id="email" type="email" />
+                      </InputWrapper>
+                    </Field>
+                  </Td>
+                  <Td>
+                    <Field>
+                      <Label htmlFor="confirm-password">Confirm Password</Label>
+                      <InputWrapper>
+                        <Input
+                          id="confirm-password"
+                          type={confirmVisible ? 'text' : 'password'}
+                        />
+                        <ToggleButton
+                          active={confirmVisible}
+                          type="button"
+                          onClick={() => setConfirmVisible(!confirmVisible)}
+                        />
+                      </InputWrapper>
+                    </Field>
+                  </Td>
+                </tr>
+              </tbody>
+            </Table>
 
-        <Button>Sign Up</Button>
+            <Button>Sign Up</Button>
 
-        <FooterText>
-          Already have an account?
-          <a href="/login" onClick={handleLoginClick}>
-            Sign in now
-          </a>
-        </FooterText>
-      </BoxAnimated>
-    </Wrapper>
+            <FooterText>
+              Already have an account?
+              <a href="/login" onClick={handleLoginClick}>
+                Sign in now
+              </a>
+            </FooterText>
+          </BoxAnimated>
+        </Wrapper>
+      </MainLayout>
+    </FullScreenLayout>
   )
 }
 

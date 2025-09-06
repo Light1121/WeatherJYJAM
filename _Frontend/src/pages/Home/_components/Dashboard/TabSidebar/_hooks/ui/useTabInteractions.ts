@@ -3,7 +3,7 @@ export const useTabInteractions = (
   editing: boolean,
   navigateToTab: (tabId: string) => void,
   onCloseTab: (id: string) => void,
-  onToggleFavorite: () => void
+  onToggleFavorite: () => void,
 ) => {
   const handleContainerClick = () => {
     if (!editing) {

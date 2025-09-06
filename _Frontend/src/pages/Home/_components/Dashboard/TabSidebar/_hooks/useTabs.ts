@@ -12,11 +12,11 @@ export const useTab = (
   initialTitle: string,
   onRenameTab?: (id: string, newTitle: string) => void,
   onCloseTab?: (id: string) => void,
-  onToggleFavorite?: (id: string) => void
+  onToggleFavorite?: (id: string) => void,
 ) => {
   const { isFavorite, toggleFavorite } = useTabFavorites()
   const { navigateToTab } = useTabNavigation()
-  
+
   const {
     editing,
     title,
@@ -39,13 +39,14 @@ export const useTab = (
     onToggleFavorite?.(tabId)
   }
 
-  const { handleContainerClick, handleCloseClick, handleHeartClick } = useTabInteractions(
-    tabId,
-    editing,
-    navigateToTab,
-    onCloseTab || (() => {}),
-    handleToggleFavorite
-  )
+  const { handleContainerClick, handleCloseClick, handleHeartClick } =
+    useTabInteractions(
+      tabId,
+      editing,
+      navigateToTab,
+      onCloseTab || (() => {}),
+      handleToggleFavorite,
+    )
 
   return {
     isActive,
