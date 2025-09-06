@@ -28,7 +28,7 @@ interface DashboardProps {
 }
 
 const Dashboard: FC<DashboardProps> = ({ currentTabId }) => {
-  const { tabs, addNewTab, renameTab } = useTabs()
+  const { tabs, addNewTab, renameTab, closeTab, toggleFavorite } = useTabs()
 
   return (
     <Background>
@@ -38,6 +38,8 @@ const Dashboard: FC<DashboardProps> = ({ currentTabId }) => {
           currentTabId={currentTabId}
           onAddTab={addNewTab}
           onRenameTab={renameTab}
+          onCloseTab={closeTab}
+          onToggleFavorite={toggleFavorite}
         />
         <MapView currentTabId={currentTabId} tabs={tabs} />
       </MapSection>

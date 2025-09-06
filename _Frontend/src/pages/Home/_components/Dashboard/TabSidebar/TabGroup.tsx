@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import Tab from './Tab'
 import { AddButtonWithTooltip } from './AddButton'
-import type { TabData } from './_hooks/useTabs'
+import type { TabData } from './_hooks/types'
 import styled from 'styled-components'
 
 const GroupContainer = styled.div`
@@ -22,6 +22,8 @@ interface TabGroupProps {
   currentTabId?: string
   onAddTab: () => void
   onRenameTab: (id: string, newTitle: string) => void
+  onCloseTab: (id: string) => void
+  onToggleFavorite: (id: string) => void
 }
 
 const TabGroup: FC<TabGroupProps> = ({
@@ -29,6 +31,8 @@ const TabGroup: FC<TabGroupProps> = ({
   currentTabId,
   onAddTab,
   onRenameTab,
+  onCloseTab,
+  onToggleFavorite,
 }) => (
   <GroupContainer>
     {tabs.map((tab) => (
@@ -37,6 +41,8 @@ const TabGroup: FC<TabGroupProps> = ({
         tab={tab}
         currentTabId={currentTabId}
         onRenameTab={onRenameTab}
+        onCloseTab={onCloseTab}
+        onToggleFavorite={onToggleFavorite}
       />
     ))}
     <AddButtonContainer>

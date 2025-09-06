@@ -1,31 +1,32 @@
 import type { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import type { TabData } from './_hooks/useTabs'
-import { useState, useRef, useEffect } from 'react'
+import type { TabData } from './_hooks/types'
+import { useTab } from './_hooks/useTabs'
 
 interface TabProps {
   tab: TabData
   currentTabId?: string
   onRenameTab?: (id: string, newTitle: string) => void
+  onCloseTab?: (id: string) => void
+  onToggleFavorite?: (id: string) => void
 }
 
-const TabButton = styled.button<{ $active: boolean; $color: string }>`
+const TabContainer = styled.div<{ $active: boolean; $color: string }>`
   background: ${({ $color }) => $color};
   border: none;
-  padding: 10px;
-  border-radius: 6px 0 0 6px; /* top-left and bottom-left rounded */
+  padding: 8px;
+  border-radius: 6px 0 0 6px;
   cursor: pointer;
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
-  text-align: center;
   font-weight: 400;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  gap: 4px;
+  min-width: 100px;
 
-  /*transitions*/
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -43,8 +44,45 @@ const TabButton = styled.button<{ $active: boolean; $color: string }>`
     css`
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       transform: scale(1.4);
-      z-index: 10; /*active tab above others */
+      z-index: 10;
     `}
+`
+
+const HeartButton = styled.button<{ $isFavorite: boolean }>`\
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 2px;
+  color: ${({ $isFavorite }) => ($isFavorite ? '#e74c3c' : '#bdc3c7')};
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+`
+
+const TabTitle = styled.div`
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px;
+  color: #7f8c8d;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+
+  &:hover {
+    color: #e74c3c;
+  }
 `
 
 const Input = styled.input`
@@ -58,55 +96,71 @@ const Input = styled.input`
   text-align: center;
 `
 
-const getTabPath = (tabId: string): string =>
-  tabId === 'tab1' ? '/' : `/${tabId}`
-
-const Tab: FC<TabProps> = ({ tab, currentTabId, onRenameTab }) => {
-  const navigate = useNavigate()
-  const isActive =
-    currentTabId === tab.id || (!currentTabId && tab.id === 'tab1')
-
-  const [editing, setEditing] = useState(false)
-  const [title, setTitle] = useState(tab.title)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (editing) inputRef.current?.focus()
-  }, [editing])
-
-  const handleBlur = () => {
-    const newTitle = title.trim() || tab.title
-    onRenameTab?.(tab.id, newTitle)
-    setEditing(false)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') inputRef.current?.blur()
-    if (e.key === 'Escape') {
-      setTitle(tab.title)
-      setEditing(false)
-    }
-  }
+const Tab: FC<TabProps> = ({ 
+  tab, 
+  currentTabId, 
+  onRenameTab, 
+  onCloseTab, 
+  onToggleFavorite 
+}) => {
+  const {
+    isActive,
+    isFavorite,
+    editing,
+    title,
+    inputRef,
+    setTitle,
+    startEditing,
+    handleEditComplete,
+    handleKeyDown,
+    handleContainerClick,
+    handleCloseClick,
+    handleHeartClick,
+  } = useTab(
+    tab.id,
+    currentTabId,
+    tab.title,
+    onRenameTab,
+    onCloseTab,
+    onToggleFavorite
+  )
 
   return (
-    <TabButton
+    <TabContainer
       $active={isActive}
       $color={tab.color}
-      onDoubleClick={() => tab.id !== 'tab1' && setEditing(true)} //prevent Home edit
-      onClick={() => !editing && navigate(getTabPath(tab.id))}
+      onDoubleClick={startEditing}
+      onClick={handleContainerClick}
     >
-      {editing ? (
-        <Input
-          ref={inputRef}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-        />
-      ) : (
-        tab.title
-      )}
-    </TabButton>
+      <HeartButton
+        $isFavorite={isFavorite}
+        onClick={handleHeartClick}
+        title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      >
+        ♥
+      </HeartButton>
+
+      <TabTitle>
+        {editing ? (
+          <Input
+            ref={inputRef}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={handleEditComplete}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          tab.title
+        )}
+      </TabTitle>
+
+      <CloseButton
+        onClick={handleCloseClick}
+        title="Close tab"
+      >
+        ×
+      </CloseButton>
+    </TabContainer>
   )
 }
 

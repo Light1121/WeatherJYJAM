@@ -20,7 +20,7 @@ const Logo: FC<LogoProps> = ({ onLeave }) => {
 
   const handleLogoClick = () => {
     if (onLeave) {
-      onLeave('/') // trigger fade-out sequence (created for the profile page animation)
+      onLeave('/') 
     } else {
       navigate('/')
     }

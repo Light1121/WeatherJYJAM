@@ -45,7 +45,6 @@ const AddButton = styled.button<AddButtonProps>`
     transform: translateX(10px);
   }
 `
-//popup while hovering
 const Tooltip = styled.div<{ $color?: string }>`
   position: absolute;
   left: 60px;

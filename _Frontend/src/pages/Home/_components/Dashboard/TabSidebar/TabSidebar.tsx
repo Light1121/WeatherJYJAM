@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import TabGroup from './TabGroup'
-import type { TabData } from './_hooks/useTabs'
+import type { TabData } from './_hooks/types'
 import styled from 'styled-components'
 
 const SidebarContainer = styled.div`
@@ -24,6 +24,8 @@ interface TabSidebarProps {
   currentTabId?: string
   onAddTab: () => void
   onRenameTab: (id: string, newTitle: string) => void
+  onCloseTab: (id: string) => void
+  onToggleFavorite: (id: string) => void
 }
 
 const TabSidebar: FC<TabSidebarProps> = ({
@@ -31,6 +33,8 @@ const TabSidebar: FC<TabSidebarProps> = ({
   currentTabId,
   onAddTab,
   onRenameTab,
+  onCloseTab,
+  onToggleFavorite,
 }) => {
   return (
     <SidebarContainer>
@@ -39,6 +43,8 @@ const TabSidebar: FC<TabSidebarProps> = ({
         currentTabId={currentTabId}
         onAddTab={onAddTab}
         onRenameTab={onRenameTab}
+        onCloseTab={onCloseTab}
+        onToggleFavorite={onToggleFavorite}
       />
     </SidebarContainer>
   )

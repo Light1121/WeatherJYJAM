@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Map from './Map'
-import type { TabData } from '../TabSidebar/_hooks/useTabs'
+import type { TabData } from '../TabSidebar/_hooks/types'
 
 const MapContainer2 = styled.div<{ $bgColor?: string }>`
   width: 100%;

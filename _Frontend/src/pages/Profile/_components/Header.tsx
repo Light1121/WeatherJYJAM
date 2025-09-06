@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import LogoComponent from '../Home/_components/Header/Logo/Logo'
+import LogoComponent from '../../Home/_components/Header/Logo/Logo'
 
 const HeaderContainer = styled.header`
   display: flex;

@@ -12,8 +12,8 @@ const MenuButton = styled.div`
   border-radius: 25px;
   user-select: none;
   position: fixed;
-  top: 20px; // distance from top of the screen
-  right: 20px; // distance from right edge
+  top: 20px;
+  right: 20px;
   z-index: 10000;
 `
 
