@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Map from './Map'
+import ControlPanel from './ControlPanel'
 import type { TabData } from '../TabSidebar/_hooks/types'
 
 const MapContainer2 = styled.div<{ $bgColor?: string }>`
@@ -23,6 +24,7 @@ const MapContainer = styled.div`
   overflow: hidden;
   border-radius: 10px;
 `
+
 const MapTitle = styled.div`
   position: absolute;
   font-family: 'Instrument Sans', sans-serif;
@@ -57,8 +59,11 @@ const MapView: FC<MapViewProps> = ({ currentTabId, tabs }) => {
   return (
     <MapContainer2 $bgColor={bgColor}>
       <MapContainer>
-        <MapTitle>{getMapTitle()}</MapTitle>
         <Map />
+
+        <MapTitle>{getMapTitle()}</MapTitle>
+
+        <ControlPanel />
       </MapContainer>
     </MapContainer2>
   )

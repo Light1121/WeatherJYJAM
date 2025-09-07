@@ -37,6 +37,7 @@ const Map: FC = () => {
         worldCopyJump={true}
         maxBounds={WORLD_BOUNDS}
         maxBoundsViscosity={0.5}
+        zoomControl={false}
         style={{ height: '100%', width: '100%' }}
       >
         <WeatherLayers apiKey={API_KEY} />
