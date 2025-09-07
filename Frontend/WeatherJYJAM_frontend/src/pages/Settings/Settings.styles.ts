@@ -17,7 +17,7 @@ export const Page = styled.div`
 
 export const Sidebar = styled.div`
   width: 240px;
-  background: #def8ff;    
+  background: #def8ff;
   padding: 20px 30px 15px; /* space at top */
   color: black;
 `
@@ -30,7 +30,9 @@ export const SidebarItem = styled.div<{ active?: boolean }>`
   background: ${(p) => (p.active ? '#b5ecfcff' : 'transparent')};
   color: ${(p) => (p.active ? '#000000ff' : '#444')};
   font-weight: ${(p) => (p.active ? '600' : '400')};
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
     background: #b5ecfcff;
@@ -51,9 +53,8 @@ export const Card = styled.div`
   background: #ffffff;
   border-radius: 12px;
   padding: 32px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   width: 100%;
-
 `
 
 // Form styling

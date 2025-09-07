@@ -39,7 +39,12 @@ const Settings: FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    console.log('Profile Updated:', { email, password, newPassword, profilePic })
+    console.log('Profile Updated:', {
+      email,
+      password,
+      newPassword,
+      profilePic,
+    })
   }
 
   const handleProfilePicChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -96,8 +101,14 @@ const Settings: FC = () => {
               <h1>Profile Settings</h1>
               <form onSubmit={handleSubmit}>
                 <Label>Profile Picture</Label>
-                {profilePic && <ProfileImage src={profilePic} alt="Profile Preview" />}
-                <FileInput type="file" accept="image/*" onChange={handleProfilePicChange} />
+                {profilePic && (
+                  <ProfileImage src={profilePic} alt="Profile Preview" />
+                )}
+                <FileInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePicChange}
+                />
 
                 <Label>Email</Label>
                 <Input
@@ -137,7 +148,8 @@ const Settings: FC = () => {
               <PrivacyCard>
                 <p>
                   We value your privacy. Your personal information is securely
-                  stored and never shared with third parties without your consent.
+                  stored and never shared with third parties without your
+                  consent.
                 </p>
               </PrivacyCard>
             </Card>
