@@ -1,23 +1,43 @@
 import type { FC } from 'react'
+<<<<<<< HEAD
+=======
+import { Link } from 'react-router-dom'
+>>>>>>> main
 import styled from 'styled-components'
 import { useMenu } from './_hooks'
 import { LoginMenu } from './login'
 import { CompareMenu } from './compare'
 import { OthersMenu } from './others'
 
-const MenuButton = styled.div<{ isOpen: boolean }>`
-  cursor: pointer;
-  padding: 16px 20px;
-  background-color: #def8ffff;
-  border-radius: 25px;
-  user-select: none;
+const ButtonContainer = styled.div`
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+const UnifiedButton = styled.div<{ isOpen: boolean; isHome?: boolean }>`
+  cursor: pointer;
+  padding: 15px 20px;
+  background-color: #def8ffff;
+  border-radius: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   font-size: 18px;
   font-weight: bold;
+  display: ${({ isHome, isOpen }) =>
+    isHome ? (isOpen ? 'flex' : 'none') : 'flex'};
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #b8e6ff;
+    transform: scale(1.05);
+  }
 `
 
 const SideMenu = styled.div<{ isOpen: boolean }>`
@@ -80,9 +100,20 @@ const Menu: FC = () => {
 
   return (
     <>
-      <MenuButton isOpen={isOpen} onClick={toggleMenu}>
-        {isOpen ? '✕' : '☰ Menu'}
-      </MenuButton>
+      <ButtonContainer>
+        <UnifiedButton
+          isOpen={isOpen}
+          isHome={true}
+          onClick={closeMenu}
+          as={Link}
+          to="/"
+        >
+          🏠
+        </UnifiedButton>
+        <UnifiedButton isOpen={isOpen} isHome={false} onClick={toggleMenu}>
+          {isOpen ? '✕' : '☰ Menu'}
+        </UnifiedButton>
+      </ButtonContainer>
 
       <SideMenu isOpen={isOpen}>
         <LoginSection>
