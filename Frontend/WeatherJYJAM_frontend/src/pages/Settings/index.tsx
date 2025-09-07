@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import Button from '../../_components/Button'
 import Header from './Header/Header'
 
-
 import {
   Container,
   Page,
