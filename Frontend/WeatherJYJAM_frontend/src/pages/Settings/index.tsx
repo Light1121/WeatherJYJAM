@@ -1,7 +1,8 @@
 import type { FC, ChangeEvent, FormEvent } from 'react'
 import { useState, useEffect } from 'react'
 import Button from '../../_components/Button'
-import Header from './Header/Header'
+import Header from './Header'
+
 import {
   Container,
   Page,
