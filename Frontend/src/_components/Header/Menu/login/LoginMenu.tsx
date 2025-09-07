@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 const MenuItemContainer = styled.div`
@@ -11,7 +11,7 @@ const MenuItemContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 
-const MenuItemText = styled(Link)`
+const MenuItemText = styled(Link)<{ $isActive: boolean }>`
   display: block;
   font-family: 'Instrument Sans', sans-serif;
   border-radius: 10px;
@@ -19,6 +19,8 @@ const MenuItemText = styled(Link)`
   text-decoration: none;
   color: #333;
   cursor: pointer;
+  background-color: ${({ $isActive }) =>
+    $isActive ? '#def8ffff' : 'transparent'};
   &:hover {
     background-color: #def8ffff;
     transform: scale(1.02);
@@ -33,6 +35,7 @@ interface LoginMenuProps {
 }
 
 const LoginMenu: FC<LoginMenuProps> = ({ onItemClick }) => {
+  const location = useLocation()
   const loginItems = [
     { to: '/profile', label: 'Profile' },
     { to: '/login', label: 'Login' },
@@ -43,7 +46,11 @@ const LoginMenu: FC<LoginMenuProps> = ({ onItemClick }) => {
     <>
       {loginItems.map((item) => (
         <MenuItemContainer key={item.to}>
-          <MenuItemText to={item.to} onClick={onItemClick}>
+          <MenuItemText
+            to={item.to}
+            onClick={onItemClick}
+            $isActive={location.pathname === item.to}
+          >
             {item.label}
           </MenuItemText>
         </MenuItemContainer>
