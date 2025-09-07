@@ -1,11 +1,7 @@
 import type { FC } from 'react'
 import { styled } from 'styled-components'
 import { Dropdown } from '@/_components'
-import {
-  TemperatureBar,
-  WindBar,
-  HumidityBar,
-} from '@/_components/WeatherDataBar'
+import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
 import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
 import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
 

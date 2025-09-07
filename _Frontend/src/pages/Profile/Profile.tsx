@@ -1,8 +1,7 @@
 import type { FC } from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import FullScreenLayout from '../../_components/FullScreenLayout'
-import MainLayout from '../../_components/MainLayout'
+import { FullScreenLayout, MainLayout } from '../../_components'
 import FavouriteComparisons from './_components/FavouriteComparisons'
 import FavouriteLocations from './_components/FavouriteLocations'
 

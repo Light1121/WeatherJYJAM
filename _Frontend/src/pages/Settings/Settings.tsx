@@ -1,8 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import Button from '../../_components/Button'
-import FullScreenLayout from '../../_components/FullScreenLayout'
-import MainLayout from '../../_components/MainLayout'
+import { FullScreenLayout, MainLayout } from '../../_components'
 
 const SettingsContainer = styled.div`
   padding: 2rem;

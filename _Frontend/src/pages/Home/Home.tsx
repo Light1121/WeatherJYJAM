@@ -1,7 +1,6 @@
 import type { FC } from 'react'
 import { useParams } from 'react-router-dom'
-import FullScreenLayout from '../../_components/FullScreenLayout'
-import MainLayout from '../../_components/MainLayout'
+import { FullScreenLayout, MainLayout } from '../../_components'
 import Dashboard from './_components/Dashboard'
 import BottomSheet from './_components/BottomSheet'
 
