@@ -1,0 +1,44 @@
+'IDCKWCDE61,,,,,,,,,,
+Australian Government Bureau of Meteorology,,,,,,,,,,
+South Australia,,,,,,,,,,
+
+Daily Evapotranspiration for GELANTIPY Victoria for November 2024,,,,,,,,,,
+Issued at 22:31 GMT on Sunday 01 December 2024,,,,,,,,,,
+© Copyright Commonwealth of Australia 2024 Bureau of Meteorology (ABN 92 637 533 532),,,,,,,,,,
+Please note Copyright Disclaimer and Privacy Notice <http://www.bom.gov.au/other/copyright.shtml>,,,,,,,,,,
+
+,,Evapo-,,Pan,,,Maximum,Minimum,Average,
+,,Transpiration,Rain,Evaporation,Maximum,Minimum,Relative,Relative,10m Wind,Solar
+Station Name,Date,0000-2400,0900-0900,0900-0900,Temperature,Temperature,Humidity,Humidity,Speed,Radiation
+,,(mm),(mm),(mm),(°C),(°C),(%),(%),(m/sec),(MJ/sq m)
+GELANTIPY,01/11/2024,2.7,0.0, ,12.1,4.8,96,52,3.11,18.85
+GELANTIPY,02/11/2024,5.6,0.0, ,22.8,1.5,98,26,4.96,27.61
+GELANTIPY,03/11/2024,6.8,0.2, ,25.2,10.3,90,20,7.24,23.44
+GELANTIPY,04/11/2024,2.0,0.0, ,13.3,9.1,95,76,1.93,12.29
+GELANTIPY,05/11/2024,4.4,0.0, ,21.3,6.3,97,49,2.38,28.05
+GELANTIPY,06/11/2024,6.7,0.0, ,28.5,9.0,96,30,5.89,24.16
+GELANTIPY,07/11/2024,2.2,0.0, ,14.9,9.2,100,55,2.54,11.03
+GELANTIPY,08/11/2024,5.0,0.2, ,18.7,8.0,88,28,5.34,25.59
+GELANTIPY,09/11/2024,4.1,0.0, ,20.6,6.8,94,39,2.28,23.43
+GELANTIPY,10/11/2024,4.1,0.0, ,17.5,6.6,97,51,2.36,27.88
+GELANTIPY,11/11/2024,5.3,0.0, ,22.0,7.3,93,33,3.68,29.01
+GELANTIPY,12/11/2024,4.5,0.0, ,23.9,7.2,94,38,4.32,17.32
+GELANTIPY,13/11/2024,2.5,14.0, ,20.4,12.0,100,70,3.86,11.73
+GELANTIPY,14/11/2024,3.0,27.2, ,15.1,6.7,99,54,2.92,18.79
+GELANTIPY,15/11/2024,3.6,0.0, ,19.2,6.7,99,69,2.29,24.82
+GELANTIPY,16/11/2024,6.3,0.2, ,26.2,10.0,94,34,5.49,27.40
+GELANTIPY,17/11/2024,3.4,0.0, ,21.9,17.2,100,53,6.34,11.80
+GELANTIPY,18/11/2024,4.3,1.0, ,17.0,5.8,85,43,4.26,26.14
+GELANTIPY,19/11/2024,4.0,0.0, ,17.4,5.1,98,52,2.35,27.90
+GELANTIPY,20/11/2024,4.0,0.0, ,19.2,5.2,99,64,1.76,27.72
+GELANTIPY,21/11/2024,5.8,0.0, ,26.4,9.1,97,31,3.85,25.99
+GELANTIPY,22/11/2024,5.8,0.2, ,27.6,13.7,93,31,3.81,23.84
+GELANTIPY,23/11/2024,7.0,0.0, ,28.9,15.0,82,29,4.53,27.91
+GELANTIPY,24/11/2024,2.8,0.0, ,21.2,14.7,98,52,2.06,11.71
+GELANTIPY,25/11/2024,3.1,9.4, ,23.0,15.8,99,65,2.44,14.58
+GELANTIPY,26/11/2024,4.1,9.4, ,26.2,15.6,99,49,4.29,14.50
+GELANTIPY,27/11/2024,3.1,4.4, ,23.1,14.9,93,69,4.95,13.28
+GELANTIPY,28/11/2024,3.8,4.8, ,24.2,13.3,100,70,2.74,21.04
+GELANTIPY,29/11/2024,3.5,1.0, ,23.9,14.8,100,69,2.35,18.09
+GELANTIPY,30/11/2024, ,34.6, ,18.6,14.7,98,87,3.86, 
+Totals:,,123.5,106.6, ,,,,,, 

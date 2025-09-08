@@ -1,0 +1,42 @@
+'IDCKWCDE61,,,,,,,,,,
+Australian Government Bureau of Meteorology,,,,,,,,,,
+South Australia,,,,,,,,,,
+
+Daily Evapotranspiration for AIREYS INLET Victoria for February 2025,,,,,,,,,,
+Issued at 22:31 GMT on Saturday 01 March 2025,,,,,,,,,,
+© Copyright Commonwealth of Australia 2025 Bureau of Meteorology (ABN 92 637 533 532),,,,,,,,,,
+Please note Copyright Disclaimer and Privacy Notice <http://www.bom.gov.au/other/copyright.shtml>,,,,,,,,,,
+
+,,Evapo-,,Pan,,,Maximum,Minimum,Average,
+,,Transpiration,Rain,Evaporation,Maximum,Minimum,Relative,Relative,10m Wind,Solar
+Station Name,Date,0000-2400,0900-0900,0900-0900,Temperature,Temperature,Humidity,Humidity,Speed,Radiation
+,,(mm),(mm),(mm),(°C),(°C),(%),(%),(m/sec),(MJ/sq m)
+AIREYS INLET,01/02/2025,5.3,0.0, ,26.7,15.4,84,55,2.80,27.65
+AIREYS INLET,02/02/2025,6.8,0.0, ,36.6,18.4,93,33,3.39,23.30
+AIREYS INLET,03/02/2025,7.0,4.0, ,33.2,20.9,80,36,5.84,18.94
+AIREYS INLET,04/02/2025,8.8,0.4, ,33.3,22.5,79,31,7.17,26.26
+AIREYS INLET,05/02/2025,4.4,0.0, ,22.6,14.4,87,54,5.30,20.34
+AIREYS INLET,06/02/2025,5.2,0.0, ,26.9,15.8,90,58,3.51,26.65
+AIREYS INLET,07/02/2025,3.1,0.0, ,21.7,17.2,96,68,5.76,13.98
+AIREYS INLET,08/02/2025,3.2,0.0, ,22.0,15.6,91,64,6.43,12.11
+AIREYS INLET,09/02/2025,1.8,0.0, ,18.5,16.3,89,74,6.52,2.04
+AIREYS INLET,10/02/2025,2.8,0.4, ,21.0,16.2,88,72,5.50,11.42
+AIREYS INLET,11/02/2025,3.9,0.0, ,25.3,17.9,95,65,3.23,19.94
+AIREYS INLET,12/02/2025, ,0.0, , ,18.4,96,60,1.65,25.92
+AIREYS INLET,13/02/2025, , , ,34.3, ,91,28,4.80,12.47
+AIREYS INLET,14/02/2025,2.9,0.0, ,21.8,14.2,94,59,3.59,12.08
+AIREYS INLET,15/02/2025,4.4,1.8, ,17.5,10.9,86,39,7.37,20.92
+AIREYS INLET,16/02/2025,4.2,4.8, ,18.9,9.1,84,44,6.78,19.13
+AIREYS INLET,17/02/2025,4.5,0.0, ,20.9,12.7,72,42,2.49,25.80
+AIREYS INLET,18/02/2025,3.5,0.0, ,19.4,10.7,95,51,4.88,17.77
+AIREYS INLET,19/02/2025,3.3,1.6, ,19.4,11.5,93,56,5.49,14.83
+AIREYS INLET,20/02/2025,4.0,0.2, ,21.2,12.6,74,45,4.01,16.12
+AIREYS INLET,21/02/2025,4.4,0.0, ,24.5,14.5,79,52,2.56,22.96
+AIREYS INLET,22/02/2025,9.3,0.0, ,38.8,17.0,77,12,4.84,23.47
+AIREYS INLET,23/02/2025,7.6,0.0, ,28.8,21.6,69,16,5.73,22.66
+AIREYS INLET,24/02/2025,4.5,0.0, ,22.6,14.4,80,51,4.25,22.33
+AIREYS INLET,25/02/2025,4.1,0.0, ,24.0,15.6,90,50,2.32,22.18
+AIREYS INLET,26/02/2025,6.6,0.0, ,32.0,13.8,94,20,4.15,21.14
+AIREYS INLET,27/02/2025,3.1,1.6, ,23.1,15.9,96,63,1.72,16.70
+AIREYS INLET,28/02/2025,4.1,0.2, ,24.4,15.5,89,57,4.16,19.96
+Totals:,,122.8,15, ,,,,,, 

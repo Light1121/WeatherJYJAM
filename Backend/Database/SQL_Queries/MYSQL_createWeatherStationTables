@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS stations;
+
+CREATE TABLE stations (
+    station_id   NUMERIC (8)    NOT NULL,
+    `Station Name` VARCHAR (30)      NOT NULL,
+    state        VARCHAR (3)       NOT NULL,
+    dist         NUMERIC (3)    NOT NULL,
+    lat          NUMERIC (8, 3) NOT NULL,
+    lon          NUMERIC (8, 3) NOT NULL,
+    PRIMARY KEY (`Station Name`)
+);
+
+
+DROP TABLE IF EXISTS Dates;
+
+CREATE TABLE Dates (
+    Date  DATE        NOT NULL
+                      PRIMARY KEY,
+    Month VARCHAR (3)    NOT NULL,
+    Year  NUMERIC (4) NOT NULL,
+    Quarter NUMERIC (1) NOT NULL
+);
+
+
+DROP TABLE IF EXISTS weather_data;
+
+CREATE TABLE weather_data (
+    `Station Name`          VARCHAR (30) NOT NULL,
+    Date                  DATE   NOT NULL,
+    `Rain 0900-0900 (mm)`                  NUMERIC   ,
+    `Maximum Temperature (°C)`              NUMERIC   ,
+    `Minimum Temperature (°C)`              NUMERIC   ,
+    `Maximum Relative Humidity (%)` NUMERIC   ,
+    `Minimum Relative Humidity (%)` NUMERIC   ,
+    `Average 10m Wind Speed (m/sec)`     NUMERIC   ,
+
+    PRIMARY KEY (`Station Name`, Date),
+    CONSTRAINT stations_weather_data_fk
+    FOREIGN KEY (`Station Name`) REFERENCES stations(`Station Name`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT dates_weather_data_fk
+    FOREIGN KEY (Date) REFERENCES Dates(Date) ON DELETE CASCADE ON UPDATE CASCADE
+);
