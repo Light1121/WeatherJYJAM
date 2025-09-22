@@ -5,6 +5,10 @@
     "husky": "^9.1.7"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "fe:dev": "cd Frontend && npm run dev",
+    "fe:build": "cd Frontend && npm run build",
+    "fe:preview": "cd Frontend && npm run preview",
+    "fe:precommit": "cd Frontend && npm run pre-commit"
   }
 }

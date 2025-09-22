@@ -42,7 +42,7 @@ WeatherJYJAM/
 
    **For Frontend Development:**
    ```bash
-   cd Frontend/WeatherJYJAM_frontend
+   cd Frontend
    npm install
    npm run dev
    ```
