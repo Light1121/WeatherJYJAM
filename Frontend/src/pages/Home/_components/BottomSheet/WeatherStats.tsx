@@ -96,15 +96,15 @@ const GraphBox = styled.div<{ tall?: boolean }>`
   padding: 8px;
   border: 1px dashed #ddd;
   border-radius: 10px;
-  min-height: ${props => props.tall ? '350px' : '220px'};
+  min-height: ${(props) => (props.tall ? '350px' : '220px')};
   color: #666;
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
-`;
+`
 
 const FullWidthBox = styled.div`
   grid-column: 1 / -1;
-`;
+`
 const TwoColumn = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -121,13 +121,13 @@ const PastTwoColumn = styled.div`
     flex-direction: column;
     gap: 16px;
   }
-`;
+`
 
 const WeatherStatsWrapper = styled.div`
   max-height: 80vh;
   overflow-y: auto;
   padding-right: 8px; // space for scrollbar
-`;
+`
 
 interface WeatherStatsProps {
   isExpanded?: boolean
@@ -138,222 +138,225 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   const { isLocTwo } = useLocTwoContext()
 
   //dummy data below, replace with API data later
-  const locOneName = "Monash University Clayton Campus"
+  const locOneName = 'Monash University Clayton Campus'
   const locOneTemp = 20
   const locOneWind = 15
   const locOneHumidity = 30
 
-  const locTwoName = "Caulfield Campus"
+  const locTwoName = 'Caulfield Campus'
   const locTwoTemp = 15
   const locTwoWind = 10
   const locTwoHumidity = 40
- 
-    return (
-      <>
+
+  return (
+    <>
       {/* Only one of Location 1 or Location 2 are selected */}
-        {((isLocOne && !isLocTwo) || (!isLocOne && isLocTwo)) && (
-          <>
-            <HeaderRow>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline' }}>
+      {((isLocOne && !isLocTwo) || (!isLocOne && isLocTwo)) && (
+        <>
+          <HeaderRow>
+            <div
+              style={{ display: 'flex', gap: '12px', alignItems: 'baseline' }}
+            >
+              {isLocOne && (
+                <>
+                  <Location>{locOneName}</Location>
+                  <NowTemp>{locOneTemp}°C</NowTemp>
+                </>
+              )}
+              {isLocTwo && (
+                <>
+                  <Location>{locTwoName}</Location>
+                  <NowTemp>{locTwoTemp}°C</NowTemp>
+                </>
+              )}
+            </div>
+          </HeaderRow>
+          {isExpanded && (
+            <>
+              <BarsRow>
                 {isLocOne && (
                   <>
-                    <Location>{locOneName}</Location>
-                    <NowTemp>{locOneTemp}°C</NowTemp>
+                    <TemperatureBar valuePosition={locOneTemp + 45} />
+                    <WindBar valuePosition={locOneWind + 35} />
+                    <HumidityBar valuePosition={locOneHumidity} />
                   </>
                 )}
                 {isLocTwo && (
                   <>
-                    <Location>{locTwoName}</Location>
-                    <NowTemp>{locTwoTemp}°C</NowTemp>
+                    <TemperatureBar valuePosition={locTwoTemp + 45} />
+                    <WindBar valuePosition={locTwoWind + 35} />
+                    <HumidityBar valuePosition={locTwoHumidity} />
                   </>
                 )}
-              </div>
-            </HeaderRow>
-            {isExpanded && (
-              <>
+              </BarsRow>
+
+              <PastGrid>
+                <SectionTitle>Past Weather Report</SectionTitle>
+
+                <Filters>
+                  <Dropdown
+                    variant="light"
+                    trigger={(toggle) => (
+                      <FilterButton onClick={toggle}>Year</FilterButton>
+                    )}
+                  >
+                    <Menu>
+                      <MenuItem>Year options here</MenuItem>
+                    </Menu>
+                  </Dropdown>
+
+                  <Dropdown
+                    variant="ink"
+                    trigger={(toggle) => (
+                      <FilterButton onClick={toggle}>Month</FilterButton>
+                    )}
+                  >
+                    <Menu>
+                      <MenuItem>Month options here</MenuItem>
+                    </Menu>
+                  </Dropdown>
+                </Filters>
+
                 <BarsRow>
-                  { isLocOne && (
+                  {isLocOne && (
                     <>
-                  <TemperatureBar valuePosition={locOneTemp + 45} />
-                  <WindBar valuePosition={locOneWind +35} />
-                  <HumidityBar valuePosition={locOneHumidity} />
-                  </>
+                      <TemperatureBar valuePosition={locOneTemp + 45} />
+                      <WindBar valuePosition={locOneWind + 35} />
+                      <HumidityBar valuePosition={locOneHumidity} />
+                    </>
                   )}
-                  { isLocTwo && (
+                  {isLocTwo && (
                     <>
-                  <TemperatureBar valuePosition={locTwoTemp + 45} />
-                  <WindBar valuePosition={locTwoWind +35} />
-                  <HumidityBar valuePosition={locTwoHumidity} />
-                  </>
+                      <TemperatureBar valuePosition={locTwoTemp + 45} />
+                      <WindBar valuePosition={locTwoWind + 35} />
+                      <HumidityBar valuePosition={locTwoHumidity} />
+                    </>
                   )}
                 </BarsRow>
 
-                <PastGrid>
-                  <SectionTitle>Past Weather Report</SectionTitle>
-
-                  <Filters>
-                    <Dropdown
-                      variant="light"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Year</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>Year options here</MenuItem>
-                      </Menu>
-                    </Dropdown>
-
-                    <Dropdown
-                      variant="ink"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Month</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>Month options here</MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Filters>
-
+                <GraphBox>Graph goes here later</GraphBox>
+              </PastGrid>
+            </>
+          )}
+        </>
+      )}
+      {/* Both Locations Selected */}
+      {isLocOne && isLocTwo && (
+        <>
+          <WeatherStatsWrapper style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <TwoColumn>
+              {/* Clayton Campus */}
+              <div>
+                <HeaderRow>
+                  <Location>{locOneName}</Location>
+                  <NowTemp>{locOneTemp}°C</NowTemp>
+                </HeaderRow>
+                {isExpanded && (
                   <BarsRow>
-                    { isLocOne && (
-                    <>
-                  <TemperatureBar valuePosition={locOneTemp + 45} />
-                  <WindBar valuePosition={locOneWind +35} />
-                  <HumidityBar valuePosition={locOneHumidity} />
-                  </>
-                  )}
-                  { isLocTwo && (
-                    <>
-                  <TemperatureBar valuePosition={locTwoTemp + 45} />
-                  <WindBar valuePosition={locTwoWind +35} />
-                  <HumidityBar valuePosition={locTwoHumidity} />
-                  </>
-                  )}
+                    <TemperatureBar valuePosition={locOneTemp + 45} />
+                    <WindBar valuePosition={locOneWind + 35} />
+                    <HumidityBar valuePosition={locOneHumidity} />
                   </BarsRow>
-
-                  <GraphBox>Graph goes here later</GraphBox>
-                </PastGrid>
-              </>
+                )}
+              </div>
+              {/* Caulfield Campus */}
+              <div>
+                <HeaderRow>
+                  <Location>{locTwoName}</Location>
+                  <NowTemp>{locTwoTemp}°C</NowTemp>
+                </HeaderRow>
+                {isExpanded && (
+                  <BarsRow>
+                    <TemperatureBar valuePosition={locTwoTemp + 45} />
+                    <WindBar valuePosition={locTwoWind + 35} />
+                    <HumidityBar valuePosition={locTwoHumidity} />
+                  </BarsRow>
+                )}
+              </div>
+            </TwoColumn>
+            {isExpanded && (
+              <PastGrid style={{ gridTemplateColumns: '1fr' }}>
+                <FullWidthBox>
+                  <SectionTitle style={{ textAlign: 'center' }}>
+                    Past Weather Report
+                  </SectionTitle>
+                </FullWidthBox>
+                <PastTwoColumn>
+                  {/* Clayton Campus Past */}
+                  <div style={{ flex: 1 }}>
+                    <Filters>
+                      <Dropdown
+                        variant="light"
+                        trigger={(toggle) => (
+                          <FilterButton onClick={toggle}>Year</FilterButton>
+                        )}
+                      >
+                        <Menu>
+                          <MenuItem>Year options here</MenuItem>
+                        </Menu>
+                      </Dropdown>
+                      <Dropdown
+                        variant="ink"
+                        trigger={(toggle) => (
+                          <FilterButton onClick={toggle}>Month</FilterButton>
+                        )}
+                      >
+                        <Menu>
+                          <MenuItem>Month options here</MenuItem>
+                        </Menu>
+                      </Dropdown>
+                    </Filters>
+                    <BarsRow>
+                      <TemperatureBar valuePosition={locOneTemp + 45} />
+                      <WindBar valuePosition={locOneWind + 35} />
+                      <HumidityBar valuePosition={locOneHumidity} />
+                    </BarsRow>
+                  </div>
+                  {/* Caulfield Campus Past */}
+                  <div style={{ flex: 1 }}>
+                    <Filters>
+                      <Dropdown
+                        variant="light"
+                        trigger={(toggle) => (
+                          <FilterButton onClick={toggle}>Year</FilterButton>
+                        )}
+                      >
+                        <Menu>
+                          <MenuItem>Year options here</MenuItem>
+                        </Menu>
+                      </Dropdown>
+                      <Dropdown
+                        variant="ink"
+                        trigger={(toggle) => (
+                          <FilterButton onClick={toggle}>Month</FilterButton>
+                        )}
+                      >
+                        <Menu>
+                          <MenuItem>Month options here</MenuItem>
+                        </Menu>
+                      </Dropdown>
+                    </Filters>
+                    <BarsRow>
+                      <TemperatureBar valuePosition={locTwoTemp + 45} />
+                      <WindBar valuePosition={locTwoWind + 35} />
+                      <HumidityBar valuePosition={locTwoHumidity} />
+                    </BarsRow>
+                  </div>
+                </PastTwoColumn>
+                <FullWidthBox>
+                  <GraphBox tall>Graph goes here later</GraphBox>
+                </FullWidthBox>
+              </PastGrid>
             )}
-          </>
-        )}
-  {/* Both Locations Selected */}
-  {isLocOne && isLocTwo &&(
-    
-  <>
-  <WeatherStatsWrapper style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-    <TwoColumn>
-      {/* Clayton Campus */}
-      <div>
-        <HeaderRow>
-          <Location>{locOneName}</Location>
-          <NowTemp>{locOneTemp}°C</NowTemp>
-        </HeaderRow>
-        {isExpanded && (
-          <BarsRow>
-            <TemperatureBar valuePosition={locOneTemp + 45} />
-            <WindBar valuePosition={locOneWind + 35} />
-            <HumidityBar valuePosition={locOneHumidity} />
-          </BarsRow>
-        )}
-      </div>
-      {/* Caulfield Campus */}
-      <div>
-        <HeaderRow>
-          <Location>{locTwoName}</Location>
-          <NowTemp>{locTwoTemp}°C</NowTemp>
-        </HeaderRow>
-        {isExpanded && (
-          <BarsRow>
-            <TemperatureBar valuePosition={locTwoTemp + 45} />
-            <WindBar valuePosition={locTwoWind + 35} />
-            <HumidityBar valuePosition={locTwoHumidity} />
-          </BarsRow>
-        )}
-      </div>
-    </TwoColumn>
-    {isExpanded && (
-      <PastGrid style={{ gridTemplateColumns: '1fr' }}>
-        <FullWidthBox>
-          <SectionTitle style={{ textAlign: 'center' }}>Past Weather Report</SectionTitle>
-        </FullWidthBox>
-        <PastTwoColumn>
-          {/* Clayton Campus Past */}
-          <div style={{ flex: 1 }}>
-            <Filters>
-              <Dropdown
-                variant="light"
-                trigger={(toggle) => (
-                  <FilterButton onClick={toggle}>Year</FilterButton>
-                )}
-              >
-                <Menu>
-                  <MenuItem>Year options here</MenuItem>
-                </Menu>
-              </Dropdown>
-              <Dropdown
-                variant="ink"
-                trigger={(toggle) => (
-                  <FilterButton onClick={toggle}>Month</FilterButton>
-                )}
-              >
-                <Menu>
-                  <MenuItem>Month options here</MenuItem>
-                </Menu>
-              </Dropdown>
-            </Filters>
-            <BarsRow>
-              <TemperatureBar valuePosition={locOneTemp + 45} />
-              <WindBar valuePosition={locOneWind + 35} />
-              <HumidityBar valuePosition={locOneHumidity} />
-            </BarsRow>
-          </div>
-          {/* Caulfield Campus Past */}
-          <div style={{ flex: 1 }}>
-            <Filters>
-              <Dropdown
-                variant="light"
-                trigger={(toggle) => (
-                  <FilterButton onClick={toggle}>Year</FilterButton>
-                )}
-              >
-                <Menu>
-                  <MenuItem>Year options here</MenuItem>
-                </Menu>
-              </Dropdown>
-              <Dropdown
-                variant="ink"
-                trigger={(toggle) => (
-                  <FilterButton onClick={toggle}>Month</FilterButton>
-                )}
-              >
-                <Menu>
-                  <MenuItem>Month options here</MenuItem>
-                </Menu>
-              </Dropdown>
-            </Filters>
-            <BarsRow>
-              <TemperatureBar valuePosition={locTwoTemp + 45} />
-              <WindBar valuePosition={locTwoWind + 35} />
-              <HumidityBar valuePosition={locTwoHumidity} />
-            </BarsRow>
-          </div>
-        </PastTwoColumn>
-        <FullWidthBox>
-          <GraphBox tall>Graph goes here later</GraphBox>
-        </FullWidthBox>
-      </PastGrid>
-    )}
-    </WeatherStatsWrapper>
-  </>
-)}
-{/* No Locations Selected */}
-        {(!isLocOne && !isLocTwo) && (
-          <Location>Please select a location to view weather stats.</Location>
-        )}
-      </>
-    )
+          </WeatherStatsWrapper>
+        </>
+      )}
+      {/* No Locations Selected */}
+      {!isLocOne && !isLocTwo && (
+        <Location>Please select a location to view weather stats.</Location>
+      )}
+    </>
+  )
 }
 
 export default WeatherStats
