@@ -150,6 +150,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
  
     return (
       <>
+      {/* Only one of Location 1 or Location 2 are selected */}
         {((isLocOne && !isLocTwo) || (!isLocOne && isLocTwo)) && (
           <>
             <HeaderRow>
@@ -237,6 +238,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
             )}
           </>
         )}
+  {/* Both Locations Selected */}
   {isLocOne && isLocTwo &&(
     
   <>
@@ -346,12 +348,10 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
     </WeatherStatsWrapper>
   </>
 )}
-
+{/* No Locations Selected */}
         {(!isLocOne && !isLocTwo) && (
           <Location>Please select a location to view weather stats.</Location>
         )}
-
-      
       </>
     )
 }
