@@ -16,7 +16,7 @@ class weather(db.Model):
     
     # Weather fields
     station_name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)
-    weather_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    weather_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     temperature: Mapped[float] = mapped_column(nullable=False)
     humidity: Mapped[float] = mapped_column(nullable=False)
     windspeed: Mapped[float] = mapped_column(nullable=False)

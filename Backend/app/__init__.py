@@ -7,6 +7,7 @@ from flask_restx import Api
 
 from app.database import init_db
 from app.user.controller import api as userapi
+from app.weather.controller import api as weatherapi
 
 load_dotenv("./.env.local")
 
@@ -30,6 +31,7 @@ def create_app():
 
     # Register blueprint
     api.add_namespace(userapi)
+    api.add_namespace(weatherapi)
     app.register_blueprint(api_bp)
 
     return app
