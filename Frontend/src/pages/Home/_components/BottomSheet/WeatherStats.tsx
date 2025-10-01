@@ -104,16 +104,13 @@ const GraphButton = styled.button<{ tall?: boolean }>`
   font-family: 'Instrument Sans', sans-serif;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background-color: #007acc;
     color: white;
   }
 `
 
-const FullWidthBox = styled.div`
-  grid-column: 1 / -1;
-`
 const TwoColumn = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -131,8 +128,6 @@ const PastTwoColumn = styled.div`
     gap: 16px;
   }
 `
-
-
 
 interface WeatherStatsProps {
   isExpanded?: boolean
@@ -255,108 +250,114 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
       {/* Both Locations Selected */}
       {isLocOne && isLocTwo && (
         <>
-            <TwoColumn>
-              {/* Clayton Campus */}
-              <div>
-                <HeaderRow>
-                  <Location>{locOneName}</Location>
-                  <NowTemp>{locOneTemp}°C</NowTemp>
-                </HeaderRow>
-                {isExpanded && (
+          <TwoColumn>
+            {/* Clayton Campus */}
+            <div>
+              <HeaderRow>
+                <Location>{locOneName}</Location>
+                <NowTemp>{locOneTemp}°C</NowTemp>
+              </HeaderRow>
+              {isExpanded && (
+                <BarsRow>
+                  <TemperatureBar valuePosition={locOneTemp + 45} />
+                  <WindBar valuePosition={locOneWind + 35} />
+                  <HumidityBar valuePosition={locOneHumidity} />
+                </BarsRow>
+              )}
+            </div>
+            {/* Caulfield Campus */}
+            <div>
+              <HeaderRow>
+                <Location>{locTwoName}</Location>
+                <NowTemp>{locTwoTemp}°C</NowTemp>
+              </HeaderRow>
+              {isExpanded && (
+                <BarsRow>
+                  <TemperatureBar valuePosition={locTwoTemp + 45} />
+                  <WindBar valuePosition={locOneWind + 35} />
+                  <HumidityBar valuePosition={locTwoHumidity} />
+                </BarsRow>
+              )}
+            </div>
+          </TwoColumn>
+          {isExpanded && (
+            <div style={{ width: '100%' }}>
+              <SectionTitle
+                style={{ textAlign: 'center', margin: '20px 0 16px 0' }}
+              >
+                Past Weather Report
+              </SectionTitle>
+              <PastTwoColumn>
+                {/* Clayton Campus Past */}
+                <div style={{ flex: 1 }}>
+                  <Filters>
+                    <Dropdown
+                      variant="light"
+                      trigger={(toggle) => (
+                        <FilterButton onClick={toggle}>Year</FilterButton>
+                      )}
+                    >
+                      <Menu>
+                        <MenuItem>Year options here</MenuItem>
+                      </Menu>
+                    </Dropdown>
+                    <Dropdown
+                      variant="ink"
+                      trigger={(toggle) => (
+                        <FilterButton onClick={toggle}>Month</FilterButton>
+                      )}
+                    >
+                      <Menu>
+                        <MenuItem>Month options here</MenuItem>
+                      </Menu>
+                    </Dropdown>
+                  </Filters>
                   <BarsRow>
                     <TemperatureBar valuePosition={locOneTemp + 45} />
                     <WindBar valuePosition={locOneWind + 35} />
                     <HumidityBar valuePosition={locOneHumidity} />
                   </BarsRow>
-                )}
-              </div>
-              {/* Caulfield Campus */}
-              <div>
-                <HeaderRow>
-                  <Location>{locTwoName}</Location>
-                  <NowTemp>{locTwoTemp}°C</NowTemp>
-                </HeaderRow>
-                {isExpanded && (
+                </div>
+                {/* Caulfield Campus Past */}
+                <div style={{ flex: 1 }}>
+                  <Filters>
+                    <Dropdown
+                      variant="light"
+                      trigger={(toggle) => (
+                        <FilterButton onClick={toggle}>Year</FilterButton>
+                      )}
+                    >
+                      <Menu>
+                        <MenuItem>Year options here</MenuItem>
+                      </Menu>
+                    </Dropdown>
+                    <Dropdown
+                      variant="ink"
+                      trigger={(toggle) => (
+                        <FilterButton onClick={toggle}>Month</FilterButton>
+                      )}
+                    >
+                      <Menu>
+                        <MenuItem>Month options here</MenuItem>
+                      </Menu>
+                    </Dropdown>
+                  </Filters>
                   <BarsRow>
                     <TemperatureBar valuePosition={locTwoTemp + 45} />
-                    <WindBar valuePosition={locOneWind + 35} />
+                    <WindBar valuePosition={locTwoWind + 35} />
                     <HumidityBar valuePosition={locTwoHumidity} />
                   </BarsRow>
-                )}
-              </div>
-            </TwoColumn>
-            {isExpanded && (
-              <div style={{ width: '100%' }}>
-                <SectionTitle style={{ textAlign: 'center', margin: '20px 0 16px 0' }}>
-                  Past Weather Report
-                </SectionTitle>
-                <PastTwoColumn>
-                  {/* Clayton Campus Past */}
-                  <div style={{ flex: 1 }}>
-                    <Filters>
-                      <Dropdown
-                        variant="light"
-                        trigger={(toggle) => (
-                          <FilterButton onClick={toggle}>Year</FilterButton>
-                        )}
-                      >
-                        <Menu>
-                          <MenuItem>Year options here</MenuItem>
-                        </Menu>
-                      </Dropdown>
-                      <Dropdown
-                        variant="ink"
-                        trigger={(toggle) => (
-                          <FilterButton onClick={toggle}>Month</FilterButton>
-                        )}
-                      >
-                        <Menu>
-                          <MenuItem>Month options here</MenuItem>
-                        </Menu>
-                      </Dropdown>
-                    </Filters>
-                    <BarsRow>
-                      <TemperatureBar valuePosition={locOneTemp + 45} />
-                      <WindBar valuePosition={locOneWind + 35} />
-                      <HumidityBar valuePosition={locOneHumidity} />
-                    </BarsRow>
-                  </div>
-                  {/* Caulfield Campus Past */}
-                  <div style={{ flex: 1 }}>
-                    <Filters>
-                      <Dropdown
-                        variant="light"
-                        trigger={(toggle) => (
-                          <FilterButton onClick={toggle}>Year</FilterButton>
-                        )}
-                      >
-                        <Menu>
-                          <MenuItem>Year options here</MenuItem>
-                        </Menu>
-                      </Dropdown>
-                      <Dropdown
-                        variant="ink"
-                        trigger={(toggle) => (
-                          <FilterButton onClick={toggle}>Month</FilterButton>
-                        )}
-                      >
-                        <Menu>
-                          <MenuItem>Month options here</MenuItem>
-                        </Menu>
-                      </Dropdown>
-                    </Filters>
-                    <BarsRow>
-                      <TemperatureBar valuePosition={locTwoTemp + 45} />
-                      <WindBar valuePosition={locTwoWind + 35} />
-                      <HumidityBar valuePosition={locTwoHumidity} />
-                    </BarsRow>
-                  </div>
-                </PastTwoColumn>
-                <GraphButton tall onClick={handleViewDetails} style={{ width: '100%', marginTop: '16px' }}>
-                  Click to view detailed graphs
-                </GraphButton>
-              </div>
-            )}
+                </div>
+              </PastTwoColumn>
+              <GraphButton
+                tall
+                onClick={handleViewDetails}
+                style={{ width: '100%', marginTop: '16px' }}
+              >
+                Click to view detailed graphs
+              </GraphButton>
+            </div>
+          )}
         </>
       )}
       {/* No Locations Selected */}

@@ -138,7 +138,7 @@ const Details: FC = () => {
       for (let month = 1; month <= 12; month++) {
         options.push({
           value: `${month.toString().padStart(2, '0')}-${year}`,
-          index: options.length
+          index: options.length,
         })
       }
     }
@@ -153,12 +153,13 @@ const Details: FC = () => {
     setTimeValues(newValues)
   }
 
-  const GraphComponent: FC<{ title: string; graphIndex: number }> = ({ title, graphIndex }) => (
+  const GraphComponent: FC<{ title: string; graphIndex: number }> = ({
+    title,
+    graphIndex,
+  }) => (
     <GraphSection>
       <GraphTitle>{title}</GraphTitle>
-      <GraphBox>
-        Graph {graphIndex + 1} goes here
-      </GraphBox>
+      <GraphBox>Graph {graphIndex + 1} goes here</GraphBox>
       <SliderContainer>
         <SliderLabel>Time Period</SliderLabel>
         <TimeSlider
@@ -166,7 +167,9 @@ const Details: FC = () => {
           min={0}
           max={timeOptions.length - 1}
           value={timeValues[graphIndex]}
-          onChange={(e) => handleSliderChange(graphIndex, parseInt(e.target.value))}
+          onChange={(e) =>
+            handleSliderChange(graphIndex, parseInt(e.target.value))
+          }
         />
         <TimeDisplay>
           {timeOptions[timeValues[graphIndex]]?.value || '01-2020'}

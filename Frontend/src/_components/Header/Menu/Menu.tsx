@@ -5,7 +5,6 @@ import { useMenu } from './_hooks'
 import { LoginMenu } from './login'
 import { CompareMenu } from './compare'
 
-
 const ButtonContainer = styled.div`
   position: fixed;
   top: 20px;
@@ -123,8 +122,6 @@ const Menu: FC = () => {
             closeLoc2={closeLoc2}
           />
         </CompareSection>
-
-        
       </SideMenu>
     </>
   )
