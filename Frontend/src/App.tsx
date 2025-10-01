@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
 import SignUp from './pages/SignUp'
+import Details from './pages/Details'
 import { LocOneProvider } from './_components/ContextHooks/LocOneContext'
 import { LocTwoProvider } from './_components/ContextHooks/LocTwoContext'
 
@@ -16,6 +17,7 @@ const App: FC = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/details" element={<Details/>} />
       </Routes>
     </LocOneProvider>
   </LocTwoProvider>

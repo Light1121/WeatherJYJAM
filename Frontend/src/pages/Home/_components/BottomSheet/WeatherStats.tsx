@@ -4,6 +4,7 @@ import { Dropdown } from '@/_components'
 import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
 import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
 import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
+import { useNavigate } from 'react-router-dom'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -90,16 +91,24 @@ const MenuItem = styled.li`
   }
 `
 
-const GraphBox = styled.div<{ tall?: boolean }>`
+const GraphButton = styled.button<{ tall?: boolean }>`
   display: grid;
   place-items: center;
   padding: 8px;
-  border: 1px dashed #ddd;
+  border: 1px solid #007acc;
   border-radius: 10px;
-  min-height: ${(props) => (props.tall ? '350px' : '220px')};
-  color: #666;
+  min-height: ${(props) => (props.tall ? '120px' : '220px')};
+  color: #007acc;
+  background-color: #f6fcff;
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #007acc;
+    color: white;
+  }
 `
 
 const FullWidthBox = styled.div`
@@ -123,11 +132,7 @@ const PastTwoColumn = styled.div`
   }
 `
 
-const WeatherStatsWrapper = styled.div`
-  max-height: 80vh;
-  overflow-y: auto;
-  padding-right: 8px; // space for scrollbar
-`
+
 
 interface WeatherStatsProps {
   isExpanded?: boolean
@@ -136,6 +141,11 @@ interface WeatherStatsProps {
 const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   const { isLocOne } = useLocOneContext()
   const { isLocTwo } = useLocTwoContext()
+  const navigate = useNavigate()
+
+  const handleViewDetails = () => {
+    navigate('/details')
+  }
 
   //dummy data below, replace with API data later
   const locOneName = 'Monash University Clayton Campus'
@@ -234,7 +244,9 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                   )}
                 </BarsRow>
 
-                <GraphBox>Graph goes here later</GraphBox>
+                <GraphButton onClick={handleViewDetails}>
+                  Click to view detailed graphs
+                </GraphButton>
               </PastGrid>
             </>
           )}
@@ -243,7 +255,6 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
       {/* Both Locations Selected */}
       {isLocOne && isLocTwo && (
         <>
-          <WeatherStatsWrapper style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <TwoColumn>
               {/* Clayton Campus */}
               <div>
@@ -268,19 +279,17 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                 {isExpanded && (
                   <BarsRow>
                     <TemperatureBar valuePosition={locTwoTemp + 45} />
-                    <WindBar valuePosition={locTwoWind + 35} />
+                    <WindBar valuePosition={locOneWind + 35} />
                     <HumidityBar valuePosition={locTwoHumidity} />
                   </BarsRow>
                 )}
               </div>
             </TwoColumn>
             {isExpanded && (
-              <PastGrid style={{ gridTemplateColumns: '1fr' }}>
-                <FullWidthBox>
-                  <SectionTitle style={{ textAlign: 'center' }}>
-                    Past Weather Report
-                  </SectionTitle>
-                </FullWidthBox>
+              <div style={{ width: '100%' }}>
+                <SectionTitle style={{ textAlign: 'center', margin: '20px 0 16px 0' }}>
+                  Past Weather Report
+                </SectionTitle>
                 <PastTwoColumn>
                   {/* Clayton Campus Past */}
                   <div style={{ flex: 1 }}>
@@ -343,12 +352,11 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                     </BarsRow>
                   </div>
                 </PastTwoColumn>
-                <FullWidthBox>
-                  <GraphBox tall>Graph goes here later</GraphBox>
-                </FullWidthBox>
-              </PastGrid>
+                <GraphButton tall onClick={handleViewDetails} style={{ width: '100%', marginTop: '16px' }}>
+                  Click to view detailed graphs
+                </GraphButton>
+              </div>
             )}
-          </WeatherStatsWrapper>
         </>
       )}
       {/* No Locations Selected */}

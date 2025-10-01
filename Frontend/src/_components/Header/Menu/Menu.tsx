@@ -78,10 +78,6 @@ const CompareSection = styled(MenuSection)`
   flex: 1;
 `
 
-const OthersSection = styled(MenuSection)`
-  flex: 0 0 10%;
-`
-
 const Menu: FC = () => {
   const {
     isOpen,
