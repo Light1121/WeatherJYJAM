@@ -1,0 +1,14 @@
+"use strict";this.default_r_nplltnkrh=this.default_r_nplltnkrh||{};(function(_){var window=this;
+try{
+var LRf=function(a,b){return a.length!==b.length?!1:a.every((c,d)=>c.path===b[d].path)},MRf=function(a){const b=a.children.primary;return b?[...a.segments,...MRf(b)]:a.segments};_.NRf=function(a){(a=a.doc.getElementById("main"))&&a!==document.activeElement&&_.vLb(a)};
+_.ORf=class{constructor(a,b,c){this.childrenOutletContexts=a;this.doc=b;this.router=c;a=c.events.pipe(_.cf(d=>d instanceof _.Yn||d instanceof _.Mh),_.Nf(null),_.Cf(),_.cf(([d,e])=>!(d instanceof _.Yn&&e instanceof _.Yn)),_.B(([,d])=>d));b=_.Ve(b,"focus",{capture:!0}).pipe(_.Sf(a),_.cf(([,d])=>d instanceof _.Yn),_.B(([,d])=>d.id),_.Nf(-1));a.pipe(_.B(d=>{var e=this.router.url,f;const g=(f=this.childrenOutletContexts.getContext("primary"))==null?void 0:f.route;f=g?_.fo(this.router,["."],{relativeTo:g}):
+null;return{event:d,url:e,rootOutletTree:f,activeSandboxId:this.getActiveSandboxId()}}),_.Cf(),_.cf(([d])=>d.event instanceof _.Yn)).pipe(_.Sf(b),_.cf(([[d,e],f])=>{(f=d.event.id===f&&document.activeElement!==document.body||!this.shouldHandleNavigation(d,e))||(d=d.rootOutletTree,e=e.rootOutletTree,d&&e?(d=MRf(d.root),e=MRf(e.root),e=!LRf(d,e)):e=!1,f=!e);return f?!1:!0})).subscribe(()=>{_.NRf(this)},d=>{this.logError(d)})}logError(a){const b=a instanceof Error?a.message:`${a}`;a={stack:a instanceof
+Error?a.stack||"":""};_.gi().logClientError({message:b,metadata:a,eventType:"navigationFocus",eventName:"navigationFocusError",errorExperience:6})}};_.tl([_.TOa(1,(0,_.$1a)(_.Lh)),_.UOa([_.Zn,Document,_.go])],_.ORf);
+}catch(e){_._DumpException(e)}
+try{
+_.Sh("kwg1if");
+_.oDb=class extends _.ORf{constructor(){const a=_.m(_.Zn),b=_.m(_.Lh),c=_.m(_.go);super(a,b,c)}shouldHandleNavigation(a,b){return!_.Uh(a.url).getPath().endsWith("rif-empty-page")&&!_.Uh(b.url).getPath().endsWith("rif-empty-page")}getActiveSandboxId(){return null}};_.oDb.\u0275fac=function(a){return new (a||_.oDb)};_.oDb.\u0275prov=_.k({token:_.oDb,factory:_.oDb.\u0275fac,providedIn:"root"});
+_.Th();
+}catch(e){_._DumpException(e)}
+}).call(this,this.default_r_nplltnkrh);
+// Google Inc.
