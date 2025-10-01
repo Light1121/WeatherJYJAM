@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useMenu } from './_hooks'
 import { LoginMenu } from './login'
 import { CompareMenu } from './compare'
-import { OthersMenu } from './others'
+
 
 const ButtonContainer = styled.div`
   position: fixed;
@@ -128,9 +128,7 @@ const Menu: FC = () => {
           />
         </CompareSection>
 
-        <OthersSection>
-          <OthersMenu onItemClick={closeMenu} />
-        </OthersSection>
+        
       </SideMenu>
     </>
   )
