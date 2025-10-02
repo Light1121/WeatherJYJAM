@@ -57,11 +57,11 @@ const ZoomController: FC = () => {
         const currentZoom = map.getZoom()
         // Clamp zoom to control panel limits
         const clampedZoom = Math.max(5, Math.min(12, currentZoom))
-        
+
         if (currentZoom !== clampedZoom) {
           map.setZoom(clampedZoom)
         }
-        
+
         if (Math.abs(controls.zoom - clampedZoom) > 0.05) {
           updateZoom(clampedZoom)
         }
@@ -72,12 +72,12 @@ const ZoomController: FC = () => {
         const currentZoom = map.getZoom()
         // Clamp zoom during zoom animation
         const clampedZoom = Math.max(5, Math.min(12, currentZoom))
-        
+
         if (Math.abs(controls.zoom - clampedZoom) > 0.05) {
           updateZoom(clampedZoom)
         }
       }
-    }
+    },
   })
 
   return null

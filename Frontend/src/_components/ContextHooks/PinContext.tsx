@@ -28,7 +28,7 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
     const newPin: PinData = {
       id: `pin-${Date.now()}`,
       position,
-      locationName: `Location ${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}`
+      locationName: `Location ${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}`,
     }
 
     if (!locationOnePin) {
@@ -52,12 +52,14 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
   }
 
   return (
-    <PinContext.Provider value={{
-      locationOnePin,
-      locationTwoPin,
-      addPin,
-      removePin
-    }}>
+    <PinContext.Provider
+      value={{
+        locationOnePin,
+        locationTwoPin,
+        addPin,
+        removePin,
+      }}
+    >
       {children}
     </PinContext.Provider>
   )

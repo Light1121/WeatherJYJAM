@@ -29,7 +29,7 @@ const defaultControls: ControlPanelState = {
   saturation: 100,
   brightness: 100,
   hue: 0,
-  colorMode: 'default'
+  colorMode: 'default',
 }
 
 const ControlPanelContext = createContext<ControlPanelContextType | null>(null)
@@ -38,37 +38,39 @@ interface ControlPanelProviderProps {
   children: ReactNode
 }
 
-export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ children }) => {
+export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
+  children,
+}) => {
   const [controls, setControls] = useState<ControlPanelState>(defaultControls)
 
   const updateZoom = (zoom: number) => {
     // Clamp zoom to valid range
     const clampedZoom = Math.max(5, Math.min(12, zoom))
-    setControls(prev => ({ ...prev, zoom: clampedZoom }))
+    setControls((prev) => ({ ...prev, zoom: clampedZoom }))
   }
 
   const updateOpacity = (opacity: number) => {
-    setControls(prev => ({ ...prev, opacity }))
+    setControls((prev) => ({ ...prev, opacity }))
   }
 
   const updateContrast = (contrast: number) => {
-    setControls(prev => ({ ...prev, contrast }))
+    setControls((prev) => ({ ...prev, contrast }))
   }
 
   const updateSaturation = (saturation: number) => {
-    setControls(prev => ({ ...prev, saturation }))
+    setControls((prev) => ({ ...prev, saturation }))
   }
 
   const updateBrightness = (brightness: number) => {
-    setControls(prev => ({ ...prev, brightness }))
+    setControls((prev) => ({ ...prev, brightness }))
   }
 
   const updateHue = (hue: number) => {
-    setControls(prev => ({ ...prev, hue }))
+    setControls((prev) => ({ ...prev, hue }))
   }
 
   const updateColorMode = (colorMode: string) => {
-    setControls(prev => ({ ...prev, colorMode }))
+    setControls((prev) => ({ ...prev, colorMode }))
   }
 
   const resetControls = () => {
@@ -76,17 +78,19 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
   }
 
   return (
-    <ControlPanelContext.Provider value={{
-      controls,
-      updateZoom,
-      updateOpacity,
-      updateContrast,
-      updateSaturation,
-      updateBrightness,
-      updateHue,
-      updateColorMode,
-      resetControls
-    }}>
+    <ControlPanelContext.Provider
+      value={{
+        controls,
+        updateZoom,
+        updateOpacity,
+        updateContrast,
+        updateSaturation,
+        updateBrightness,
+        updateHue,
+        updateColorMode,
+        resetControls,
+      }}
+    >
       {children}
     </ControlPanelContext.Provider>
   )

@@ -1,11 +1,13 @@
 import type { FC } from 'react'
 import { Marker, useMapEvents } from 'react-leaflet'
 import { divIcon } from 'leaflet'
+import type { LeafletMouseEvent } from 'leaflet'
 import { usePinContext } from '../../../../../_components/ContextHooks/usePinContext'
 
-const createPurpleIcon = (label: string) => divIcon({
-  className: 'custom-pin',
-  html: `
+const createPurpleIcon = (label: string) =>
+  divIcon({
+    className: 'custom-pin',
+    html: `
     <div style="
       width: 24px;
       height: 24px;
@@ -26,9 +28,9 @@ const createPurpleIcon = (label: string) => divIcon({
       ">${label}</span>
     </div>
   `,
-  iconSize: [24, 24],
-  iconAnchor: [12, 24],
-})
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
+  })
 
 const MapPins: FC = () => {
   const { locationOnePin, locationTwoPin, addPin, removePin } = usePinContext()
@@ -37,10 +39,10 @@ const MapPins: FC = () => {
     contextmenu: (e) => {
       e.originalEvent.preventDefault()
       addPin(e.latlng)
-    }
+    },
   })
 
-  const handlePinRightClick = (pinId: string, e: any) => {
+  const handlePinRightClick = (pinId: string, e: LeafletMouseEvent) => {
     e.originalEvent.preventDefault()
     e.originalEvent.stopPropagation()
     removePin(pinId)
@@ -53,7 +55,7 @@ const MapPins: FC = () => {
           position={locationOnePin.position}
           icon={createPurpleIcon('1')}
           eventHandlers={{
-            contextmenu: (e) => handlePinRightClick(locationOnePin.id, e)
+            contextmenu: (e) => handlePinRightClick(locationOnePin.id, e),
           }}
         />
       )}
@@ -62,7 +64,7 @@ const MapPins: FC = () => {
           position={locationTwoPin.position}
           icon={createPurpleIcon('2')}
           eventHandlers={{
-            contextmenu: (e) => handlePinRightClick(locationTwoPin.id, e)
+            contextmenu: (e) => handlePinRightClick(locationTwoPin.id, e),
           }}
         />
       )}

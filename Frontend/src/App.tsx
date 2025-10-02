@@ -15,15 +15,15 @@ const App: FC = () => (
     <LocOneProvider>
       <PinProvider>
         <ControlPanelProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/:tabId" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/details" element={<Details />} />
-      </Routes>
-      </ControlPanelProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/:tabId" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/details" element={<Details />} />
+          </Routes>
+        </ControlPanelProvider>
       </PinProvider>
     </LocOneProvider>
   </LocTwoProvider>

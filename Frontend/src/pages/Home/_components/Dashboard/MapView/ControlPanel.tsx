@@ -154,7 +154,7 @@ const ResetButton = styled.button`
   font-size: 12px;
   cursor: pointer;
   font-family: 'Instrument Sans', sans-serif;
-  
+
   &:hover {
     background: #007acc;
     color: white;
@@ -172,12 +172,12 @@ const ControlPanel: FC = () => {
     updateBrightness,
     updateHue,
     updateColorMode,
-    resetControls
+    resetControls,
   } = useControlPanelContext()
 
   // Local state for immediate visual feedback
   const [localValues, setLocalValues] = useState(controls)
-  
+
   // Timeout refs for debouncing
   const timeoutRefs = useRef<{
     zoom?: NodeJS.Timeout
@@ -207,10 +207,10 @@ const ControlPanel: FC = () => {
     key: keyof typeof timeoutRefs.current,
     value: number,
     updateFunction: (value: number) => void,
-    delay = 300
+    delay = 300,
   ) => {
     // Update local state immediately for visual feedback
-    setLocalValues(prev => ({ ...prev, [key]: value }))
+    setLocalValues((prev) => ({ ...prev, [key]: value }))
 
     // Clear existing timeout
     if (timeoutRefs.current[key]) {
@@ -224,10 +224,11 @@ const ControlPanel: FC = () => {
     }, delay)
   }
 
-  // Clean up timeouts on unmount
+  // Clean up timeouts on unmount - Fixed dependency warning
   useEffect(() => {
+    const currentTimeouts = timeoutRefs.current
     return () => {
-      Object.values(timeoutRefs.current).forEach(timeout => {
+      Object.values(currentTimeouts).forEach((timeout) => {
         if (timeout) clearTimeout(timeout)
       })
     }
@@ -241,10 +242,10 @@ const ControlPanel: FC = () => {
 
       <StyledControlPanel isOpen={isOpen}>
         {!isOpen && <Title>Map Controls</Title>}
-        
+
         <Content isOpen={isOpen}>
           <Title>Map Controls</Title>
-          
+
           {/* Zoom Control */}
           <ControlGroup>
             <Label>Zoom: {zoomToPercentage(localValues.zoom)}%</Label>
@@ -256,7 +257,14 @@ const ControlPanel: FC = () => {
                 max="12"
                 step="0.1"
                 value={localValues.zoom}
-                onChange={(e) => debouncedUpdate('zoom', parseFloat(e.target.value), updateZoom, 150)}
+                onChange={(e) =>
+                  debouncedUpdate(
+                    'zoom',
+                    parseFloat(e.target.value),
+                    updateZoom,
+                    150,
+                  )
+                }
               />
               <Icon>+</Icon>
             </SliderContainer>
@@ -267,13 +275,19 @@ const ControlPanel: FC = () => {
             <Label>Opacity: {localValues.opacity}%</Label>
             <SliderContainer>
               <Icon>◯</Icon>
-              <Slider 
-                type="range" 
-                min="0" 
-                max="100" 
-                step="5" 
+              <Slider
+                type="range"
+                min="0"
+                max="100"
+                step="5"
                 value={localValues.opacity}
-                onChange={(e) => debouncedUpdate('opacity', parseInt(e.target.value), updateOpacity)}
+                onChange={(e) =>
+                  debouncedUpdate(
+                    'opacity',
+                    parseInt(e.target.value),
+                    updateOpacity,
+                  )
+                }
               />
               <Icon>●</Icon>
             </SliderContainer>
@@ -290,7 +304,13 @@ const ControlPanel: FC = () => {
                 max="150"
                 step="10"
                 value={localValues.contrast}
-                onChange={(e) => debouncedUpdate('contrast', parseInt(e.target.value), updateContrast)}
+                onChange={(e) =>
+                  debouncedUpdate(
+                    'contrast',
+                    parseInt(e.target.value),
+                    updateContrast,
+                  )
+                }
               />
               <Icon>◑</Icon>
             </SliderContainer>
@@ -307,7 +327,13 @@ const ControlPanel: FC = () => {
                 max="200"
                 step="10"
                 value={localValues.saturation}
-                onChange={(e) => debouncedUpdate('saturation', parseInt(e.target.value), updateSaturation)}
+                onChange={(e) =>
+                  debouncedUpdate(
+                    'saturation',
+                    parseInt(e.target.value),
+                    updateSaturation,
+                  )
+                }
               />
               <Icon>☽</Icon>
             </SliderContainer>
@@ -324,7 +350,13 @@ const ControlPanel: FC = () => {
                 max="150"
                 step="5"
                 value={localValues.brightness}
-                onChange={(e) => debouncedUpdate('brightness', parseInt(e.target.value), updateBrightness)}
+                onChange={(e) =>
+                  debouncedUpdate(
+                    'brightness',
+                    parseInt(e.target.value),
+                    updateBrightness,
+                  )
+                }
               />
               <Icon>☀</Icon>
             </SliderContainer>
@@ -335,13 +367,15 @@ const ControlPanel: FC = () => {
             <Label>Hue: {localValues.hue}°</Label>
             <SliderContainer>
               <Icon>🎨</Icon>
-              <Slider 
-                type="range" 
-                min="0" 
-                max="360" 
-                step="15" 
+              <Slider
+                type="range"
+                min="0"
+                max="360"
+                step="15"
                 value={localValues.hue}
-                onChange={(e) => debouncedUpdate('hue', parseInt(e.target.value), updateHue)}
+                onChange={(e) =>
+                  debouncedUpdate('hue', parseInt(e.target.value), updateHue)
+                }
               />
               <Icon>🎨</Icon>
             </SliderContainer>
@@ -350,7 +384,7 @@ const ControlPanel: FC = () => {
           {/* Color Scheme Selector */}
           <ControlGroup>
             <Label>Color Mode</Label>
-            <Select 
+            <Select
               value={controls.colorMode}
               onChange={(e) => updateColorMode(e.target.value)}
             >
