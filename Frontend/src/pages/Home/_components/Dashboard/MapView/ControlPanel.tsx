@@ -1,30 +1,74 @@
-import React from 'react'
+import type { FC } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
-const ControlPanelContainer = styled.div`
+const ControlPanelWrapper = styled.div`
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 2000;
-  background: transparent;
-  padding: 8px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 260px;
+`
+
+const HandleButton = styled.button`
+  cursor: pointer;
+  width: 48px;
+  height: 24px;
+  border-radius: 20%;
+  border: 1px solid #ddd;
+  background: white;
+  margin-bottom: -2px;
+  margin-left: 12px;
+  z-index: 500;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+`
+
+const StyledControlPanel = styled.div<{ isOpen: boolean }>`
+  background: white;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: ${({ isOpen }) => (isOpen ? '16px 20px' : '8px 20px')};
+  width: 100%;
+  max-height: ${({ isOpen }) => (isOpen ? '400px' : '50px')};
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    padding 0.3s ease;
+  position: relative;
+`
+
+const Content = styled.div<{ isOpen: boolean }>`
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`
+
+const Title = styled.h3`
+  margin: 8px 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Instrument Sans', sans-serif;
+`
+
+const ControlGroup = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 `
 
-const ZoomLabel = styled.div`
+const Label = styled.div`
   font-family: 'Instrument Sans', sans-serif;
   font-size: 12px;
   font-weight: 600;
-  color: #ffffff;
-  text-shadow:
-    -1px -1px 0 #000000,
-    1px -1px 0 #000000,
-    -1px 1px 0 #000000,
-    1px 1px 0 #000000,
-    0 0 3px rgba(0, 0, 0, 0.8);
+  color: #555;
 `
 
 const SliderContainer = styled.div`
@@ -33,28 +77,22 @@ const SliderContainer = styled.div`
   gap: 8px;
 `
 
-const ZoomIcon = styled.div`
+const Icon = styled.div`
   width: 16px;
   height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-size: 14px;
+  color: #666;
+  font-size: 12px;
   font-weight: bold;
-  text-shadow:
-    -1px -1px 0 #000000,
-    1px -1px 0 #000000,
-    -1px 1px 0 #000000,
-    1px 1px 0 #000000,
-    0 0 3px rgba(0, 0, 0, 0.8);
 `
 
-const ZoomSlider = styled.input`
-  width: 120px;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.3);
+const Slider = styled.input`
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #e0e0e0;
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
@@ -62,135 +100,166 @@ const ZoomSlider = styled.input`
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #4a90e2;
-    cursor: grab;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background: #007acc;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
 
     &:hover {
-      background: #357abd;
+      background: #005f99;
       transform: scale(1.1);
-    }
-
-    &:active {
-      cursor: grabbing;
     }
   }
 
   &::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #4a90e2;
-    cursor: grab;
+    background: #007acc;
+    cursor: pointer;
     border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 `
 
-const ControlPanel: React.FC = () => {
+const Select = styled.select`
+  width: 100%;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #f6f7f9;
+  color: #333;
+  font-size: 12px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+
+  &:focus {
+    outline: none;
+    border-color: #007acc;
+  }
+`
+
+const ControlPanel: FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggle = () => {
+    setIsOpen(!isOpen)
+  }
+
   return (
-    <ControlPanelContainer>
-      {/* Zoom Control */}
-      <ZoomLabel>Zoom</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>−</ZoomIcon>
-        <ZoomSlider
-          type="range"
-          min="2.5"
-          max="18"
-          step="0.5"
-          defaultValue="4"
-        />
-        <ZoomIcon>+</ZoomIcon>
-      </SliderContainer>
+    <ControlPanelWrapper>
+      <HandleButton onClick={toggle} aria-label="Toggle control panel">
+        {isOpen ? '▾' : '▴'}
+      </HandleButton>
 
-      {/* Opacity Control */}
-      <ZoomLabel>Opacity</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>◯</ZoomIcon>
-        <ZoomSlider type="range" min="0" max="100" step="5" defaultValue="80" />
-        <ZoomIcon>●</ZoomIcon>
-      </SliderContainer>
+      <StyledControlPanel isOpen={isOpen}>
+        {!isOpen && <Title>Map Controls</Title>}
+        
+        <Content isOpen={isOpen}>
+          <Title>Map Controls</Title>
+          
+          {/* Zoom Control */}
+          <ControlGroup>
+            <Label>Zoom</Label>
+            <SliderContainer>
+              <Icon>−</Icon>
+              <Slider
+                type="range"
+                min="2.5"
+                max="18"
+                step="0.5"
+                defaultValue="4"
+              />
+              <Icon>+</Icon>
+            </SliderContainer>
+          </ControlGroup>
 
-      {/* Contrast Control */}
-      <ZoomLabel>Contrast</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>◐</ZoomIcon>
-        <ZoomSlider
-          type="range"
-          min="50"
-          max="200"
-          step="10"
-          defaultValue="100"
-        />
-        <ZoomIcon>◑</ZoomIcon>
-      </SliderContainer>
+          {/* Opacity Control */}
+          <ControlGroup>
+            <Label>Opacity</Label>
+            <SliderContainer>
+              <Icon>◯</Icon>
+              <Slider type="range" min="0" max="100" step="5" defaultValue="80" />
+              <Icon>●</Icon>
+            </SliderContainer>
+          </ControlGroup>
 
-      {/* Saturation Control */}
-      <ZoomLabel>Saturation</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>☾</ZoomIcon>
-        <ZoomSlider
-          type="range"
-          min="0"
-          max="200"
-          step="10"
-          defaultValue="100"
-        />
-        <ZoomIcon>☽</ZoomIcon>
-      </SliderContainer>
+          {/* Contrast Control */}
+          <ControlGroup>
+            <Label>Contrast</Label>
+            <SliderContainer>
+              <Icon>◐</Icon>
+              <Slider
+                type="range"
+                min="50"
+                max="200"
+                step="10"
+                defaultValue="100"
+              />
+              <Icon>◑</Icon>
+            </SliderContainer>
+          </ControlGroup>
 
-      {/* Brightness Control */}
-      <ZoomLabel>Brightness</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>☀</ZoomIcon>
-        <ZoomSlider
-          type="range"
-          min="50"
-          max="150"
-          step="5"
-          defaultValue="100"
-        />
-        <ZoomIcon>☀</ZoomIcon>
-      </SliderContainer>
+          {/* Saturation Control */}
+          <ControlGroup>
+            <Label>Saturation</Label>
+            <SliderContainer>
+              <Icon>☾</Icon>
+              <Slider
+                type="range"
+                min="0"
+                max="200"
+                step="10"
+                defaultValue="100"
+              />
+              <Icon>☽</Icon>
+            </SliderContainer>
+          </ControlGroup>
 
-      {/* Hue Rotation Control */}
-      <ZoomLabel>Hue</ZoomLabel>
-      <SliderContainer>
-        <ZoomIcon>🎨</ZoomIcon>
-        <ZoomSlider type="range" min="0" max="360" step="15" defaultValue="0" />
-        <ZoomIcon>🎨</ZoomIcon>
-      </SliderContainer>
+          {/* Brightness Control */}
+          <ControlGroup>
+            <Label>Brightness</Label>
+            <SliderContainer>
+              <Icon>☀</Icon>
+              <Slider
+                type="range"
+                min="50"
+                max="150"
+                step="5"
+                defaultValue="100"
+              />
+              <Icon>☀</Icon>
+            </SliderContainer>
+          </ControlGroup>
 
-      {/* Color Scheme Selector */}
-      <ZoomLabel>Color Mode</ZoomLabel>
-      <SliderContainer>
-        <select
-          style={{
-            width: '140px',
-            height: '24px',
-            borderRadius: '4px',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            background: 'rgba(255, 255, 255, 0.9)',
-            color: '#333',
-            fontSize: '11px',
-            padding: '2px 4px',
-            cursor: 'pointer',
-          }}
-          defaultValue="default"
-        >
-          <option value="default">Default</option>
-          <option value="colorblind">Color Blind</option>
-          <option value="high-contrast">High Contrast</option>
-          <option value="grayscale">Grayscale</option>
-          <option value="inverted">Inverted</option>
-        </select>
-      </SliderContainer>
-    </ControlPanelContainer>
+          {/* Hue Rotation Control */}
+          <ControlGroup>
+            <Label>Hue</Label>
+            <SliderContainer>
+              <Icon>🎨</Icon>
+              <Slider type="range" min="0" max="360" step="15" defaultValue="0" />
+              <Icon>🎨</Icon>
+            </SliderContainer>
+          </ControlGroup>
+
+          {/* Color Scheme Selector */}
+          <ControlGroup>
+            <Label>Color Mode</Label>
+            <Select defaultValue="default">
+              <option value="default">Default</option>
+              <option value="colorblind">Color Blind</option>
+              <option value="high-contrast">High Contrast</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="inverted">Inverted</option>
+            </Select>
+          </ControlGroup>
+        </Content>
+      </StyledControlPanel>
+    </ControlPanelWrapper>
   )
 }
 
