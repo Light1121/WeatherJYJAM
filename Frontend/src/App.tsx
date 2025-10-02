@@ -8,11 +8,13 @@ import Details from './pages/Details'
 import { LocOneProvider } from './_components/ContextHooks/LocOneContext'
 import { LocTwoProvider } from './_components/ContextHooks/LocTwoContext'
 import { PinProvider } from './_components/ContextHooks/PinContext'
+import { ControlPanelProvider } from './_components/ContextHooks/ControlPanelContext'
 
 const App: FC = () => (
   <LocTwoProvider>
     <LocOneProvider>
       <PinProvider>
+        <ControlPanelProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:tabId" element={<Home />} />
@@ -21,6 +23,7 @@ const App: FC = () => (
         <Route path="/signup" element={<SignUp />} />
         <Route path="/details" element={<Details />} />
       </Routes>
+      </ControlPanelProvider>
       </PinProvider>
     </LocOneProvider>
   </LocTwoProvider>

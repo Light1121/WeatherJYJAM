@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
+import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
 
 const ControlPanelWrapper = styled.div`
   position: absolute;
@@ -143,8 +144,36 @@ const Select = styled.select`
   }
 `
 
+const ResetButton = styled.button`
+  width: 100%;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #007acc;
+  background: #f6fcff;
+  color: #007acc;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  
+  &:hover {
+    background: #007acc;
+    color: white;
+  }
+`
+
 const ControlPanel: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const {
+    controls,
+    updateZoom,
+    updateOpacity,
+    updateContrast,
+    updateSaturation,
+    updateBrightness,
+    updateHue,
+    updateColorMode,
+    resetControls
+  } = useControlPanelContext()
 
   const toggle = () => {
     setIsOpen(!isOpen)
@@ -164,7 +193,7 @@ const ControlPanel: FC = () => {
           
           {/* Zoom Control */}
           <ControlGroup>
-            <Label>Zoom</Label>
+            <Label>Zoom: {controls.zoom}</Label>
             <SliderContainer>
               <Icon>−</Icon>
               <Slider
@@ -172,7 +201,8 @@ const ControlPanel: FC = () => {
                 min="2.5"
                 max="18"
                 step="0.5"
-                defaultValue="4"
+                value={controls.zoom}
+                onChange={(e) => updateZoom(parseFloat(e.target.value))}
               />
               <Icon>+</Icon>
             </SliderContainer>
@@ -180,17 +210,24 @@ const ControlPanel: FC = () => {
 
           {/* Opacity Control */}
           <ControlGroup>
-            <Label>Opacity</Label>
+            <Label>Opacity: {controls.opacity}%</Label>
             <SliderContainer>
               <Icon>◯</Icon>
-              <Slider type="range" min="0" max="100" step="5" defaultValue="80" />
+              <Slider 
+                type="range" 
+                min="0" 
+                max="100" 
+                step="5" 
+                value={controls.opacity}
+                onChange={(e) => updateOpacity(parseInt(e.target.value))}
+              />
               <Icon>●</Icon>
             </SliderContainer>
           </ControlGroup>
 
           {/* Contrast Control */}
           <ControlGroup>
-            <Label>Contrast</Label>
+            <Label>Contrast: {controls.contrast}%</Label>
             <SliderContainer>
               <Icon>◐</Icon>
               <Slider
@@ -198,7 +235,8 @@ const ControlPanel: FC = () => {
                 min="50"
                 max="200"
                 step="10"
-                defaultValue="100"
+                value={controls.contrast}
+                onChange={(e) => updateContrast(parseInt(e.target.value))}
               />
               <Icon>◑</Icon>
             </SliderContainer>
@@ -206,7 +244,7 @@ const ControlPanel: FC = () => {
 
           {/* Saturation Control */}
           <ControlGroup>
-            <Label>Saturation</Label>
+            <Label>Saturation: {controls.saturation}%</Label>
             <SliderContainer>
               <Icon>☾</Icon>
               <Slider
@@ -214,7 +252,8 @@ const ControlPanel: FC = () => {
                 min="0"
                 max="200"
                 step="10"
-                defaultValue="100"
+                value={controls.saturation}
+                onChange={(e) => updateSaturation(parseInt(e.target.value))}
               />
               <Icon>☽</Icon>
             </SliderContainer>
@@ -222,7 +261,7 @@ const ControlPanel: FC = () => {
 
           {/* Brightness Control */}
           <ControlGroup>
-            <Label>Brightness</Label>
+            <Label>Brightness: {controls.brightness}%</Label>
             <SliderContainer>
               <Icon>☀</Icon>
               <Slider
@@ -230,7 +269,8 @@ const ControlPanel: FC = () => {
                 min="50"
                 max="150"
                 step="5"
-                defaultValue="100"
+                value={controls.brightness}
+                onChange={(e) => updateBrightness(parseInt(e.target.value))}
               />
               <Icon>☀</Icon>
             </SliderContainer>
@@ -238,10 +278,17 @@ const ControlPanel: FC = () => {
 
           {/* Hue Rotation Control */}
           <ControlGroup>
-            <Label>Hue</Label>
+            <Label>Hue: {controls.hue}°</Label>
             <SliderContainer>
               <Icon>🎨</Icon>
-              <Slider type="range" min="0" max="360" step="15" defaultValue="0" />
+              <Slider 
+                type="range" 
+                min="0" 
+                max="360" 
+                step="15" 
+                value={controls.hue}
+                onChange={(e) => updateHue(parseInt(e.target.value))}
+              />
               <Icon>🎨</Icon>
             </SliderContainer>
           </ControlGroup>
@@ -249,13 +296,23 @@ const ControlPanel: FC = () => {
           {/* Color Scheme Selector */}
           <ControlGroup>
             <Label>Color Mode</Label>
-            <Select defaultValue="default">
+            <Select 
+              value={controls.colorMode}
+              onChange={(e) => updateColorMode(e.target.value)}
+            >
               <option value="default">Default</option>
               <option value="colorblind">Color Blind</option>
               <option value="high-contrast">High Contrast</option>
               <option value="grayscale">Grayscale</option>
               <option value="inverted">Inverted</option>
             </Select>
+          </ControlGroup>
+
+          {/* Reset Button */}
+          <ControlGroup>
+            <ResetButton onClick={resetControls}>
+              Reset All Controls
+            </ResetButton>
           </ControlGroup>
         </Content>
       </StyledControlPanel>
