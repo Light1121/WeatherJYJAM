@@ -36,14 +36,12 @@ const MapPins: FC = () => {
   const { locationOnePin, locationTwoPin, addPin, removePin } = usePinContext()
 
   useMapEvents({
-    contextmenu: (e) => {
-      e.originalEvent.preventDefault()
+    click: (e) => {
       addPin(e.latlng)
     },
   })
 
-  const handlePinRightClick = (pinId: string, e: LeafletMouseEvent) => {
-    e.originalEvent.preventDefault()
+  const handlePinClick = (pinId: string, e: LeafletMouseEvent) => {
     e.originalEvent.stopPropagation()
     removePin(pinId)
   }
@@ -55,7 +53,7 @@ const MapPins: FC = () => {
           position={locationOnePin.position}
           icon={createPurpleIcon('1')}
           eventHandlers={{
-            contextmenu: (e) => handlePinRightClick(locationOnePin.id, e),
+            click: (e) => handlePinClick(locationOnePin.id, e),
           }}
         />
       )}
@@ -64,7 +62,7 @@ const MapPins: FC = () => {
           position={locationTwoPin.position}
           icon={createPurpleIcon('2')}
           eventHandlers={{
-            contextmenu: (e) => handlePinRightClick(locationTwoPin.id, e),
+            click: (e) => handlePinClick(locationTwoPin.id, e),
           }}
         />
       )}
