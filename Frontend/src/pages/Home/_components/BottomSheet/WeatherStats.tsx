@@ -129,9 +129,9 @@ const PastTwoColumn = styled.div`
 `
 const NoDataMessage = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 10px 20px;
   text-align: center;
   color: #666;
   font-family: 'Instrument Sans', sans-serif;
