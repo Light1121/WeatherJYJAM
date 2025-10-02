@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { Marker, useMapEvents } from 'react-leaflet'
 import { divIcon } from 'leaflet'
 import type { LeafletMouseEvent } from 'leaflet'
-import { usePinContext } from '../../../../../_components/ContextHooks/usePinContext'
+import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 
 const createPurpleIcon = (label: string) =>
   divIcon({
@@ -19,14 +19,21 @@ const createPurpleIcon = (label: string) =>
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      
     ">
       <span style="
         color: white;
         font-weight: bold;
         font-size: 12px;
         transform: rotate(45deg);
-      ">${label}</span>
+      "><span>${label}</span></div>
     </div>
+    <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+    </style>
   `,
     iconSize: [24, 24],
     iconAnchor: [12, 24],
@@ -34,10 +41,11 @@ const createPurpleIcon = (label: string) =>
 
 const MapPins: FC = () => {
   const { locationOnePin, locationTwoPin, addPin, removePin } = usePinContext()
+  // Removed unused isLoading state
 
   useMapEvents({
-    click: (e) => {
-      addPin(e.latlng)
+    click: async (e) => {
+      await addPin(e.latlng)
     },
   })
 

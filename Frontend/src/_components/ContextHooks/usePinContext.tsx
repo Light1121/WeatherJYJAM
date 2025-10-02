@@ -1,5 +1,6 @@
 import { useContext } from 'react'
-import PinContext from './PinContext'
+// Update the import path to the correct location of PinContext
+import { PinContext } from './contexts'
 
 export const usePinContext = () => {
   const context = useContext(PinContext)

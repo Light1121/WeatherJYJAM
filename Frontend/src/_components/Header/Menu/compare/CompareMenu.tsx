@@ -2,8 +2,7 @@ import type { FC } from 'react'
 //import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import LocSearchBar from '../LocSearchBar'
-import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
-import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
+
 
 const AccordionItem = styled.div<{ isExpanded?: boolean }>`
   background-color: white;
@@ -51,21 +50,7 @@ const AccordionContent = styled.div<{ isOpen?: boolean }>`
   background: rgba(255, 255, 255, 0.8);
 `
 
-interface ToggleButtonProps {
-  $active: boolean
-}
 
-const ToggleButton = styled.button<ToggleButtonProps>`
-  background-color: ${({ $active }) => ($active ? 'green' : 'gray')};
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 12px;
-  &:hover {
-    background-color: ${({ $active }) => ($active ? '#45a049' : '#aaa')};
-  }
-`
 
 const LocTitle = styled.h4`
   border: none;
@@ -92,8 +77,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
   closeLoc1,
   closeLoc2,
 }) => {
-  const { isLocOne, setIsLocOne } = useLocOneContext()
-  const { isLocTwo, setIsLocTwo } = useLocTwoContext()
+  
 
   return (
     <>
@@ -108,12 +92,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc1Open}>
           <LocTitle>Set Location 1</LocTitle>
-          <ToggleButton
-            $active={isLocOne}
-            onClick={() => setIsLocOne(!isLocOne)}
-          >
-            {isLocOne ? 'Disable Location 1' : 'Enable Location 1'}
-          </ToggleButton>
+         
           <LocSearchBar />
         </AccordionContent>
       </AccordionItem>
@@ -129,12 +108,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc2Open}>
           <LocTitle>Set Location 2</LocTitle>
-          <ToggleButton
-            $active={isLocTwo}
-            onClick={() => setIsLocTwo(!isLocTwo)}
-          >
-            {isLocTwo ? 'Disable Location 2' : 'Enable Location 2'}
-          </ToggleButton>
+          
           <LocSearchBar />
         </AccordionContent>
       </AccordionItem>

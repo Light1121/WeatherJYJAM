@@ -2,9 +2,8 @@ import type { FC } from 'react'
 import { styled } from 'styled-components'
 import { Dropdown } from '@/_components'
 import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
-import useLocOneContext from '@/_components/ContextHooks/useLocOneContext'
-import useLocTwoContext from '@/_components/ContextHooks/useLocTwoContext'
 import { useNavigate } from 'react-router-dom'
+import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -128,50 +127,57 @@ const PastTwoColumn = styled.div`
     gap: 16px;
   }
 `
+const NoDataMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+`
 
 interface WeatherStatsProps {
   isExpanded?: boolean
 }
 
 const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
-  const { isLocOne } = useLocOneContext()
-  const { isLocTwo } = useLocTwoContext()
+  const { locationOnePin, locationTwoPin } = usePinContext()
   const navigate = useNavigate()
 
   const handleViewDetails = () => {
     navigate('/details')
   }
 
-  //dummy data below, replace with API data later
-  const locOneName = 'Monash University Clayton Campus'
-  const locOneTemp = 20
-  const locOneWind = 15
-  const locOneHumidity = 30
-
-  const locTwoName = 'Caulfield Campus'
-  const locTwoTemp = 15
-  const locTwoWind = 10
-  const locTwoHumidity = 40
+  // Check if we have any pins
+  const hasLocationOne = locationOnePin !== null
+  const hasLocationTwo = locationTwoPin !== null
 
   return (
     <>
-      {/* Only one of Location 1 or Location 2 are selected */}
-      {((isLocOne && !isLocTwo) || (!isLocOne && isLocTwo)) && (
+      {/* Only one location selected */}
+      {((hasLocationOne && !hasLocationTwo) ||
+        (!hasLocationOne && hasLocationTwo)) && (
         <>
           <HeaderRow>
             <div
               style={{ display: 'flex', gap: '12px', alignItems: 'baseline' }}
             >
-              {isLocOne && (
+              {hasLocationOne && locationOnePin && (
                 <>
-                  <Location>{locOneName}</Location>
-                  <NowTemp>{locOneTemp}°C</NowTemp>
+                  <Location>{locationOnePin.locationName}</Location>
+                  <NowTemp>
+                    {locationOnePin.weatherData?.temperature || 0}°C
+                  </NowTemp>
                 </>
               )}
-              {isLocTwo && (
+              {hasLocationTwo && locationTwoPin && (
                 <>
-                  <Location>{locTwoName}</Location>
-                  <NowTemp>{locTwoTemp}°C</NowTemp>
+                  <Location>{locationTwoPin.locationName}</Location>
+                  <NowTemp>
+                    {locationTwoPin.weatherData?.temperature || 0}°C
+                  </NowTemp>
                 </>
               )}
             </div>
@@ -179,18 +185,34 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
           {isExpanded && (
             <>
               <BarsRow>
-                {isLocOne && (
+                {hasLocationOne && locationOnePin?.weatherData && (
                   <>
-                    <TemperatureBar valuePosition={locOneTemp + 45} />
-                    <WindBar valuePosition={locOneWind + 35} />
-                    <HumidityBar valuePosition={locOneHumidity} />
+                    <TemperatureBar
+                      valuePosition={
+                        locationOnePin.weatherData.temperature + 45
+                      }
+                    />
+                    <WindBar
+                      valuePosition={locationOnePin.weatherData.windSpeed + 35}
+                    />
+                    <HumidityBar
+                      valuePosition={locationOnePin.weatherData.humidity}
+                    />
                   </>
                 )}
-                {isLocTwo && (
+                {hasLocationTwo && locationTwoPin?.weatherData && (
                   <>
-                    <TemperatureBar valuePosition={locTwoTemp + 45} />
-                    <WindBar valuePosition={locTwoWind + 35} />
-                    <HumidityBar valuePosition={locTwoHumidity} />
+                    <TemperatureBar
+                      valuePosition={
+                        locationTwoPin.weatherData.temperature + 45
+                      }
+                    />
+                    <WindBar
+                      valuePosition={locationTwoPin.weatherData.windSpeed + 35}
+                    />
+                    <HumidityBar
+                      valuePosition={locationTwoPin.weatherData.humidity}
+                    />
                   </>
                 )}
               </BarsRow>
@@ -223,18 +245,38 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                 </Filters>
 
                 <BarsRow>
-                  {isLocOne && (
+                  {hasLocationOne && locationOnePin?.weatherData && (
                     <>
-                      <TemperatureBar valuePosition={locOneTemp + 45} />
-                      <WindBar valuePosition={locOneWind + 35} />
-                      <HumidityBar valuePosition={locOneHumidity} />
+                      <TemperatureBar
+                        valuePosition={
+                          locationOnePin.weatherData.temperature + 45
+                        }
+                      />
+                      <WindBar
+                        valuePosition={
+                          locationOnePin.weatherData.windSpeed + 35
+                        }
+                      />
+                      <HumidityBar
+                        valuePosition={locationOnePin.weatherData.humidity}
+                      />
                     </>
                   )}
-                  {isLocTwo && (
+                  {hasLocationTwo && locationTwoPin?.weatherData && (
                     <>
-                      <TemperatureBar valuePosition={locTwoTemp + 45} />
-                      <WindBar valuePosition={locTwoWind + 35} />
-                      <HumidityBar valuePosition={locTwoHumidity} />
+                      <TemperatureBar
+                        valuePosition={
+                          locationTwoPin.weatherData.temperature + 45
+                        }
+                      />
+                      <WindBar
+                        valuePosition={
+                          locationTwoPin.weatherData.windSpeed + 35
+                        }
+                      />
+                      <HumidityBar
+                        valuePosition={locationTwoPin.weatherData.humidity}
+                      />
                     </>
                   )}
                 </BarsRow>
@@ -247,39 +289,58 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
           )}
         </>
       )}
+
       {/* Both Locations Selected */}
-      {isLocOne && isLocTwo && (
+      {hasLocationOne && hasLocationTwo && locationOnePin && locationTwoPin && (
         <>
           <TwoColumn>
-            {/* Clayton Campus */}
+            {/* Location 1 */}
             <div>
               <HeaderRow>
-                <Location>{locOneName}</Location>
-                <NowTemp>{locOneTemp}°C</NowTemp>
+                <Location>{locationOnePin.locationName}</Location>
+                <NowTemp>
+                  {locationOnePin.weatherData?.temperature || 0}°C
+                </NowTemp>
               </HeaderRow>
-              {isExpanded && (
+              {isExpanded && locationOnePin.weatherData && (
                 <BarsRow>
-                  <TemperatureBar valuePosition={locOneTemp + 45} />
-                  <WindBar valuePosition={locOneWind + 35} />
-                  <HumidityBar valuePosition={locOneHumidity} />
+                  <TemperatureBar
+                    valuePosition={locationOnePin.weatherData.temperature + 45}
+                  />
+                  <WindBar
+                    valuePosition={locationOnePin.weatherData.windSpeed + 35}
+                  />
+                  <HumidityBar
+                    valuePosition={locationOnePin.weatherData.humidity}
+                  />
                 </BarsRow>
               )}
             </div>
-            {/* Caulfield Campus */}
+
+            {/* Location 2 */}
             <div>
               <HeaderRow>
-                <Location>{locTwoName}</Location>
-                <NowTemp>{locTwoTemp}°C</NowTemp>
+                <Location>{locationTwoPin.locationName}</Location>
+                <NowTemp>
+                  {locationTwoPin.weatherData?.temperature || 0}°C
+                </NowTemp>
               </HeaderRow>
-              {isExpanded && (
+              {isExpanded && locationTwoPin.weatherData && (
                 <BarsRow>
-                  <TemperatureBar valuePosition={locTwoTemp + 45} />
-                  <WindBar valuePosition={locOneWind + 35} />
-                  <HumidityBar valuePosition={locTwoHumidity} />
+                  <TemperatureBar
+                    valuePosition={locationTwoPin.weatherData.temperature + 45}
+                  />
+                  <WindBar
+                    valuePosition={locationTwoPin.weatherData.windSpeed + 35}
+                  />
+                  <HumidityBar
+                    valuePosition={locationTwoPin.weatherData.humidity}
+                  />
                 </BarsRow>
               )}
             </div>
           </TwoColumn>
+
           {isExpanded && (
             <div style={{ width: '100%' }}>
               <SectionTitle
@@ -288,7 +349,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                 Past Weather Report
               </SectionTitle>
               <PastTwoColumn>
-                {/* Clayton Campus Past */}
+                {/* Location 1 Past */}
                 <div style={{ flex: 1 }}>
                   <Filters>
                     <Dropdown
@@ -312,13 +373,26 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       </Menu>
                     </Dropdown>
                   </Filters>
-                  <BarsRow>
-                    <TemperatureBar valuePosition={locOneTemp + 45} />
-                    <WindBar valuePosition={locOneWind + 35} />
-                    <HumidityBar valuePosition={locOneHumidity} />
-                  </BarsRow>
+                  {locationOnePin.weatherData && (
+                    <BarsRow>
+                      <TemperatureBar
+                        valuePosition={
+                          locationOnePin.weatherData.temperature + 45
+                        }
+                      />
+                      <WindBar
+                        valuePosition={
+                          locationOnePin.weatherData.windSpeed + 35
+                        }
+                      />
+                      <HumidityBar
+                        valuePosition={locationOnePin.weatherData.humidity}
+                      />
+                    </BarsRow>
+                  )}
                 </div>
-                {/* Caulfield Campus Past */}
+
+                {/* Location 2 Past */}
                 <div style={{ flex: 1 }}>
                   <Filters>
                     <Dropdown
@@ -342,11 +416,23 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       </Menu>
                     </Dropdown>
                   </Filters>
-                  <BarsRow>
-                    <TemperatureBar valuePosition={locTwoTemp + 45} />
-                    <WindBar valuePosition={locTwoWind + 35} />
-                    <HumidityBar valuePosition={locTwoHumidity} />
-                  </BarsRow>
+                  {locationTwoPin.weatherData && (
+                    <BarsRow>
+                      <TemperatureBar
+                        valuePosition={
+                          locationTwoPin.weatherData.temperature + 45
+                        }
+                      />
+                      <WindBar
+                        valuePosition={
+                          locationTwoPin.weatherData.windSpeed + 35
+                        }
+                      />
+                      <HumidityBar
+                        valuePosition={locationTwoPin.weatherData.humidity}
+                      />
+                    </BarsRow>
+                  )}
                 </div>
               </PastTwoColumn>
               <GraphButton
@@ -360,9 +446,12 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
           )}
         </>
       )}
+
       {/* No Locations Selected */}
-      {!isLocOne && !isLocTwo && (
-        <Location>Please select a location to view weather stats.</Location>
+      {!hasLocationOne && !hasLocationTwo && (
+        <NoDataMessage>
+          Click on the map to add location pins and view weather data.
+        </NoDataMessage>
       )}
     </>
   )
