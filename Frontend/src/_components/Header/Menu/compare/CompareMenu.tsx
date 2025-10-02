@@ -3,7 +3,6 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 import LocSearchBar from '../LocSearchBar'
 
-
 const AccordionItem = styled.div<{ isExpanded?: boolean }>`
   background-color: white;
   border-radius: 10px;
@@ -50,8 +49,6 @@ const AccordionContent = styled.div<{ isOpen?: boolean }>`
   background: rgba(255, 255, 255, 0.8);
 `
 
-
-
 const LocTitle = styled.h4`
   border: none;
   text-align: middle;
@@ -77,8 +74,6 @@ const CompareMenu: FC<CompareMenuProps> = ({
   closeLoc1,
   closeLoc2,
 }) => {
-  
-
   return (
     <>
       <AccordionItem isExpanded={isLoc1Open}>
@@ -92,7 +87,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc1Open}>
           <LocTitle>Set Location 1</LocTitle>
-         
+
           <LocSearchBar />
         </AccordionContent>
       </AccordionItem>
@@ -108,7 +103,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc2Open}>
           <LocTitle>Set Location 2</LocTitle>
-          
+
           <LocSearchBar />
         </AccordionContent>
       </AccordionItem>
