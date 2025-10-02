@@ -7,10 +7,12 @@ import SignUp from './pages/SignUp'
 import Details from './pages/Details'
 import { LocOneProvider } from './_components/ContextHooks/LocOneContext'
 import { LocTwoProvider } from './_components/ContextHooks/LocTwoContext'
+import { PinProvider } from './_components/ContextHooks/PinContext'
 
 const App: FC = () => (
   <LocTwoProvider>
     <LocOneProvider>
+      <PinProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:tabId" element={<Home />} />
@@ -19,6 +21,7 @@ const App: FC = () => (
         <Route path="/signup" element={<SignUp />} />
         <Route path="/details" element={<Details />} />
       </Routes>
+      </PinProvider>
     </LocOneProvider>
   </LocTwoProvider>
 )

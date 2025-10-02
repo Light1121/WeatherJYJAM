@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { MapContainer } from 'react-leaflet'
 import type { LatLngExpression, LatLngBoundsExpression } from 'leaflet'
 import WeatherLayers from './WeatherLayers'
+import MapPins from './MapPins'
 
 const MapWrapper = styled.div`
   width: 100%;
@@ -13,7 +14,13 @@ const MapWrapper = styled.div`
     height: 100%;
     border-radius: 8px;
   }
+
+  .custom-pin {
+    background: transparent !important;
+    border: none !important;
+  }
 `
+
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const CENTER: LatLngExpression = [-25.2744, 133.7751] as const
 
@@ -41,6 +48,7 @@ const Map: FC = () => {
         style={{ height: '100%', width: '100%' }}
       >
         <WeatherLayers apiKey={API_KEY} />
+        <MapPins />
       </MapContainer>
     </MapWrapper>
   )
