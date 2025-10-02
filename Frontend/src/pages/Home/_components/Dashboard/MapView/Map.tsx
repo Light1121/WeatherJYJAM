@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { MapContainer, useMap } from 'react-leaflet'
+import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import type { LatLngExpression, LatLngBoundsExpression } from 'leaflet'
 import WeatherLayers from './WeatherLayers'
 import MapPins from './MapPins'
@@ -33,14 +33,52 @@ const WORLD_BOUNDS: LatLngBoundsExpression = [
   [85, Infinity],
 ] as const
 
-// Component to handle zoom changes
+// Component to handle zoom changes and sync with controls
 const ZoomController: FC = () => {
   const map = useMap()
-  const { controls } = useControlPanelContext()
+  const { controls, updateZoom } = useControlPanelContext()
+  const isUpdatingFromControl = useRef(false)
 
+  // Update map zoom when control panel changes
   useEffect(() => {
-    map.setZoom(controls.zoom)
+    if (Math.abs(map.getZoom() - controls.zoom) > 0.05) {
+      isUpdatingFromControl.current = true
+      map.setZoom(controls.zoom)
+      setTimeout(() => {
+        isUpdatingFromControl.current = false
+      }, 100)
+    }
   }, [controls.zoom, map])
+
+  // Listen for map zoom events and update controls
+  useMapEvents({
+    zoomend: () => {
+      if (!isUpdatingFromControl.current) {
+        const currentZoom = map.getZoom()
+        // Clamp zoom to control panel limits
+        const clampedZoom = Math.max(5, Math.min(12, currentZoom))
+        
+        if (currentZoom !== clampedZoom) {
+          map.setZoom(clampedZoom)
+        }
+        
+        if (Math.abs(controls.zoom - clampedZoom) > 0.05) {
+          updateZoom(clampedZoom)
+        }
+      }
+    },
+    zoom: () => {
+      if (!isUpdatingFromControl.current) {
+        const currentZoom = map.getZoom()
+        // Clamp zoom during zoom animation
+        const clampedZoom = Math.max(5, Math.min(12, currentZoom))
+        
+        if (Math.abs(controls.zoom - clampedZoom) > 0.05) {
+          updateZoom(clampedZoom)
+        }
+      }
+    }
+  })
 
   return null
 }
@@ -52,7 +90,7 @@ const Map: FC = () => {
   const generateFilterStyles = () => {
     const filters = []
 
-    if (controls.opacity !== 80) {
+    if (controls.opacity !== 100) {
       filters.push(`opacity(${controls.opacity / 100})`)
     }
     if (controls.contrast !== 100) {
@@ -92,11 +130,11 @@ const Map: FC = () => {
       <MapContainer
         center={CENTER}
         zoom={controls.zoom}
-        minZoom={2.5}
-        maxZoom={18}
-        zoomSnap={0.15}
+        minZoom={5}
+        maxZoom={12}
+        zoomSnap={0.1}
         zoomDelta={0.5}
-        wheelPxPerZoomLevel={120}
+        wheelPxPerZoomLevel={60}
         wheelDebounceTime={40}
         worldCopyJump={true}
         maxBounds={WORLD_BOUNDS}

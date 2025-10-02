@@ -23,8 +23,8 @@ interface ControlPanelContextType {
 }
 
 const defaultControls: ControlPanelState = {
-  zoom: 4,
-  opacity: 80,
+  zoom: 5, // Changed to middle of range (5-12)
+  opacity: 100,
   contrast: 100,
   saturation: 100,
   brightness: 100,
@@ -42,7 +42,9 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
   const [controls, setControls] = useState<ControlPanelState>(defaultControls)
 
   const updateZoom = (zoom: number) => {
-    setControls(prev => ({ ...prev, zoom }))
+    // Clamp zoom to valid range
+    const clampedZoom = Math.max(5, Math.min(12, zoom))
+    setControls(prev => ({ ...prev, zoom: clampedZoom }))
   }
 
   const updateOpacity = (opacity: number) => {
