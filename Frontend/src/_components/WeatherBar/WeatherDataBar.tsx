@@ -28,13 +28,18 @@ const Head = styled.div`
   min-height: 18px;
 `
 
-const Track = styled.div<{ $gradient: string; $customStyle?: React.CSSProperties }>`
+const Track = styled.div<{
+  $gradient: string
+  $customStyle?: React.CSSProperties
+}>`
   position: relative;
   height: 12px;
   border-radius: 999px;
   background: ${({ $gradient }) => $gradient};
   overflow: hidden;
-  ${({ $customStyle }) => $customStyle && `
+  ${({ $customStyle }) =>
+    $customStyle &&
+    `
     filter: ${$customStyle.filter};
     transition: ${$customStyle.transition};
   `}
@@ -89,12 +94,15 @@ const WeatherDataBar: FC<BaseProps> = ({
 
 export default WeatherDataBar
 
-type SimpleProps = { 
+type SimpleProps = {
   valuePosition?: number
   customStyle?: React.CSSProperties
 }
 
-export const TemperatureBar: FC<SimpleProps> = ({ valuePosition, customStyle }) => (
+export const TemperatureBar: FC<SimpleProps> = ({
+  valuePosition,
+  customStyle,
+}) => (
   <WeatherDataBar
     variant="temperature"
     label="Temperature Report"
@@ -116,7 +124,10 @@ export const WindBar: FC<SimpleProps> = ({ valuePosition, customStyle }) => (
   />
 )
 
-export const HumidityBar: FC<SimpleProps> = ({ valuePosition, customStyle }) => (
+export const HumidityBar: FC<SimpleProps> = ({
+  valuePosition,
+  customStyle,
+}) => (
   <WeatherDataBar
     variant="humidity"
     label="Humidity Report"

@@ -185,33 +185,54 @@ const ControlPanel: FC = () => {
   }, [controls.zoom])
 
   // Direct update handlers without debouncing
-  const handleZoomChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateZoom(parseFloat(e.target.value))
-  }, [updateZoom])
+  const handleZoomChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateZoom(parseFloat(e.target.value))
+    },
+    [updateZoom],
+  )
 
-  const handleOpacityChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateOpacity(parseInt(e.target.value))
-  }, [updateOpacity])
+  const handleOpacityChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateOpacity(parseInt(e.target.value))
+    },
+    [updateOpacity],
+  )
 
-  const handleContrastChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateContrast(parseInt(e.target.value))
-  }, [updateContrast])
+  const handleContrastChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateContrast(parseInt(e.target.value))
+    },
+    [updateContrast],
+  )
 
-  const handleSaturationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateSaturation(parseInt(e.target.value))
-  }, [updateSaturation])
+  const handleSaturationChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateSaturation(parseInt(e.target.value))
+    },
+    [updateSaturation],
+  )
 
-  const handleBrightnessChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateBrightness(parseInt(e.target.value))
-  }, [updateBrightness])
+  const handleBrightnessChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateBrightness(parseInt(e.target.value))
+    },
+    [updateBrightness],
+  )
 
-  const handleHueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateHue(parseInt(e.target.value))
-  }, [updateHue])
+  const handleHueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      updateHue(parseInt(e.target.value))
+    },
+    [updateHue],
+  )
 
-  const handleColorModeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateColorMode(e.target.value)
-  }, [updateColorMode])
+  const handleColorModeChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      updateColorMode(e.target.value)
+    },
+    [updateColorMode],
+  )
 
   return (
     <ControlPanelWrapper>
@@ -330,10 +351,7 @@ const ControlPanel: FC = () => {
           {/* Color Scheme Selector */}
           <ControlGroup>
             <Label>Accessibility Mode</Label>
-            <Select
-              value={controls.colorMode}
-              onChange={handleColorModeChange}
-            >
+            <Select value={controls.colorMode} onChange={handleColorModeChange}>
               <option value="default">Default</option>
               <optgroup label="Color Blind Support">
                 <option value="protanopia">Protanopia (Red-blind)</option>

@@ -37,38 +37,40 @@ const defaultControls: ControlPanelState = {
   saturation: 100,
   brightness: 100,
   hue: 0,
-  colorMode: 'default'
+  colorMode: 'default',
 }
 
-export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ children }) => {
+export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
+  children,
+}) => {
   const [controls, setControls] = useState<ControlPanelState>(defaultControls)
 
   const updateZoom = (zoom: number) => {
-    setControls(prev => ({ ...prev, zoom }))
+    setControls((prev) => ({ ...prev, zoom }))
   }
 
   const updateOpacity = (opacity: number) => {
-    setControls(prev => ({ ...prev, opacity }))
+    setControls((prev) => ({ ...prev, opacity }))
   }
 
   const updateContrast = (contrast: number) => {
-    setControls(prev => ({ ...prev, contrast }))
+    setControls((prev) => ({ ...prev, contrast }))
   }
 
   const updateSaturation = (saturation: number) => {
-    setControls(prev => ({ ...prev, saturation }))
+    setControls((prev) => ({ ...prev, saturation }))
   }
 
   const updateBrightness = (brightness: number) => {
-    setControls(prev => ({ ...prev, brightness }))
+    setControls((prev) => ({ ...prev, brightness }))
   }
 
   const updateHue = (hue: number) => {
-    setControls(prev => ({ ...prev, hue }))
+    setControls((prev) => ({ ...prev, hue }))
   }
 
   const updateColorMode = (colorMode: string) => {
-    setControls(prev => ({ ...prev, colorMode }))
+    setControls((prev) => ({ ...prev, colorMode }))
   }
 
   const resetControls = () => {
@@ -78,63 +80,75 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
   // Generate accurate color blind filters
   const getColorBlindFilter = (type: string): string[] => {
     const filters: string[] = []
-    
+
     switch (type) {
       case 'protanopia': // Red-blind - cannot see red light
         // Protanopes see blues and yellows, reds appear as yellow-brown
         // This shifts the red spectrum to yellow/brown tones
         filters.push('brightness(1.1)')
         filters.push('contrast(0.9)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"protanopia\\"><feColorMatrix values=\\"0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0\\"/></filter></defs></svg>#protanopia")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"protanopia\\"><feColorMatrix values=\\"0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0\\"/></filter></defs></svg>#protanopia")',
+        )
         break
-        
+
       case 'deuteranopia': // Green-blind - cannot see green light
         // Deuteranopes see blues and reds, greens appear as yellow/brown
         filters.push('brightness(1.05)')
         filters.push('contrast(0.95)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"deuteranopia\\"><feColorMatrix values=\\"0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0\\"/></filter></defs></svg>#deuteranopia")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"deuteranopia\\"><feColorMatrix values=\\"0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0\\"/></filter></defs></svg>#deuteranopia")',
+        )
         break
-        
+
       case 'tritanopia': // Blue-blind - cannot see blue light
         // Tritanopes see reds and greens, blues appear as green/yellow
         filters.push('brightness(1.1)')
         filters.push('contrast(0.9)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"tritanopia\\"><feColorMatrix values=\\"0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0\\"/></filter></defs></svg>#tritanopia")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"tritanopia\\"><feColorMatrix values=\\"0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0\\"/></filter></defs></svg>#tritanopia")',
+        )
         break
-        
+
       case 'protanomaly': // Weak red perception
         filters.push('brightness(1.05)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"protanomaly\\"><feColorMatrix values=\\"0.817 0.183 0 0 0 0.333 0.667 0 0 0 0 0.125 0.875 0 0 0 0 0 1 0\\"/></filter></defs></svg>#protanomaly")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"protanomaly\\"><feColorMatrix values=\\"0.817 0.183 0 0 0 0.333 0.667 0 0 0 0 0.125 0.875 0 0 0 0 0 1 0\\"/></filter></defs></svg>#protanomaly")',
+        )
         break
-        
+
       case 'deuteranomaly': // Weak green perception (most common)
         filters.push('brightness(1.03)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"deuteranomaly\\"><feColorMatrix values=\\"0.8 0.2 0 0 0 0.258 0.742 0 0 0 0 0.142 0.858 0 0 0 0 0 1 0\\"/></filter></defs></svg>#deuteranomaly")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"deuteranomaly\\"><feColorMatrix values=\\"0.8 0.2 0 0 0 0.258 0.742 0 0 0 0 0.142 0.858 0 0 0 0 0 1 0\\"/></filter></defs></svg>#deuteranomaly")',
+        )
         break
-        
+
       case 'tritanomaly': // Weak blue perception
         filters.push('brightness(1.05)')
-        filters.push('url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"tritanomaly\\"><feColorMatrix values=\\"0.967 0.033 0 0 0 0 0.733 0.267 0 0 0 0.183 0.817 0 0 0 0 0 1 0\\"/></filter></defs></svg>#tritanomaly")')
+        filters.push(
+          'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><defs><filter id=\\"tritanomaly\\"><feColorMatrix values=\\"0.967 0.033 0 0 0 0 0.733 0.267 0 0 0 0.183 0.817 0 0 0 0 0 1 0\\"/></filter></defs></svg>#tritanomaly")',
+        )
         break
-        
+
       default:
         break
     }
-    
+
     return filters
   }
 
   // Generate CSS filter string for layers
   const getLayerStyle = (): string => {
-    let filters = []
-    
+    const filters = []
+
     // Base filters
     filters.push(`opacity(${controls.opacity}%)`)
     filters.push(`contrast(${controls.contrast}%)`)
     filters.push(`saturate(${controls.saturation}%)`)
     filters.push(`brightness(${controls.brightness}%)`)
     filters.push(`hue-rotate(${controls.hue}deg)`)
-    
+
     // Color mode specific filters
     switch (controls.colorMode) {
       case 'protanopia':
@@ -142,116 +156,120 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
       case 'tritanopia':
       case 'protanomaly':
       case 'deuteranomaly':
-      case 'tritanomaly':
+      case 'tritanomaly': {
         // Add color blind simulation filters
         const colorBlindFilters = getColorBlindFilter(controls.colorMode)
         filters.push(...colorBlindFilters)
         break
-        
+      }
+
       case 'monochromacy': // Complete color blindness (achromatopsia)
         filters.push('grayscale(100%)')
         filters.push('contrast(120%)')
         filters.push('brightness(110%)')
         break
-        
+
       case 'high-contrast':
         filters.push('contrast(200%)')
         filters.push('brightness(120%)')
         filters.push('saturate(150%)')
         break
-        
+
       case 'low-vision':
         filters.push('contrast(180%)')
         filters.push('brightness(130%)')
         filters.push('saturate(200%)')
         break
-        
+
       case 'grayscale':
         filters.push('grayscale(100%)')
         break
-        
+
       case 'inverted':
         filters.push('invert(100%)')
         break
-        
+
       default:
         break
     }
-    
+
     return filters.join(' ')
   }
 
   // Generate CSS properties for weather bars
   const getBarStyle = (): React.CSSProperties => {
-    let filters = []
-    
+    const filters = []
+
     filters.push(`contrast(${controls.contrast}%)`)
     filters.push(`saturate(${controls.saturation}%)`)
     filters.push(`brightness(${controls.brightness}%)`)
     filters.push(`hue-rotate(${controls.hue}deg)`)
-    
+
     switch (controls.colorMode) {
       case 'protanopia':
       case 'deuteranopia':
       case 'tritanopia':
       case 'protanomaly':
       case 'deuteranomaly':
-      case 'tritanomaly':
+      case 'tritanomaly': {
         // Add color blind simulation filters
         const colorBlindFilters = getColorBlindFilter(controls.colorMode)
         filters.push(...colorBlindFilters)
         break
-        
+      }
+
       case 'monochromacy':
         filters.push('grayscale(100%)')
         filters.push('contrast(120%)')
         filters.push('brightness(110%)')
         break
-        
+
       case 'high-contrast':
         filters.push('contrast(200%)')
         filters.push('brightness(120%)')
         filters.push('saturate(150%)')
         break
-        
+
       case 'low-vision':
         filters.push('contrast(180%)')
         filters.push('brightness(130%)')
         filters.push('saturate(200%)')
         break
-        
+
       case 'grayscale':
         filters.push('grayscale(100%)')
         break
-        
+
       case 'inverted':
         filters.push('invert(100%)')
         break
-        
+
       default:
         break
     }
 
     return {
       filter: filters.join(' '),
-      transition: 'filter 0.3s ease'
+      transition: 'filter 0.3s ease',
     }
   }
 
   return (
-    <ControlPanelContext.Provider value={{
-      controls,
-      updateZoom,
-      updateOpacity,
-      updateContrast,
-      updateSaturation,
-      updateBrightness,
-      updateHue,
-      updateColorMode,
-      resetControls,
-      getLayerStyle,
-      getBarStyle
-    }}>
+    <ControlPanelContext.Provider
+      value={{
+        controls,
+        updateZoom,
+        updateOpacity,
+        updateContrast,
+        updateSaturation,
+        updateBrightness,
+        updateHue,
+        updateColorMode,
+        resetControls,
+        getLayerStyle,
+        getBarStyle,
+      }}
+    >
       {children}
     </ControlPanelContext.Provider>
   )

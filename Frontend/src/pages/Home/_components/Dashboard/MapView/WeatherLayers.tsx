@@ -14,8 +14,8 @@ const WeatherLayers: React.FC<WeatherLayersProps> = ({ apiKey }) => {
   // Apply styles to all layers when controls change
   useEffect(() => {
     const style = getLayerStyle()
-    
-    Object.values(layerRefs.current).forEach(layer => {
+
+    Object.values(layerRefs.current).forEach((layer) => {
       if (layer && layer.getContainer && layer.getContainer()) {
         const container = layer.getContainer()
         if (container) {
@@ -27,22 +27,23 @@ const WeatherLayers: React.FC<WeatherLayersProps> = ({ apiKey }) => {
   }, [controls, getLayerStyle])
 
   // Simple ref handler - no event listeners that could interfere
-  const createRefHandler = (layerKey: string) => (layer: LeafletTileLayer | null) => {
-    if (layer) {
-      layerRefs.current[layerKey] = layer
-      // Apply styles immediately
-      const style = getLayerStyle()
-      setTimeout(() => {
-        const container = layer.getContainer()
-        if (container) {
-          container.style.filter = style
-          container.style.transition = 'filter 0.3s ease'
-        }
-      }, 100)
-    } else {
-      delete layerRefs.current[layerKey]
+  const createRefHandler =
+    (layerKey: string) => (layer: LeafletTileLayer | null) => {
+      if (layer) {
+        layerRefs.current[layerKey] = layer
+        // Apply styles immediately
+        const style = getLayerStyle()
+        setTimeout(() => {
+          const container = layer.getContainer()
+          if (container) {
+            container.style.filter = style
+            container.style.transition = 'filter 0.3s ease'
+          }
+        }, 100)
+      } else {
+        delete layerRefs.current[layerKey]
+      }
     }
-  }
 
   return (
     <LayersControl position="topleft">

@@ -5,6 +5,7 @@ import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
 import { useNavigate } from 'react-router-dom'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
+import type { WeatherData } from '@/_components/ContextHooks/contexts'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -159,7 +160,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   const barStyle = getBarStyle()
 
   // Helper function to render weather bars with individual styling
-  const renderWeatherBars = (weatherData: any) => (
+  const renderWeatherBars = (weatherData: WeatherData) => (
     <>
       <TemperatureBar
         valuePosition={Math.max(0, Math.min(100, weatherData.temperature + 45))}
@@ -207,12 +208,12 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
           {isExpanded && (
             <>
               <BarsRow>
-                {hasLocationOne && locationOnePin?.weatherData && 
-                  renderWeatherBars(locationOnePin.weatherData)
-                }
-                {hasLocationTwo && locationTwoPin?.weatherData && 
-                  renderWeatherBars(locationTwoPin.weatherData)
-                }
+                {hasLocationOne &&
+                  locationOnePin?.weatherData &&
+                  renderWeatherBars(locationOnePin.weatherData)}
+                {hasLocationTwo &&
+                  locationTwoPin?.weatherData &&
+                  renderWeatherBars(locationTwoPin.weatherData)}
               </BarsRow>
 
               <PastGrid>
@@ -256,12 +257,12 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                 </Filters>
 
                 <BarsRow>
-                  {hasLocationOne && locationOnePin?.weatherData && 
-                    renderWeatherBars(locationOnePin.weatherData)
-                  }
-                  {hasLocationTwo && locationTwoPin?.weatherData && 
-                    renderWeatherBars(locationTwoPin.weatherData)
-                  }
+                  {hasLocationOne &&
+                    locationOnePin?.weatherData &&
+                    renderWeatherBars(locationOnePin.weatherData)}
+                  {hasLocationTwo &&
+                    locationTwoPin?.weatherData &&
+                    renderWeatherBars(locationTwoPin.weatherData)}
                 </BarsRow>
 
                 <GraphButton onClick={handleViewDetails}>
