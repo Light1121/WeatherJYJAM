@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
 
@@ -175,64 +175,43 @@ const ControlPanel: FC = () => {
     resetControls,
   } = useControlPanelContext()
 
-  // Local state for immediate visual feedback
-  const [localValues, setLocalValues] = useState(controls)
-
-  // Timeout refs for debouncing
-  const timeoutRefs = useRef<{
-    zoom?: NodeJS.Timeout
-    opacity?: NodeJS.Timeout
-    contrast?: NodeJS.Timeout
-    saturation?: NodeJS.Timeout
-    brightness?: NodeJS.Timeout
-    hue?: NodeJS.Timeout
-  }>({})
-
-  // Update local values when context changes (e.g., from reset or external updates)
-  useEffect(() => {
-    setLocalValues(controls)
-  }, [controls])
-
-  const toggle = () => {
+  const toggle = useCallback(() => {
     setIsOpen(!isOpen)
-  }
+  }, [isOpen])
 
   // Convert zoom value to percentage for display
-  const zoomToPercentage = (zoom: number) => {
-    return Math.round(((zoom - 5) / (12 - 5)) * 100)
-  }
+  const zoomPercentage = useMemo(() => {
+    return Math.round(((controls.zoom - 5) / (12 - 5)) * 100)
+  }, [controls.zoom])
 
-  // Debounced update function
-  const debouncedUpdate = (
-    key: keyof typeof timeoutRefs.current,
-    value: number,
-    updateFunction: (value: number) => void,
-    delay = 300,
-  ) => {
-    // Update local state immediately for visual feedback
-    setLocalValues((prev) => ({ ...prev, [key]: value }))
+  // Direct update handlers without debouncing
+  const handleZoomChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateZoom(parseFloat(e.target.value))
+  }, [updateZoom])
 
-    // Clear existing timeout
-    if (timeoutRefs.current[key]) {
-      clearTimeout(timeoutRefs.current[key])
-    }
+  const handleOpacityChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateOpacity(parseInt(e.target.value))
+  }, [updateOpacity])
 
-    // Set new timeout to update context
-    timeoutRefs.current[key] = setTimeout(() => {
-      updateFunction(value)
-      delete timeoutRefs.current[key]
-    }, delay)
-  }
+  const handleContrastChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateContrast(parseInt(e.target.value))
+  }, [updateContrast])
 
-  // Clean up timeouts on unmount - Fixed dependency warning
-  useEffect(() => {
-    const currentTimeouts = timeoutRefs.current
-    return () => {
-      Object.values(currentTimeouts).forEach((timeout) => {
-        if (timeout) clearTimeout(timeout)
-      })
-    }
-  }, [])
+  const handleSaturationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateSaturation(parseInt(e.target.value))
+  }, [updateSaturation])
+
+  const handleBrightnessChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateBrightness(parseInt(e.target.value))
+  }, [updateBrightness])
+
+  const handleHueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    updateHue(parseInt(e.target.value))
+  }, [updateHue])
+
+  const handleColorModeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    updateColorMode(e.target.value)
+  }, [updateColorMode])
 
   return (
     <ControlPanelWrapper>
@@ -248,7 +227,7 @@ const ControlPanel: FC = () => {
 
           {/* Zoom Control */}
           <ControlGroup>
-            <Label>Zoom: {zoomToPercentage(localValues.zoom)}%</Label>
+            <Label>Zoom: {zoomPercentage}%</Label>
             <SliderContainer>
               <Icon>−</Icon>
               <Slider
@@ -256,15 +235,8 @@ const ControlPanel: FC = () => {
                 min="5"
                 max="12"
                 step="0.1"
-                value={localValues.zoom}
-                onChange={(e) =>
-                  debouncedUpdate(
-                    'zoom',
-                    parseFloat(e.target.value),
-                    updateZoom,
-                    150,
-                  )
-                }
+                value={controls.zoom}
+                onChange={handleZoomChange}
               />
               <Icon>+</Icon>
             </SliderContainer>
@@ -272,7 +244,7 @@ const ControlPanel: FC = () => {
 
           {/* Opacity Control */}
           <ControlGroup>
-            <Label>Opacity: {localValues.opacity}%</Label>
+            <Label>Opacity: {controls.opacity}%</Label>
             <SliderContainer>
               <Icon>◯</Icon>
               <Slider
@@ -280,14 +252,8 @@ const ControlPanel: FC = () => {
                 min="0"
                 max="100"
                 step="5"
-                value={localValues.opacity}
-                onChange={(e) =>
-                  debouncedUpdate(
-                    'opacity',
-                    parseInt(e.target.value),
-                    updateOpacity,
-                  )
-                }
+                value={controls.opacity}
+                onChange={handleOpacityChange}
               />
               <Icon>●</Icon>
             </SliderContainer>
@@ -295,7 +261,7 @@ const ControlPanel: FC = () => {
 
           {/* Contrast Control */}
           <ControlGroup>
-            <Label>Contrast: {localValues.contrast}%</Label>
+            <Label>Contrast: {controls.contrast}%</Label>
             <SliderContainer>
               <Icon>◐</Icon>
               <Slider
@@ -303,14 +269,8 @@ const ControlPanel: FC = () => {
                 min="50"
                 max="150"
                 step="10"
-                value={localValues.contrast}
-                onChange={(e) =>
-                  debouncedUpdate(
-                    'contrast',
-                    parseInt(e.target.value),
-                    updateContrast,
-                  )
-                }
+                value={controls.contrast}
+                onChange={handleContrastChange}
               />
               <Icon>◑</Icon>
             </SliderContainer>
@@ -318,7 +278,7 @@ const ControlPanel: FC = () => {
 
           {/* Saturation Control */}
           <ControlGroup>
-            <Label>Saturation: {localValues.saturation}%</Label>
+            <Label>Saturation: {controls.saturation}%</Label>
             <SliderContainer>
               <Icon>☾</Icon>
               <Slider
@@ -326,14 +286,8 @@ const ControlPanel: FC = () => {
                 min="0"
                 max="200"
                 step="10"
-                value={localValues.saturation}
-                onChange={(e) =>
-                  debouncedUpdate(
-                    'saturation',
-                    parseInt(e.target.value),
-                    updateSaturation,
-                  )
-                }
+                value={controls.saturation}
+                onChange={handleSaturationChange}
               />
               <Icon>☽</Icon>
             </SliderContainer>
@@ -341,7 +295,7 @@ const ControlPanel: FC = () => {
 
           {/* Brightness Control */}
           <ControlGroup>
-            <Label>Brightness: {localValues.brightness}%</Label>
+            <Label>Brightness: {controls.brightness}%</Label>
             <SliderContainer>
               <Icon>☀</Icon>
               <Slider
@@ -349,14 +303,8 @@ const ControlPanel: FC = () => {
                 min="50"
                 max="150"
                 step="5"
-                value={localValues.brightness}
-                onChange={(e) =>
-                  debouncedUpdate(
-                    'brightness',
-                    parseInt(e.target.value),
-                    updateBrightness,
-                  )
-                }
+                value={controls.brightness}
+                onChange={handleBrightnessChange}
               />
               <Icon>☀</Icon>
             </SliderContainer>
@@ -364,7 +312,7 @@ const ControlPanel: FC = () => {
 
           {/* Hue Rotation Control */}
           <ControlGroup>
-            <Label>Hue: {localValues.hue}°</Label>
+            <Label>Hue: {controls.hue}°</Label>
             <SliderContainer>
               <Icon>🎨</Icon>
               <Slider
@@ -372,10 +320,8 @@ const ControlPanel: FC = () => {
                 min="0"
                 max="360"
                 step="15"
-                value={localValues.hue}
-                onChange={(e) =>
-                  debouncedUpdate('hue', parseInt(e.target.value), updateHue)
-                }
+                value={controls.hue}
+                onChange={handleHueChange}
               />
               <Icon>🎨</Icon>
             </SliderContainer>
@@ -383,16 +329,23 @@ const ControlPanel: FC = () => {
 
           {/* Color Scheme Selector */}
           <ControlGroup>
-            <Label>Color Mode</Label>
+            <Label>Accessibility Mode</Label>
             <Select
               value={controls.colorMode}
-              onChange={(e) => updateColorMode(e.target.value)}
+              onChange={handleColorModeChange}
             >
               <option value="default">Default</option>
-              <option value="colorblind">Color Blind</option>
-              <option value="high-contrast">High Contrast</option>
-              <option value="grayscale">Grayscale</option>
-              <option value="inverted">Inverted</option>
+              <optgroup label="Color Blind Support">
+                <option value="protanopia">Protanopia (Red-blind)</option>
+                <option value="deuteranopia">Deuteranopia (Green-blind)</option>
+                <option value="tritanopia">Tritanopia (Blue-blind)</option>
+                <option value="monochromacy">Monochromacy (Complete)</option>
+              </optgroup>
+              <optgroup label="Other Modes">
+                <option value="high-contrast">High Contrast</option>
+                <option value="grayscale">Grayscale</option>
+                <option value="inverted">Inverted</option>
+              </optgroup>
             </Select>
           </ControlGroup>
 

@@ -4,6 +4,7 @@ import { Dropdown } from '@/_components'
 import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
 import { useNavigate } from 'react-router-dom'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
+import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -144,6 +145,7 @@ interface WeatherStatsProps {
 
 const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   const { locationOnePin, locationTwoPin } = usePinContext()
+  const { getBarStyle } = useControlPanelContext()
   const navigate = useNavigate()
 
   const handleViewDetails = () => {
@@ -153,6 +155,26 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   // Check if we have any pins
   const hasLocationOne = locationOnePin !== null
   const hasLocationTwo = locationTwoPin !== null
+
+  const barStyle = getBarStyle()
+
+  // Helper function to render weather bars with individual styling
+  const renderWeatherBars = (weatherData: any) => (
+    <>
+      <TemperatureBar
+        valuePosition={Math.max(0, Math.min(100, weatherData.temperature + 45))}
+        customStyle={barStyle}
+      />
+      <WindBar
+        valuePosition={Math.max(0, Math.min(100, weatherData.windSpeed + 35))}
+        customStyle={barStyle}
+      />
+      <HumidityBar
+        valuePosition={Math.max(0, Math.min(100, weatherData.humidity))}
+        customStyle={barStyle}
+      />
+    </>
+  )
 
   return (
     <>
@@ -185,36 +207,12 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
           {isExpanded && (
             <>
               <BarsRow>
-                {hasLocationOne && locationOnePin?.weatherData && (
-                  <>
-                    <TemperatureBar
-                      valuePosition={
-                        locationOnePin.weatherData.temperature + 45
-                      }
-                    />
-                    <WindBar
-                      valuePosition={locationOnePin.weatherData.windSpeed + 35}
-                    />
-                    <HumidityBar
-                      valuePosition={locationOnePin.weatherData.humidity}
-                    />
-                  </>
-                )}
-                {hasLocationTwo && locationTwoPin?.weatherData && (
-                  <>
-                    <TemperatureBar
-                      valuePosition={
-                        locationTwoPin.weatherData.temperature + 45
-                      }
-                    />
-                    <WindBar
-                      valuePosition={locationTwoPin.weatherData.windSpeed + 35}
-                    />
-                    <HumidityBar
-                      valuePosition={locationTwoPin.weatherData.humidity}
-                    />
-                  </>
-                )}
+                {hasLocationOne && locationOnePin?.weatherData && 
+                  renderWeatherBars(locationOnePin.weatherData)
+                }
+                {hasLocationTwo && locationTwoPin?.weatherData && 
+                  renderWeatherBars(locationTwoPin.weatherData)
+                }
               </BarsRow>
 
               <PastGrid>
@@ -228,7 +226,9 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                     )}
                   >
                     <Menu>
-                      <MenuItem>Year options here</MenuItem>
+                      <MenuItem>2024</MenuItem>
+                      <MenuItem>2023</MenuItem>
+                      <MenuItem>2022</MenuItem>
                     </Menu>
                   </Dropdown>
 
@@ -239,46 +239,29 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                     )}
                   >
                     <Menu>
-                      <MenuItem>Month options here</MenuItem>
+                      <MenuItem>January</MenuItem>
+                      <MenuItem>February</MenuItem>
+                      <MenuItem>March</MenuItem>
+                      <MenuItem>April</MenuItem>
+                      <MenuItem>May</MenuItem>
+                      <MenuItem>June</MenuItem>
+                      <MenuItem>July</MenuItem>
+                      <MenuItem>August</MenuItem>
+                      <MenuItem>September</MenuItem>
+                      <MenuItem>October</MenuItem>
+                      <MenuItem>November</MenuItem>
+                      <MenuItem>December</MenuItem>
                     </Menu>
                   </Dropdown>
                 </Filters>
 
                 <BarsRow>
-                  {hasLocationOne && locationOnePin?.weatherData && (
-                    <>
-                      <TemperatureBar
-                        valuePosition={
-                          locationOnePin.weatherData.temperature + 45
-                        }
-                      />
-                      <WindBar
-                        valuePosition={
-                          locationOnePin.weatherData.windSpeed + 35
-                        }
-                      />
-                      <HumidityBar
-                        valuePosition={locationOnePin.weatherData.humidity}
-                      />
-                    </>
-                  )}
-                  {hasLocationTwo && locationTwoPin?.weatherData && (
-                    <>
-                      <TemperatureBar
-                        valuePosition={
-                          locationTwoPin.weatherData.temperature + 45
-                        }
-                      />
-                      <WindBar
-                        valuePosition={
-                          locationTwoPin.weatherData.windSpeed + 35
-                        }
-                      />
-                      <HumidityBar
-                        valuePosition={locationTwoPin.weatherData.humidity}
-                      />
-                    </>
-                  )}
+                  {hasLocationOne && locationOnePin?.weatherData && 
+                    renderWeatherBars(locationOnePin.weatherData)
+                  }
+                  {hasLocationTwo && locationTwoPin?.weatherData && 
+                    renderWeatherBars(locationTwoPin.weatherData)
+                  }
                 </BarsRow>
 
                 <GraphButton onClick={handleViewDetails}>
@@ -304,15 +287,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
               </HeaderRow>
               {isExpanded && locationOnePin.weatherData && (
                 <BarsRow>
-                  <TemperatureBar
-                    valuePosition={locationOnePin.weatherData.temperature + 45}
-                  />
-                  <WindBar
-                    valuePosition={locationOnePin.weatherData.windSpeed + 35}
-                  />
-                  <HumidityBar
-                    valuePosition={locationOnePin.weatherData.humidity}
-                  />
+                  {renderWeatherBars(locationOnePin.weatherData)}
                 </BarsRow>
               )}
             </div>
@@ -327,15 +302,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
               </HeaderRow>
               {isExpanded && locationTwoPin.weatherData && (
                 <BarsRow>
-                  <TemperatureBar
-                    valuePosition={locationTwoPin.weatherData.temperature + 45}
-                  />
-                  <WindBar
-                    valuePosition={locationTwoPin.weatherData.windSpeed + 35}
-                  />
-                  <HumidityBar
-                    valuePosition={locationTwoPin.weatherData.humidity}
-                  />
+                  {renderWeatherBars(locationTwoPin.weatherData)}
                 </BarsRow>
               )}
             </div>
@@ -359,7 +326,9 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       )}
                     >
                       <Menu>
-                        <MenuItem>Year options here</MenuItem>
+                        <MenuItem>2024</MenuItem>
+                        <MenuItem>2023</MenuItem>
+                        <MenuItem>2022</MenuItem>
                       </Menu>
                     </Dropdown>
                     <Dropdown
@@ -369,25 +338,15 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       )}
                     >
                       <Menu>
-                        <MenuItem>Month options here</MenuItem>
+                        <MenuItem>January</MenuItem>
+                        <MenuItem>February</MenuItem>
+                        <MenuItem>March</MenuItem>
                       </Menu>
                     </Dropdown>
                   </Filters>
                   {locationOnePin.weatherData && (
                     <BarsRow>
-                      <TemperatureBar
-                        valuePosition={
-                          locationOnePin.weatherData.temperature + 45
-                        }
-                      />
-                      <WindBar
-                        valuePosition={
-                          locationOnePin.weatherData.windSpeed + 35
-                        }
-                      />
-                      <HumidityBar
-                        valuePosition={locationOnePin.weatherData.humidity}
-                      />
+                      {renderWeatherBars(locationOnePin.weatherData)}
                     </BarsRow>
                   )}
                 </div>
@@ -402,7 +361,9 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       )}
                     >
                       <Menu>
-                        <MenuItem>Year options here</MenuItem>
+                        <MenuItem>2024</MenuItem>
+                        <MenuItem>2023</MenuItem>
+                        <MenuItem>2022</MenuItem>
                       </Menu>
                     </Dropdown>
                     <Dropdown
@@ -412,25 +373,15 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                       )}
                     >
                       <Menu>
-                        <MenuItem>Month options here</MenuItem>
+                        <MenuItem>January</MenuItem>
+                        <MenuItem>February</MenuItem>
+                        <MenuItem>March</MenuItem>
                       </Menu>
                     </Dropdown>
                   </Filters>
                   {locationTwoPin.weatherData && (
                     <BarsRow>
-                      <TemperatureBar
-                        valuePosition={
-                          locationTwoPin.weatherData.temperature + 45
-                        }
-                      />
-                      <WindBar
-                        valuePosition={
-                          locationTwoPin.weatherData.windSpeed + 35
-                        }
-                      />
-                      <HumidityBar
-                        valuePosition={locationTwoPin.weatherData.humidity}
-                      />
+                      {renderWeatherBars(locationTwoPin.weatherData)}
                     </BarsRow>
                   )}
                 </div>
