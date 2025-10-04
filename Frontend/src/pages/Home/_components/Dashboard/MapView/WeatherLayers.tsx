@@ -15,7 +15,7 @@ const WeatherLayers: React.FC<WeatherLayersProps> = ({ apiKey }) => {
   useEffect(() => {
     const style = getLayerStyle()
 
-    Object.entries(layerRefs.current).forEach(([key, layer]) => {
+    Object.entries(layerRefs.current).forEach(([, layer]) => {
       if (layer && layer.getContainer && layer.getContainer()) {
         const container = layer.getContainer()
         if (container) {
@@ -26,10 +26,10 @@ const WeatherLayers: React.FC<WeatherLayersProps> = ({ apiKey }) => {
             container.style.filter = style
             container.style.transition = 'filter 0.3s ease'
           })
-          
+
           // Also apply to individual tiles for better coverage
           const tiles = container.querySelectorAll('img')
-          tiles.forEach(tile => {
+          tiles.forEach((tile) => {
             if (tile instanceof HTMLImageElement) {
               tile.style.filter = ''
               requestAnimationFrame(() => {
@@ -44,52 +44,52 @@ const WeatherLayers: React.FC<WeatherLayersProps> = ({ apiKey }) => {
   }, [controls, getLayerStyle])
 
   // Ref handler to store layer references and apply initial styles
-  const createRefHandler = (layerKey: string) => (layer: LeafletTileLayer | null) => {
-    if (layer) {
-      layerRefs.current[layerKey] = layer
-      
-      // Apply initial styles after layer is mounted
-      setTimeout(() => {
-        const style = getLayerStyle()
-        const container = layer.getContainer()
-        if (container) {
-          container.style.filter = style
-          container.style.transition = 'filter 0.3s ease'
-          
-          // Apply to existing tiles
-          const tiles = container.querySelectorAll('img')
-          tiles.forEach(tile => {
-            if (tile instanceof HTMLImageElement) {
-              tile.style.filter = style
-              tile.style.transition = 'filter 0.3s ease'
-            }
-          })
-        }
-      }, 100)
-      
-      // Listen for new tiles being loaded and apply styles
-      layer.on('tileload', () => {
+  const createRefHandler =
+    (layerKey: string) => (layer: LeafletTileLayer | null) => {
+      if (layer) {
+        layerRefs.current[layerKey] = layer
+
+        // Apply initial styles after layer is mounted
         setTimeout(() => {
           const style = getLayerStyle()
           const container = layer.getContainer()
           if (container) {
-            // Apply to newly loaded tiles
+            container.style.filter = style
+            container.style.transition = 'filter 0.3s ease'
+
+            // Apply to existing tiles
             const tiles = container.querySelectorAll('img')
-            tiles.forEach(tile => {
-              if (tile instanceof HTMLImageElement && !tile.style.filter) {
+            tiles.forEach((tile) => {
+              if (tile instanceof HTMLImageElement) {
                 tile.style.filter = style
                 tile.style.transition = 'filter 0.3s ease'
               }
             })
           }
-        }, 50)
-      })
-      
-    } else {
-      // Clean up when layer is removed
-      delete layerRefs.current[layerKey]
+        }, 100)
+
+        // Listen for new tiles being loaded and apply styles
+        layer.on('tileload', () => {
+          setTimeout(() => {
+            const style = getLayerStyle()
+            const container = layer.getContainer()
+            if (container) {
+              // Apply to newly loaded tiles
+              const tiles = container.querySelectorAll('img')
+              tiles.forEach((tile) => {
+                if (tile instanceof HTMLImageElement && !tile.style.filter) {
+                  tile.style.filter = style
+                  tile.style.transition = 'filter 0.3s ease'
+                }
+              })
+            }
+          }, 50)
+        })
+      } else {
+        // Clean up when layer is removed
+        delete layerRefs.current[layerKey]
+      }
     }
-  }
 
   return (
     <LayersControl position="topleft">
