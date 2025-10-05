@@ -21,6 +21,9 @@ export interface PinContextType {
   addPin: (position: LatLng) => Promise<void>
   removePin: (pinId: string) => void
   updatePinWeatherData: (pinId: string, weatherData: WeatherData) => void
+  // Methods for tab integration
+  clearAllPins: () => void
+  loadPins: (pins: PinData[]) => void
 }
 
 export const PinContext = createContext<PinContextType | null>(null)

@@ -4,11 +4,10 @@ import Dashboard from './_components/Dashboard'
 import BottomSheet from './_components/BottomSheet'
 
 const Home: FC = () => {
-
   return (
     <FullScreenLayout>
       <MainLayout>
-        <Dashboard/>
+        <Dashboard />
         <BottomSheet />
       </MainLayout>
     </FullScreenLayout>

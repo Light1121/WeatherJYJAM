@@ -8,6 +8,11 @@ export interface ControlPanelState {
   brightness: number
   hue: number
   colorMode: string
+  // Map position tracking
+  mapPosition: {
+    lat: number
+    lng: number
+  }
 }
 
 interface ControlPanelContextType {
@@ -19,6 +24,7 @@ interface ControlPanelContextType {
   updateBrightness: (brightness: number) => void
   updateHue: (hue: number) => void
   updateColorMode: (colorMode: string) => void
+  updateMapPosition: (lat: number, lng: number) => void
   resetControls: () => void
   getLayerStyle: () => string
   getBarStyle: () => React.CSSProperties
@@ -38,6 +44,10 @@ const defaultControls: ControlPanelState = {
   brightness: 100,
   hue: 0,
   colorMode: 'default',
+  mapPosition: {
+    lat: -25.2744,
+    lng: 133.7751,
+  },
 }
 
 export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
@@ -45,8 +55,12 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
 }) => {
   const [controls, setControls] = useState<ControlPanelState>(defaultControls)
 
+  // Note: TabsContext integration is handled by TabsPinIntegration component
+  // to avoid circular dependencies and hook rule violations
+
   const updateZoom = (zoom: number) => {
     setControls((prev) => ({ ...prev, zoom }))
+    // Note: Tab sync is handled by TabsPinIntegration component
   }
 
   const updateOpacity = (opacity: number) => {
@@ -71,6 +85,14 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
 
   const updateColorMode = (colorMode: string) => {
     setControls((prev) => ({ ...prev, colorMode }))
+  }
+
+  const updateMapPosition = (lat: number, lng: number) => {
+    setControls((prev) => ({
+      ...prev,
+      mapPosition: { lat, lng },
+    }))
+    console.log('ControlPanel: Map position updated to:', { lat, lng })
   }
 
   const resetControls = () => {
@@ -265,6 +287,7 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({
         updateBrightness,
         updateHue,
         updateColorMode,
+        updateMapPosition,
         resetControls,
         getLayerStyle,
         getBarStyle,

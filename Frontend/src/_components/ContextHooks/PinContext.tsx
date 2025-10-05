@@ -1,5 +1,6 @@
 import React, { useState, type ReactNode } from 'react'
 import type { LatLng } from 'leaflet'
+import { LatLng as LeafletLatLng } from 'leaflet'
 import { PinContext, type WeatherData, type PinData } from './contexts'
 
 interface PinProviderProps {
@@ -104,8 +105,50 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
   const [locationOnePin, setLocationOnePin] = useState<PinData | null>(null)
   const [locationTwoPin, setLocationTwoPin] = useState<PinData | null>(null)
 
+  // Temporarily disable tabs integration to debug
+  // We'll fix this with a proper approach
+
+  // Load pins from active tab when tab changes - TEMPORARILY DISABLED
+  // TODO: Fix this with proper context integration
+  /*
+  useEffect(() => {
+    if (tabsContext?.activeTab) {
+      const { pins } = tabsContext.activeTab
+      console.log('Loading pins from tab:', tabsContext.activeTab.name, 'pins:', pins) // Debug log
+      
+      // Clear existing pins first
+      setLocationOnePin(null)
+      setLocationTwoPin(null)
+      
+      // Then set new pins
+      if (pins.length > 0) {
+        console.log('Setting pin 1:', pins[0]) // Debug log
+        setLocationOnePin(pins[0])
+      }
+      if (pins.length > 1) {
+        console.log('Setting pin 2:', pins[1]) // Debug log
+        setLocationTwoPin(pins[1])
+      }
+    }
+  }, [tabsContext?.activeTabId]) // Changed dependency to activeTabId for better triggering
+  */
+
+  // Sync pins back to tabs context when pins change - TEMPORARILY DISABLED
+  // TODO: Fix this with proper context integration
+  /*
+  useEffect(() => {
+    if (tabsContext?.activeTabId) {
+      const pins = [locationOnePin, locationTwoPin].filter(Boolean) as PinData[]
+      console.log('Syncing pins to tab:', tabsContext.activeTabId, 'pins:', pins) // Debug log
+      tabsContext.updateTabPins(tabsContext.activeTabId, pins)
+    }
+  }, [locationOnePin, locationTwoPin, tabsContext?.activeTabId, tabsContext?.updateTabPins])
+  */
+
   const addPin = async (position: LatLng) => {
     const pinId = `pin-${Date.now()}`
+
+    console.log('Adding pin at:', position) // Debug log
 
     try {
       // Get location name from OpenStreetMap and weather data from OpenWeatherMap
@@ -116,16 +159,23 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
 
       const newPin: PinData = {
         id: pinId,
-        position,
+        position, // Keep the original LatLng object
         locationName,
         weatherData,
       }
 
+      console.log('Created new pin:', newPin) // Debug log
+
       if (!locationOnePin) {
+        console.log('Setting as location one pin') // Debug log
         setLocationOnePin(newPin)
       } else if (!locationTwoPin) {
+        console.log('Setting as location two pin') // Debug log
         setLocationTwoPin(newPin)
       } else {
+        console.log(
+          'Shifting pins - moving location two to one, new pin to two',
+        ) // Debug log
         // Both slots filled, shift locations
         setLocationOnePin(locationTwoPin)
         setLocationTwoPin(newPin)
@@ -136,7 +186,7 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
       // Create pin with fallback data
       const fallbackPin: PinData = {
         id: pinId,
-        position,
+        position, // Keep the original LatLng object
         locationName: `Location ${position.lat.toFixed(2)}, ${position.lng.toFixed(2)}`,
         weatherData: {
           temperature: 0,
@@ -178,6 +228,81 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
     }
   }
 
+  // Methods for tab integration
+  const clearAllPins = () => {
+    console.log('PinContext: Clearing all pins')
+    setLocationOnePin(null)
+    setLocationTwoPin(null)
+  }
+
+  const loadPins = (pins: PinData[]) => {
+    console.log('PinContext: Loading pins:', pins)
+    console.log('PinContext: Total pins to load:', pins.length)
+
+    // Clear existing pins first
+    setLocationOnePin(null)
+    setLocationTwoPin(null)
+
+    // Set new pins - ensure LatLng objects are properly reconstructed
+    if (pins.length > 0) {
+      const pin1 = pins[0]
+      console.log('PinContext: Processing pin 1:', pin1)
+      console.log('PinContext: Pin 1 position type:', typeof pin1.position)
+      console.log('PinContext: Pin 1 position:', pin1.position)
+
+      // Reconstruct LatLng object if needed
+      if (pin1.position) {
+        let validPin = pin1
+        if (
+          pin1.position.lat !== undefined &&
+          pin1.position.lng !== undefined
+        ) {
+          // Recreate the LatLng object to ensure it has all methods
+          validPin = {
+            ...pin1,
+            position: new LeafletLatLng(pin1.position.lat, pin1.position.lng),
+          }
+          console.log(
+            'PinContext: Reconstructed pin 1 position:',
+            validPin.position,
+          )
+        }
+        setLocationOnePin(validPin)
+        console.log('PinContext: Set location one pin successfully')
+      }
+    }
+
+    if (pins.length > 1) {
+      const pin2 = pins[1]
+      console.log('PinContext: Processing pin 2:', pin2)
+      console.log('PinContext: Pin 2 position type:', typeof pin2.position)
+      console.log('PinContext: Pin 2 position:', pin2.position)
+
+      // Reconstruct LatLng object if needed
+      if (pin2.position) {
+        let validPin = pin2
+        if (
+          pin2.position.lat !== undefined &&
+          pin2.position.lng !== undefined
+        ) {
+          // Recreate the LatLng object to ensure it has all methods
+          validPin = {
+            ...pin2,
+            position: new LeafletLatLng(pin2.position.lat, pin2.position.lng),
+          }
+          console.log(
+            'PinContext: Reconstructed pin 2 position:',
+            validPin.position,
+          )
+        }
+        setLocationTwoPin(validPin)
+        console.log('PinContext: Set location two pin successfully')
+      }
+    }
+
+    console.log('PinContext: loadPins completed')
+  }
+
   return (
     <PinContext.Provider
       value={{
@@ -186,6 +311,8 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
         addPin,
         removePin,
         updatePinWeatherData,
+        clearAllPins,
+        loadPins,
       }}
     >
       {children}

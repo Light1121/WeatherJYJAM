@@ -3,9 +3,6 @@ import styled from 'styled-components'
 import Map from './Map'
 import ControlPanel from './ControlPanel'
 
-
-
-
 const MapContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -30,21 +27,15 @@ const MapTitle = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 
-
-
 const MapView: FC = () => {
-  
-
   return (
-    
-      <MapContainer>
-        <Map />
+    <MapContainer>
+      <Map />
 
-        <MapTitle>empty</MapTitle>
+      <MapTitle>empty</MapTitle>
 
-        <ControlPanel />
-      </MapContainer>
-    
+      <ControlPanel />
+    </MapContainer>
   )
 }
 

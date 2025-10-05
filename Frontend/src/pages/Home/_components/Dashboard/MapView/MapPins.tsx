@@ -41,10 +41,16 @@ const createPurpleIcon = (label: string) =>
 
 const MapPins: FC = () => {
   const { locationOnePin, locationTwoPin, addPin, removePin } = usePinContext()
-  // Removed unused isLoading state
+
+  // Debug logging
+  console.log('MapPins - locationOnePin:', locationOnePin)
+  console.log('MapPins - locationOnePin coordinates:', locationOnePin?.position)
+  console.log('MapPins - locationTwoPin:', locationTwoPin)
+  console.log('MapPins - locationTwoPin coordinates:', locationTwoPin?.position)
 
   useMapEvents({
     click: async (e) => {
+      console.log('Map clicked at:', e.latlng) // Debug log
       await addPin(e.latlng)
     },
   })
