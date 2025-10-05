@@ -13,7 +13,6 @@ const App: FC = () => (
     <ControlPanelProvider>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/:tabId" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />

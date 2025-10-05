@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import TabSidebar from './TabSidebar'
+
 import MapView from './MapView'
 import { styled } from 'styled-components'
-import { useTabs } from './TabSidebar/_hooks/useTabs'
+
 
 const Background = styled.div`
   display: flex;
@@ -23,25 +23,16 @@ const MapSection = styled.div`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-interface DashboardProps {
-  currentTabId?: string
-}
 
-const Dashboard: FC<DashboardProps> = ({ currentTabId }) => {
-  const { tabs, addNewTab, renameTab, closeTab, toggleFavorite } = useTabs()
+
+const Dashboard: FC = () => {
+  
 
   return (
     <Background>
       <MapSection>
-        <TabSidebar
-          tabs={tabs}
-          currentTabId={currentTabId}
-          onAddTab={addNewTab}
-          onRenameTab={renameTab}
-          onCloseTab={closeTab}
-          onToggleFavorite={toggleFavorite}
-        />
-        <MapView currentTabId={currentTabId} tabs={tabs} />
+        
+        <MapView />
       </MapSection>
     </Background>
   )
