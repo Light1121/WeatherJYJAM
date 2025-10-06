@@ -42,6 +42,9 @@ export interface TabsContextType {
     mapView: MapViewState,
     controlPanelSettings: ControlPanelState,
   ) => void
+  exportTabsToJSON: () => void
+  importTabsFromJSON: (file: File) => Promise<void>
+  clearAllTabs: () => void
 }
 
 const TabsContext = createContext<TabsContextType | null>(null)
@@ -85,109 +88,75 @@ const createNewTab = (name?: string): TabData => {
   }
 }
 
-// Local storage keys
-const STORAGE_KEYS = {
-  TABS: 'weatherJYJAM_tabs',
-  ACTIVE_TAB_ID: 'weatherJYJAM_activeTabId',
-} as const
+// Interface for exported/imported data
+interface TabsExportData {
+  tabs: Array<{
+    id: string
+    name: string
+    createdAt: string
+    lastModified: string
+    pins?: Array<{
+      id: string
+      position: { lat: number; lng: number }
+      locationName: string
+      weatherData?: {
+        temperature: number
+        windSpeed: number
+        humidity: number
+        description: string
+      }
+    }>
+    mapView?: { center: { lat: number; lng: number }; zoom: number }
+    controlPanelSettings?: ControlPanelState
+  }>
+  activeTabId: string | null
+  exportedAt: string
+  version: string
+}
+
+// JSON file utilities
+const downloadJSONFile = (data: object, filename: string) => {
+  const json = JSON.stringify(data, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+const parseJSONFile = (file: File): Promise<TabsExportData> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const result = JSON.parse(e.target?.result as string)
+        resolve(result)
+      } catch {
+        reject(new Error('Invalid JSON file format'))
+      }
+    }
+    reader.onerror = () => reject(new Error('Error reading file'))
+    reader.readAsText(file)
+  })
+}
 
 export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
   const [tabs, setTabs] = useState<TabData[]>([])
   const [activeTabId, setActiveTabId] = useState<string | null>(null)
 
-  // Load tabs from localStorage on mount
+  // Initialize with default tab on mount
   useEffect(() => {
-    try {
-      const savedTabs = localStorage.getItem(STORAGE_KEYS.TABS)
-      const savedActiveTabId = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB_ID)
-
-      if (savedTabs) {
-        const parsedTabs = JSON.parse(savedTabs)
-        // Convert dates back from strings and recreate LatLng objects for pins
-        const restoredTabs = parsedTabs.map(
-          (tab: {
-            id: string
-            name: string
-            createdAt: string
-            lastModified: string
-            pins?: Array<{
-              id: string
-              position: { lat: number; lng: number }
-              name?: string
-              weather?: unknown
-            }>
-            mapView?: { center: { lat: number; lng: number }; zoom: number }
-            controlPanelSettings?: ControlPanelState
-          }) => ({
-            ...tab,
-            createdAt: new Date(tab.createdAt),
-            lastModified: new Date(tab.lastModified),
-            // Recreate LatLng objects for pins
-            pins:
-              tab.pins?.map((pin) => ({
-                ...pin,
-                position: new LatLng(
-                  pin.position?.lat || 0,
-                  pin.position?.lng || 0,
-                ),
-              })) || [],
-            // Recreate LatLng object for map view center
-            mapView: {
-              ...tab.mapView,
-              center: new LatLng(
-                tab.mapView?.center?.lat || -25.2744,
-                tab.mapView?.center?.lng || 133.7751,
-              ),
-            },
-          }),
-        )
-        setTabs(restoredTabs)
-
-        // Restore active tab if it exists
-        if (
-          savedActiveTabId &&
-          restoredTabs.some((tab: TabData) => tab.id === savedActiveTabId)
-        ) {
-          setActiveTabId(savedActiveTabId)
-        } else if (restoredTabs.length > 0) {
-          setActiveTabId(restoredTabs[0].id)
-        }
-      } else {
-        // Create default tab if no saved tabs
-        const defaultTab = createNewTab('Default')
-        setTabs([defaultTab])
-        setActiveTabId(defaultTab.id)
-      }
-    } catch (error) {
-      console.error('Error loading tabs from localStorage:', error)
-      // Create default tab on error
-      const defaultTab = createNewTab('Default')
-      setTabs([defaultTab])
-      setActiveTabId(defaultTab.id)
-    }
+    const defaultTab = createNewTab('Default')
+    setTabs([defaultTab])
+    setActiveTabId(defaultTab.id)
   }, [])
 
-  // Save tabs to localStorage whenever tabs change
-  useEffect(() => {
-    if (tabs.length > 0) {
-      try {
-        localStorage.setItem(STORAGE_KEYS.TABS, JSON.stringify(tabs))
-      } catch (error) {
-        console.error('Error saving tabs to localStorage:', error)
-      }
-    }
-  }, [tabs])
-
-  // Save active tab ID to localStorage
-  useEffect(() => {
-    if (activeTabId) {
-      try {
-        localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB_ID, activeTabId)
-      } catch (error) {
-        console.error('Error saving active tab ID to localStorage:', error)
-      }
-    }
-  }, [activeTabId])
+  // Note: Tabs are now managed through JSON file import/export
+  // No automatic saving - users must manually export their tabs
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || null
 
@@ -294,6 +263,82 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
     }
   }
 
+  const exportTabsToJSON = () => {
+    const exportData = {
+      tabs,
+      activeTabId,
+      exportedAt: new Date().toISOString(),
+      version: '1.0',
+    }
+    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+    const filename = `weatherjyjam-tabs-${timestamp}.json`
+    
+    downloadJSONFile(exportData, filename)
+    console.log('Tabs exported to:', filename)
+  }
+
+  const importTabsFromJSON = async (file: File): Promise<void> => {
+    try {
+      const data = await parseJSONFile(file)
+      
+      // Validate the imported data structure
+      if (!data.tabs || !Array.isArray(data.tabs)) {
+        throw new Error('Invalid tabs data format')
+      }
+      
+      // Restore tabs with proper object reconstruction
+      const restoredTabs = data.tabs.map((tab) => ({
+        ...tab,
+        createdAt: new Date(tab.createdAt),
+        lastModified: new Date(tab.lastModified),
+        // Recreate LatLng objects for pins
+        pins:
+          tab.pins?.map((pin) => ({
+            ...pin,
+            position: new LatLng(
+              pin.position?.lat || 0,
+              pin.position?.lng || 0,
+            ),
+          })) || [],
+        // Recreate LatLng object for map view center
+        mapView: {
+          zoom: tab.mapView?.zoom || 5,
+          center: new LatLng(
+            tab.mapView?.center?.lat || -25.2744,
+            tab.mapView?.center?.lng || 133.7751,
+          ),
+        },
+        // Ensure controlPanelSettings has default values
+        controlPanelSettings: tab.controlPanelSettings || defaultControlPanelSettings,
+      }))
+      
+      setTabs(restoredTabs)
+      
+      // Restore active tab if it exists in imported data
+      if (
+        data.activeTabId &&
+        restoredTabs.some((tab: TabData) => tab.id === data.activeTabId)
+      ) {
+        setActiveTabId(data.activeTabId)
+      } else if (restoredTabs.length > 0) {
+        setActiveTabId(restoredTabs[0].id)
+      }
+      
+      console.log('Tabs imported successfully:', restoredTabs.length, 'tabs')
+    } catch {
+      console.error('Error importing tabs')
+      throw new Error('Failed to import tabs')
+    }
+  }
+
+  const clearAllTabs = () => {
+    const defaultTab = createNewTab('Default')
+    setTabs([defaultTab])
+    setActiveTabId(defaultTab.id)
+    console.log('All tabs cleared, reset to default')
+  }
+
   const contextValue: TabsContextType = {
     tabs,
     activeTabId,
@@ -306,6 +351,9 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
     updateTabMapView,
     updateTabControlPanelSettings,
     saveCurrentTabState,
+    exportTabsToJSON,
+    importTabsFromJSON,
+    clearAllTabs,
   }
 
   return (

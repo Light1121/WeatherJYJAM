@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import TabItem from './TabItem.tsx'
 import AddTabButton from './AddTabButton.tsx'
 import EditTabModal from './EditTabModal.tsx'
+import { TabsFileManager } from './TabsFileManager.tsx'
 import { useTabsContext } from '@/_components/ContextHooks/useTabsContext'
 
 interface SidebarProps {
@@ -175,6 +176,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </TabsContainer>
 
         <SidebarFooter>
+          {isOpen && <TabsFileManager />}
           <AddTabButton onClick={handleAddTab} isCollapsed={!isOpen} />
         </SidebarFooter>
       </SidebarWrapper>
