@@ -62,20 +62,29 @@ const StatusMessage = styled.div<{ $type: 'success' | 'error' }>`
   padding: 0.5rem;
   font-size: 0.8rem;
   border-radius: 4px;
-  background-color: ${props => props.$type === 'success' ? '#d4edda' : '#f8d7da'};
-  color: ${props => props.$type === 'success' ? '#155724' : '#721c24'};
-  border: 1px solid ${props => props.$type === 'success' ? '#c3e6cb' : '#f5c6cb'};
+  background-color: ${(props) =>
+    props.$type === 'success' ? '#d4edda' : '#f8d7da'};
+  color: ${(props) => (props.$type === 'success' ? '#155724' : '#721c24')};
+  border: 1px solid
+    ${(props) => (props.$type === 'success' ? '#c3e6cb' : '#f5c6cb')};
 `
 
 export const TabsFileManager: React.FC = () => {
-  const { tabs, exportTabsToJSON, importTabsFromJSON, clearAllTabs } = useTabsContext()
+  const { tabs, exportTabsToJSON, importTabsFromJSON, clearAllTabs } =
+    useTabsContext()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
+  const [statusMessage, setStatusMessage] = useState<{
+    text: string
+    type: 'success' | 'error'
+  } | null>(null)
 
   const handleExport = () => {
     try {
       exportTabsToJSON()
-      setStatusMessage({ text: `Exported ${tabs.length} tabs successfully!`, type: 'success' })
+      setStatusMessage({
+        text: `Exported ${tabs.length} tabs successfully!`,
+        type: 'success',
+      })
       setTimeout(() => setStatusMessage(null), 3000)
     } catch {
       setStatusMessage({ text: 'Failed to export tabs', type: 'error' })
@@ -87,7 +96,9 @@ export const TabsFileManager: React.FC = () => {
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0]
     if (!file) return
 
@@ -96,7 +107,8 @@ export const TabsFileManager: React.FC = () => {
       setStatusMessage({ text: 'Tabs imported successfully!', type: 'success' })
       setTimeout(() => setStatusMessage(null), 3000)
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to import tabs'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to import tabs'
       setStatusMessage({ text: errorMessage, type: 'error' })
       setTimeout(() => setStatusMessage(null), 3000)
     }
@@ -108,9 +120,16 @@ export const TabsFileManager: React.FC = () => {
   }
 
   const handleClear = () => {
-    if (window.confirm('Are you sure you want to clear all tabs? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to clear all tabs? This action cannot be undone.',
+      )
+    ) {
       clearAllTabs()
-      setStatusMessage({ text: 'All tabs cleared and reset to default', type: 'success' })
+      setStatusMessage({
+        text: 'All tabs cleared and reset to default',
+        type: 'success',
+      })
       setTimeout(() => setStatusMessage(null), 3000)
     }
   }
@@ -118,19 +137,15 @@ export const TabsFileManager: React.FC = () => {
   return (
     <FileManagementContainer>
       <FileManagementTitle>Tab Management</FileManagementTitle>
-      
+
       <ButtonGroup>
         <FileButton onClick={handleExport} disabled={tabs.length === 0}>
           Export Tabs
         </FileButton>
-        
-        <FileButton onClick={handleImportClick}>
-          Import Tabs
-        </FileButton>
-        
-        <ClearButton onClick={handleClear}>
-          Clear All
-        </ClearButton>
+
+        <FileButton onClick={handleImportClick}>Import Tabs</FileButton>
+
+        <ClearButton onClick={handleClear}>Clear All</ClearButton>
       </ButtonGroup>
 
       <HiddenFileInput

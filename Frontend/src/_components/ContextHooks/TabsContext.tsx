@@ -270,10 +270,13 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
       exportedAt: new Date().toISOString(),
       version: '1.0',
     }
-    
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, '-')
+      .slice(0, 19)
     const filename = `weatherjyjam-tabs-${timestamp}.json`
-    
+
     downloadJSONFile(exportData, filename)
     console.log('Tabs exported to:', filename)
   }
@@ -281,12 +284,12 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
   const importTabsFromJSON = async (file: File): Promise<void> => {
     try {
       const data = await parseJSONFile(file)
-      
+
       // Validate the imported data structure
       if (!data.tabs || !Array.isArray(data.tabs)) {
         throw new Error('Invalid tabs data format')
       }
-      
+
       // Restore tabs with proper object reconstruction
       const restoredTabs = data.tabs.map((tab) => ({
         ...tab,
@@ -310,11 +313,12 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
           ),
         },
         // Ensure controlPanelSettings has default values
-        controlPanelSettings: tab.controlPanelSettings || defaultControlPanelSettings,
+        controlPanelSettings:
+          tab.controlPanelSettings || defaultControlPanelSettings,
       }))
-      
+
       setTabs(restoredTabs)
-      
+
       // Restore active tab if it exists in imported data
       if (
         data.activeTabId &&
@@ -324,7 +328,7 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
       } else if (restoredTabs.length > 0) {
         setActiveTabId(restoredTabs[0].id)
       }
-      
+
       console.log('Tabs imported successfully:', restoredTabs.length, 'tabs')
     } catch {
       console.error('Error importing tabs')
