@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../../../lib/supabase'
 
 interface SignUpFormData {
   username: string
@@ -78,6 +79,14 @@ export const useSignUp = () => {
       return false
     }
 
+    if (password.length < 6) {
+      setState((prev) => ({
+        ...prev,
+        error: 'Password must be at least 6 characters',
+      }))
+      return false
+    }
+
     if (password !== confirmPassword) {
       setState((prev) => ({ ...prev, error: 'Passwords do not match' }))
       return false
@@ -92,36 +101,57 @@ export const useSignUp = () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
     try {
-      const response = await fetch('http://localhost:2333/api/users/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      console.log('Starting signup process for:', state.formData.email)
+
+      // Sign up with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: state.formData.email,
+        password: state.formData.password,
+        options: {
+          data: {
+            username: state.formData.username,
+          },
         },
-        body: JSON.stringify({
-          username: state.formData.username,
-          email: state.formData.email,
-          password: state.formData.password,
-        }),
       })
 
-      if (response.ok) {
-        const result = await response.json()
-        console.log('User created:', result)
+      console.log('Auth signup result:', { authData, authError })
 
-        setFadeOut(true)
-        setTimeout(() => navigate('/login'), 500)
-      } else {
-        const errorData = await response.json()
-        setState((prev) => ({
-          ...prev,
-          error: errorData.message || 'Sign up failed',
-          isLoading: false,
-        }))
+      if (authError) {
+        throw authError
       }
-    } catch {
+
+      if (authData.user) {
+        console.log('User created:', authData.user.id)
+
+        // Create profile, tabs, and settings
+        console.log('Creating user profile...')
+
+        const { error: profileError } = await supabase.rpc(
+          'create_user_profile',
+          {
+            user_id: authData.user.id,
+            user_email: state.formData.email,
+            user_username: state.formData.username,
+          },
+        )
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+          throw profileError
+        }
+
+        console.log('Profile created successfully')
+
+        setState((prev) => ({ ...prev, isLoading: false }))
+        setFadeOut(true)
+        setTimeout(() => navigate('/'), 500) // Redirect to homepage instead of login
+      }
+    } catch (error: unknown) {
+      console.error('Signup error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Sign up failed'
       setState((prev) => ({
         ...prev,
-        error: 'Network error. Please try again.',
+        error: errorMessage,
         isLoading: false,
       }))
     }

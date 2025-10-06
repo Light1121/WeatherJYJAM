@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../../../lib/supabase'
 
 interface LoginFormData {
   email: string
@@ -72,16 +73,44 @@ export const useLogin = () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
     try {
-      console.log('Login attempt:', state.formData)
+      console.log('Attempting login for:', state.formData.email)
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: state.formData.email,
+        password: state.formData.password,
+      })
 
-      setFadeOut(true)
-      setTimeout(() => navigate('/'), 500)
-    } catch {
+      console.log('Login result:', { data, error })
+
+      if (error) {
+        console.error('Login error:', error)
+
+        // Provide more specific error messages
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error(
+            'Invalid email or password. Please check your credentials and try again.',
+          )
+        } else if (error.message.includes('Email not confirmed')) {
+          throw new Error(
+            'Please check your email and click the confirmation link before logging in.',
+          )
+        } else {
+          throw error
+        }
+      }
+
+      if (data.user) {
+        console.log('Login successful for user:', data.user.id)
+        setState((prev) => ({ ...prev, isLoading: false }))
+        setFadeOut(true)
+        setTimeout(() => navigate('/'), 500)
+      }
+    } catch (error: unknown) {
+      console.error('Login failed:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Login failed. Please try again.'
       setState((prev) => ({
         ...prev,
-        error: 'Login failed. Please try again.',
+        error: errorMessage,
         isLoading: false,
       }))
     }
