@@ -9,6 +9,7 @@ type BaseProps = {
   variant?: BarVariant
   customGradient?: string
   valuePosition?: number
+  customStyle?: React.CSSProperties
 }
 
 const Wrap = styled.div`
@@ -27,12 +28,21 @@ const Head = styled.div`
   min-height: 18px;
 `
 
-const Track = styled.div<{ $gradient: string }>`
+const Track = styled.div<{
+  $gradient: string
+  $customStyle?: React.CSSProperties
+}>`
   position: relative;
   height: 12px;
   border-radius: 999px;
   background: ${({ $gradient }) => $gradient};
   overflow: hidden;
+  ${({ $customStyle }) =>
+    $customStyle &&
+    `
+    filter: ${$customStyle.filter};
+    transition: ${$customStyle.transition};
+  `}
 `
 
 const Thumb = styled.div<{ $leftPct: number }>`
@@ -61,6 +71,7 @@ const WeatherDataBar: FC<BaseProps> = ({
   variant = 'temperature',
   customGradient,
   valuePosition = 50,
+  customStyle,
 }) => {
   const fallback = 'linear-gradient(90deg, #e5e7eb 0%, #cbd5e1 100%)'
   const gradient =
@@ -70,7 +81,7 @@ const WeatherDataBar: FC<BaseProps> = ({
   return (
     <Wrap>
       <Head>{label}</Head>
-      <Track $gradient={gradient}>
+      <Track $gradient={gradient} $customStyle={customStyle}>
         <Thumb $leftPct={pct} />
       </Track>
       <Ends>
@@ -83,34 +94,46 @@ const WeatherDataBar: FC<BaseProps> = ({
 
 export default WeatherDataBar
 
-type SimpleProps = { valuePosition?: number }
+type SimpleProps = {
+  valuePosition?: number
+  customStyle?: React.CSSProperties
+}
 
-export const TemperatureBar: FC<SimpleProps> = ({ valuePosition }) => (
+export const TemperatureBar: FC<SimpleProps> = ({
+  valuePosition,
+  customStyle,
+}) => (
   <WeatherDataBar
     variant="temperature"
     label="Temperature Report"
     leftText="-20°C"
     rightText="40°C"
     valuePosition={valuePosition}
+    customStyle={customStyle}
   />
 )
 
-export const WindBar: FC<SimpleProps> = ({ valuePosition }) => (
+export const WindBar: FC<SimpleProps> = ({ valuePosition, customStyle }) => (
   <WeatherDataBar
     variant="wind"
     label="Wind Speed Report"
     leftText="0 kt"
     rightText="60 kt"
     valuePosition={valuePosition}
+    customStyle={customStyle}
   />
 )
 
-export const HumidityBar: FC<SimpleProps> = ({ valuePosition }) => (
+export const HumidityBar: FC<SimpleProps> = ({
+  valuePosition,
+  customStyle,
+}) => (
   <WeatherDataBar
     variant="humidity"
     label="Humidity Report"
     leftText="30%"
     rightText="100%"
     valuePosition={valuePosition}
+    customStyle={customStyle}
   />
 )

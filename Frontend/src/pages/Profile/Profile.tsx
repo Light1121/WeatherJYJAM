@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { FullScreenLayout, MainLayout } from '../../_components'
 import FavouriteComparisons from './_components/FavouriteComparisons'
 import FavouriteLocations from './_components/FavouriteLocations'
+import ProfileSettings from './_components/ProfileSettings'
 
 const ProfileContainer = styled.div`
   flex: 1;
@@ -76,6 +77,8 @@ const Profile: FC = () => {
     const fadeInContent = setTimeout(() => setContentVisible(true), 300)
     return () => clearTimeout(fadeInContent)
   }, [])
+  const username = 'Username'
+  const email = 'username@gmail.com'
 
   return (
     <FullScreenLayout>
@@ -84,8 +87,8 @@ const Profile: FC = () => {
           <UserSection>
             <Circle />
             <UserInfo>
-              <WelcomeText>Hello, Username</WelcomeText>
-              <EmailText>username@gmail.com</EmailText>
+              <WelcomeText>Hello, {username}</WelcomeText>
+              <EmailText>{email}</EmailText>
             </UserInfo>
           </UserSection>
 
@@ -93,6 +96,7 @@ const Profile: FC = () => {
             <ContentGrid>
               <FavouriteLocations />
               <FavouriteComparisons />
+              <ProfileSettings />
             </ContentGrid>
           </FadeDiv>
         </ProfileContainer>

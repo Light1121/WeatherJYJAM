@@ -19,9 +19,21 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
+<<<<<<< HEAD
     "noUncheckedSideEffectImports": true
+=======
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /* Additional options that might help */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+>>>>>>> aafa7a7ab6b1e47fc0095fa62e10e826d7b84980
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
