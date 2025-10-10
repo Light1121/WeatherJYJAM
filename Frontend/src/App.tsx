@@ -2,25 +2,31 @@ import type { FC } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Settings from './pages/Settings'
 import Profile from './pages/Profile'
 import SignUp from './pages/SignUp'
-import { LocOneProvider } from './_components/ContextHooks/LocOneContext'
-import { LocTwoProvider } from './_components/ContextHooks/LocTwoContext'
+import Details from './pages/Details'
+import {
+  TabsProvider,
+  PinProvider,
+  ControlPanelProvider,
+} from './_components/ContextHooks'
+import { TabsPinIntegration } from './_components/ContextHooks/TabsPinIntegration' // Re-enabled with fixes
 
 const App: FC = () => (
-  <LocTwoProvider>
-    <LocOneProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/:tabId" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </LocOneProvider>
-  </LocTwoProvider>
+  <TabsProvider>
+    <PinProvider>
+      <ControlPanelProvider>
+        <TabsPinIntegration />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/details" element={<Details />} />
+        </Routes>
+      </ControlPanelProvider>
+    </PinProvider>
+  </TabsProvider>
 )
 
 export default App

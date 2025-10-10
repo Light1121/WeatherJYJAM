@@ -1,10 +1,17 @@
 import type { FC } from 'react'
-import TabSidebar from './TabSidebar'
-import MapView from './MapView'
-import { styled } from 'styled-components'
-import { useTabs } from './TabSidebar/_hooks/useTabs'
+import { useState } from 'react'
 
-const Background = styled.div`
+import MapView from './MapView'
+import Sidebar from '@/_components/Sidebar'
+import { styled } from 'styled-components'
+
+const DashboardContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  position: relative;
+`
+
+const Background = styled.div<{ $sidebarOpen: boolean }>`
   display: flex;
   flex: 1;
   border-radius: 15px;
@@ -12,6 +19,8 @@ const Background = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   margin: 20px;
+  margin-left: ${({ $sidebarOpen }) => ($sidebarOpen ? '300px' : '80px')};
+  transition: margin-left 0.3s ease;
 `
 
 const MapSection = styled.div`
@@ -23,27 +32,22 @@ const MapSection = styled.div`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-interface DashboardProps {
-  currentTabId?: string
-}
+const Dashboard: FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
-const Dashboard: FC<DashboardProps> = ({ currentTabId }) => {
-  const { tabs, addNewTab, renameTab, closeTab, toggleFavorite } = useTabs()
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
 
   return (
-    <Background>
-      <MapSection>
-        <TabSidebar
-          tabs={tabs}
-          currentTabId={currentTabId}
-          onAddTab={addNewTab}
-          onRenameTab={renameTab}
-          onCloseTab={closeTab}
-          onToggleFavorite={toggleFavorite}
-        />
-        <MapView currentTabId={currentTabId} tabs={tabs} />
-      </MapSection>
-    </Background>
+    <DashboardContainer>
+      <Sidebar isOpen={sidebarOpen} onToggle={handleSidebarToggle} />
+      <Background $sidebarOpen={sidebarOpen}>
+        <MapSection>
+          <MapView />
+        </MapSection>
+      </Background>
+    </DashboardContainer>
   )
 }
 

@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { useMenu } from './_hooks'
 import { LoginMenu } from './login'
 import { CompareMenu } from './compare'
-import { OthersMenu } from './others'
 
 const ButtonContainer = styled.div`
   position: fixed;
@@ -78,10 +77,6 @@ const CompareSection = styled(MenuSection)`
   flex: 1;
 `
 
-const OthersSection = styled(MenuSection)`
-  flex: 0 0 10%;
-`
-
 const Menu: FC = () => {
   const {
     isOpen,
@@ -127,10 +122,6 @@ const Menu: FC = () => {
             closeLoc2={closeLoc2}
           />
         </CompareSection>
-
-        <OthersSection>
-          <OthersMenu onItemClick={closeMenu} />
-        </OthersSection>
       </SideMenu>
     </>
   )
