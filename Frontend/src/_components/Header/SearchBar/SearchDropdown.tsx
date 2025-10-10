@@ -64,5 +64,3 @@ const SearchDropdown: FC = () => {
 }
 
 export default SearchDropdown
-
-

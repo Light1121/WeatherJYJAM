@@ -1,8 +1,9 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { SearchDropdown, AIdropdown, SearchSwitch } from './'
-
+import SearchDropdown from './SearchDropdown'
+import AIdropdown from './AIdropdown'
+import SearchSwitch from './SearchSwitch'
 
 const Wrapper = styled.div`
   position: relative;
@@ -54,7 +55,7 @@ const SearchBar: FC = () => {
     <Wrapper>
       <SearchInput
         type="text"
-        placeholder={mode === 'search' ? 'Search Location...' : 'Ask AI...' }
+        placeholder={mode === 'search' ? 'Search Location...' : 'Ask AI...'}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
@@ -63,7 +64,13 @@ const SearchBar: FC = () => {
       <ToggleSlot>
         <SearchSwitch mode={mode} onModeChange={(next) => setMode(next)} />
       </ToggleSlot>
-      {query && focused && (mode === 'search' ? <SearchDropdown /> : <AIdropdown prompt={query} />)}
+      {query &&
+        focused &&
+        (mode === 'search' ? (
+          <SearchDropdown />
+        ) : (
+          <AIdropdown prompt={query} />
+        ))}
     </Wrapper>
   )
 }

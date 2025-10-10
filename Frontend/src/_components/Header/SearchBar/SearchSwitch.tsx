@@ -24,7 +24,8 @@ const Option = styled.div<{ $active: boolean }>`
   font-size: 14px;
   background: ${({ $active }) => ($active ? '#ffffff' : 'transparent')};
   color: ${({ $active }) => ($active ? '#000000d9' : '#00000073')};
-  box-shadow: ${({ $active }) => ($active ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
+  box-shadow: ${({ $active }) =>
+    $active ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none'};
   transition: all 0.3s;
   user-select: none;
 
@@ -45,7 +46,10 @@ const Text = styled.span`
 const SearchSwitch: FC<SearchSwitchProps> = ({ mode, onModeChange }) => {
   return (
     <Container>
-      <Option $active={mode === 'search'} onClick={() => onModeChange('search')}>
+      <Option
+        $active={mode === 'search'}
+        onClick={() => onModeChange('search')}
+      >
         <Icon>🔍</Icon>
         <Text>Search</Text>
       </Option>
@@ -58,4 +62,3 @@ const SearchSwitch: FC<SearchSwitchProps> = ({ mode, onModeChange }) => {
 }
 
 export default SearchSwitch
-

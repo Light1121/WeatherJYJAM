@@ -1,5 +1,6 @@
-import type { FC, ReactNode } from 'react'
+import type { FC } from 'react'
 import styled from 'styled-components'
+import { renderAIContent } from '@/_components/ContextHooks/aiRender'
 
 const Container = styled.div`
   position: absolute;
@@ -18,25 +19,12 @@ const Container = styled.div`
   z-index: 100000;
 `
 
-export const renderAIContent = (text: string): ReactNode => {
-  // For future SSE streaming, this function can progressively append tokens.
-  // For now, render the full input text as a single block.
-  if (!text) return null
-  return (
-    <div style={{ padding: '12px 16px', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
-      {text}
-    </div>
-  )
-}
-
-type AIDropdownProps = {
+interface AIDropdownProps {
   prompt: string
 }
 
-const SearchAI: FC<AIDropdownProps> = ({ prompt }) => {
+const AIdropdown: FC<AIDropdownProps> = ({ prompt }) => {
   return <Container>{renderAIContent(prompt)}</Container>
 }
 
-export default SearchAI
-
-
+export default AIdropdown
