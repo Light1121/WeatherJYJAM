@@ -7,7 +7,7 @@ const ControlPanelWrapper = styled.div`
   position: absolute;
   bottom: 0px;
   left: 0px;
-  z-index: 1000;
+  z-index: 400;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

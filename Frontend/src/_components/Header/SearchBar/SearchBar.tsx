@@ -1,10 +1,17 @@
 import type { FC } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
+import { SearchDropdown } from './'
+
+
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`
 
 const SearchInput = styled.input`
   width: 300px;
   height: 40px;
-  padding: 8px 16px;
   background-color: #def8ffff;
   border: none;
   border-radius: 20px;
@@ -12,6 +19,7 @@ const SearchInput = styled.input`
   font-size: 16px;
   color: #333;
   text-align: center;
+  z-index: 1000;
   transition:
     width 0.3s ease,
     background-color 0.3s ease,
@@ -29,7 +37,22 @@ const SearchInput = styled.input`
 `
 
 const SearchBar: FC = () => {
-  return <SearchInput type="text" placeholder="Search Location..." />
+  const [query, setQuery] = useState('')
+  const [focused, setFocused] = useState(false)
+
+  return (
+    <Wrapper>
+      <SearchInput
+        type="text"
+        placeholder="Search Location..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
+      {query && focused && <SearchDropdown />}
+    </Wrapper>
+  )
 }
 
 export default SearchBar
