@@ -2,23 +2,17 @@
   "name": "weatherjyjam-monorepo",
   "private": true,
   "devDependencies": {
-    "@types/styled-components": "^5.1.34",
     "husky": "^9.1.7"
   },
   "scripts": {
-<<<<<<< HEAD
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@types/react": "^19.1.12",
-    "react": "^19.1.1",
-    "styled-components": "^6.1.19"
-=======
     "prepare": "husky",
     "fe:dev": "cd Frontend && npm run dev",
     "fe:build": "cd Frontend && npm run build",
     "fe:preview": "cd Frontend && npm run preview",
     "fe:precommit": "cd Frontend && npm run pre-commit"
->>>>>>> main
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "antd": "^5.27.4"
   }
 }
