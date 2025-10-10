@@ -10,5 +10,9 @@
     "fe:build": "cd Frontend && npm run build",
     "fe:preview": "cd Frontend && npm run preview",
     "fe:precommit": "cd Frontend && npm run pre-commit"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "antd": "^5.27.4"
   }
 }

@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { SearchDropdown } from './'
+import { SearchDropdown, AIdropdown, SearchSwitch } from './'
 
 
 const Wrapper = styled.div`
@@ -9,16 +9,25 @@ const Wrapper = styled.div`
   display: inline-block;
 `
 
+const ToggleSlot = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+`
+
 const SearchInput = styled.input`
-  width: 300px;
-  height: 40px;
+  width: 550px;
+  height: 55px;
   background-color: #def8ffff;
   border: none;
   border-radius: 20px;
   outline: none;
   font-size: 16px;
   color: #333;
-  text-align: center;
+  text-align: left;
+  padding-left: 20px;
   z-index: 1000;
   transition:
     width 0.3s ease,
@@ -30,7 +39,7 @@ const SearchInput = styled.input`
   }
 
   &:focus {
-    width: 600px;
+    width: 750px;
     background-color: #def8ffff;
     box-shadow: 0 0 0 2px #e3f2fd;
   }
@@ -39,18 +48,22 @@ const SearchInput = styled.input`
 const SearchBar: FC = () => {
   const [query, setQuery] = useState('')
   const [focused, setFocused] = useState(false)
+  const [mode, setMode] = useState<'search' | 'ai'>('search')
 
   return (
     <Wrapper>
       <SearchInput
         type="text"
-        placeholder="Search Location..."
+        placeholder={mode === 'search' ? 'Search Location...' : 'Ask AI...' }
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      {query && focused && <SearchDropdown />}
+      <ToggleSlot>
+        <SearchSwitch mode={mode} onModeChange={(next) => setMode(next)} />
+      </ToggleSlot>
+      {query && focused && (mode === 'search' ? <SearchDropdown /> : <AIdropdown prompt={query} />)}
     </Wrapper>
   )
 }
