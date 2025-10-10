@@ -6,19 +6,10 @@
     "husky": "^9.1.7"
   },
   "scripts": {
-<<<<<<< HEAD
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@types/react": "^19.1.12",
-    "react": "^19.1.1",
-    "styled-components": "^6.1.19"
-=======
     "prepare": "husky",
     "fe:dev": "cd Frontend && npm run dev",
     "fe:build": "cd Frontend && npm run build",
     "fe:preview": "cd Frontend && npm run preview",
     "fe:precommit": "cd Frontend && npm run pre-commit"
->>>>>>> main
   }
 }
