@@ -29,7 +29,7 @@ const SidebarWrapper = styled.div<{ $isOpen: boolean }>`
   transition:
     width 0.3s ease,
     box-shadow 0.3s ease;
-  z-index: 1000;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -48,7 +48,7 @@ const ToggleButtonWrapper = styled.div<{ $isOpen: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1001;
+  z-index: 1000;
   transition:
     all 0.3s ease,
     left 0.3s ease;

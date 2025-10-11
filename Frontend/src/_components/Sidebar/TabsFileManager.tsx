@@ -74,15 +74,17 @@ const StatusMessage = styled.div<{ $type: 'success' | 'error' }>`
     ${(props) => (props.$type === 'success' ? '#c3e6cb' : '#f5c6cb')};
 `
 
-// --- Confirmation Modal ---
 const ModalBackdrop = styled.div`
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 10000;
   animation: fadeIn 0.2s ease;
 
   @keyframes fadeIn {

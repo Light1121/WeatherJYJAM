@@ -1,5 +1,5 @@
-import { useState, type FC } from 'react'
-import styled from 'styled-components'
+import { useState, type FC, useEffect } from 'react'
+import styled, { keyframes } from 'styled-components'
 import type { TabData } from '@/_components/ContextHooks/TabsContext'
 
 interface TabItemProps {
@@ -15,13 +15,35 @@ interface TabItemProps {
 const formatDate = (date: Date): string => {
   const now = new Date()
   const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-
   if (diffInHours < 1) return 'Just now'
   if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`
   if (diffInHours < 24 * 7) return `${Math.floor(diffInHours / 24)}d ago`
   return date.toLocaleDateString()
 }
 
+// --- Animations ---
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`
+
+const bounceIn = keyframes`
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+`
+
+const bounceOut = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+`
+
+// --- Styled Components ---
 const TabItemWrapper = styled.div<{
   $isActive: boolean
   $isCollapsed: boolean
@@ -144,45 +166,30 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   }
 `
 
-const DeleteModalBackdrop = styled.div`
+const DeleteModalBackdrop = styled.div<{ $isClosing: boolean }>`
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-  animation: fadeIn 0.2s ease;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+  z-index: 10000;
+  animation: ${({ $isClosing }) => ($isClosing ? fadeOut : fadeIn)} 0.2s ease
+    forwards;
 `
 
-const DeleteModalContent = styled.div`
+const DeleteModalContent = styled.div<{ $isClosing: boolean }>`
   background: white;
   padding: 24px;
   border-radius: 12px;
   text-align: center;
   font-family: 'Instrument Sans', sans-serif;
   min-width: 300px;
-  animation: slideDown 0.2s ease;
-
-  @keyframes slideDown {
-    from {
-      transform: translateY(-10px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+  animation: ${({ $isClosing }) => ($isClosing ? bounceOut : bounceIn)} 0.25s
+    ease forwards;
 `
 
 const ModalButtons = styled.div`
@@ -235,6 +242,7 @@ const TabItem: FC<TabItemProps> = ({
   canDelete,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -248,10 +256,19 @@ const TabItem: FC<TabItemProps> = ({
 
   const confirmDelete = () => {
     onDelete()
-    setShowDeleteModal(false)
+    setIsClosing(true)
   }
 
-  const cancelDelete = () => setShowDeleteModal(false)
+  const cancelDelete = () => setIsClosing(true)
+
+  useEffect(() => {
+    if (!isClosing) return
+    const timer = setTimeout(() => {
+      setShowDeleteModal(false)
+      setIsClosing(false)
+    }, 250)
+    return () => clearTimeout(timer)
+  }, [isClosing])
 
   return (
     <>
@@ -296,8 +313,8 @@ const TabItem: FC<TabItemProps> = ({
       </TabItemWrapper>
 
       {showDeleteModal && (
-        <DeleteModalBackdrop>
-          <DeleteModalContent>
+        <DeleteModalBackdrop $isClosing={isClosing}>
+          <DeleteModalContent $isClosing={isClosing}>
             <p>Are you sure you want to delete "{tab.name}"?</p>
             <ModalButtons>
               <Button $variant="primary" onClick={confirmDelete}>
