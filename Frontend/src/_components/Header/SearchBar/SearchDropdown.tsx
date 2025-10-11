@@ -1,47 +1,40 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 
-const Container = styled.div`
+const Container = styled.div<{ width: number }>`
   position: absolute;
-  top: 45px;
+  top: 100%;
   left: 0;
-  width: 100%;
-  min-width: 660px;
-  max-width: 720px;
+  width: ${({ width }) => width}px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   border: 1px solid #eaeaea;
-  padding: 12px 0;
+  padding: 12px 16px;
   max-height: 520px;
   overflow-y: auto;
-  z-index: 100000;
+  font-family: 'Instrument Sans', sans-serif;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  z-index: 1000;
 `
 
 const ResultItem = styled.div`
-  padding: 14px 18px;
+  padding: 12px 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  font-family: 'Instrument Sans', sans-serif;
 
   &:hover {
     background-color: #f5f5f5;
   }
 `
 
-const ItemTitle = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 4px;
-`
+interface SearchDropdownProps {
+  query: string
+  onSelect: (loc: { id: number; title: string; subtitle: string }) => void
+  inputWidth: number
+}
 
-const ItemSubtitle = styled.div`
-  font-size: 12px;
-  color: #666;
-`
-
-// Dummy search results
 const dummyResults = [
   { id: 1, title: 'Sydney, Australia', subtitle: 'New South Wales' },
   { id: 2, title: 'Melbourne, Australia', subtitle: 'Victoria' },
@@ -50,17 +43,32 @@ const dummyResults = [
   { id: 5, title: 'Adelaide, Australia', subtitle: 'South Australia' },
 ]
 
-const renderResults = () => {
-  return dummyResults.map((result) => (
-    <ResultItem key={result.id}>
-      <ItemTitle>{result.title}</ItemTitle>
-      <ItemSubtitle>{result.subtitle}</ItemSubtitle>
-    </ResultItem>
-  ))
-}
+const SearchDropdown: FC<SearchDropdownProps> = ({
+  query,
+  onSelect,
+  inputWidth,
+}) => {
+  const results = dummyResults.filter((r) =>
+    r.title.toLowerCase().includes(query.toLowerCase()),
+  )
 
-const SearchDropdown: FC = () => {
-  return <Container>{renderResults()}</Container>
+  if (results.length === 0) {
+    return <Container width={inputWidth}>No search results</Container>
+  }
+
+  return (
+    <Container width={inputWidth}>
+      {results.map((r) => (
+        <ResultItem
+          key={r.id}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => onSelect(r)}
+        >
+          {r.title} - {r.subtitle}
+        </ResultItem>
+      ))}
+    </Container>
+  )
 }
 
 export default SearchDropdown
