@@ -6,7 +6,7 @@ import WeatherStats from './WeatherStats'
 const BottomSheetWrapper = styled.div`
   position: absolute;
   bottom: 0;
-  left: 57%;
+  left: 56%;
   transform: translateX(-50%);
   z-index: 400;
   display: flex;
