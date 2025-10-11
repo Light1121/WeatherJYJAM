@@ -6,13 +6,14 @@ const FileManagementContainer = styled.div`
   padding: 1rem;
   border-bottom: 1px solid #e0e0e0;
   background-color: #f8f9fa;
+  font-family: 'Instrument Sans', sans-serif;
+  color: #333;
 `
 
 const FileManagementTitle = styled.h3`
   margin: 0 0 1rem 0;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #495057;
+  color: #333;
 `
 
 const ButtonGroup = styled.div`
@@ -24,16 +25,18 @@ const ButtonGroup = styled.div`
 const FileButton = styled.button`
   padding: 0.5rem 0.75rem;
   font-size: 0.8rem;
-  border: 1px solid #007bff;
+  border: 1px solid #a0d1ff;
   border-radius: 4px;
-  background-color: #007bff;
-  color: white;
+  background-color: #b3e0ff;
+  color: #333;
   cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
   transition: all 0.2s ease;
+  font-weight: 200;
 
   &:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: #99ccff;
+    border-color: #99ccff;
   }
 
   &:disabled {
@@ -44,12 +47,13 @@ const FileButton = styled.button`
 `
 
 const ClearButton = styled(FileButton)`
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: #ffc9c9;
+  border-color: #ffc9c9;
+  color: #333;
 
   &:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
+    background-color: #ffb3b3;
+    border-color: #ff9999;
   }
 `
 
@@ -62,11 +66,100 @@ const StatusMessage = styled.div<{ $type: 'success' | 'error' }>`
   padding: 0.5rem;
   font-size: 0.8rem;
   border-radius: 4px;
+  font-family: 'Instrument Sans', sans-serif;
+  color: #333;
   background-color: ${(props) =>
     props.$type === 'success' ? '#d4edda' : '#f8d7da'};
-  color: ${(props) => (props.$type === 'success' ? '#155724' : '#721c24')};
   border: 1px solid
     ${(props) => (props.$type === 'success' ? '#c3e6cb' : '#f5c6cb')};
+`
+
+// --- Confirmation Modal ---
+const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Instrument Sans', sans-serif;
+  min-width: 300px;
+  animation: slideDown 0.2s ease;
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+`
+
+const ModalButtons = styled.div`
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+`
+
+const ModalButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? '#007acc' : '#d1d5db')};
+  background: ${({ $variant }) =>
+    $variant === 'primary' ? '#b3e0ff' : 'white'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#333' : '#333')};
+
+  &:hover {
+    background: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#f3f4f6'};
+    border-color: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#9ca3af'};
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 `
 
 export const TabsFileManager: React.FC = () => {
@@ -77,6 +170,7 @@ export const TabsFileManager: React.FC = () => {
     text: string
     type: 'success' | 'error'
   } | null>(null)
+  const [showClearModal, setShowClearModal] = useState(false)
 
   const handleExport = () => {
     try {
@@ -113,26 +207,24 @@ export const TabsFileManager: React.FC = () => {
       setTimeout(() => setStatusMessage(null), 3000)
     }
 
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const handleClear = () => {
-    if (
-      window.confirm(
-        'Are you sure you want to clear all tabs? This action cannot be undone.',
-      )
-    ) {
-      clearAllTabs()
-      setStatusMessage({
-        text: 'All tabs cleared and reset to default',
-        type: 'success',
-      })
-      setTimeout(() => setStatusMessage(null), 3000)
-    }
+    setShowClearModal(true)
   }
+
+  const confirmClear = () => {
+    clearAllTabs()
+    setStatusMessage({
+      text: 'All tabs cleared and reset to default',
+      type: 'success',
+    })
+    setShowClearModal(false)
+    setTimeout(() => setStatusMessage(null), 3000)
+  }
+
+  const cancelClear = () => setShowClearModal(false)
 
   return (
     <FileManagementContainer>
@@ -159,6 +251,24 @@ export const TabsFileManager: React.FC = () => {
         <StatusMessage $type={statusMessage.type}>
           {statusMessage.text}
         </StatusMessage>
+      )}
+
+      {showClearModal && (
+        <ModalBackdrop>
+          <ModalContent>
+            <p>
+              Are you sure you want to clear all tabs? This cannot be undone.
+            </p>
+            <ModalButtons>
+              <ModalButton $variant="primary" onClick={confirmClear}>
+                Yes
+              </ModalButton>
+              <ModalButton $variant="secondary" onClick={cancelClear}>
+                Cancel
+              </ModalButton>
+            </ModalButtons>
+          </ModalContent>
+        </ModalBackdrop>
       )}
     </FileManagementContainer>
   )

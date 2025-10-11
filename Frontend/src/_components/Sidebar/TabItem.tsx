@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { FC } from 'react'
+import { useState, type FC } from 'react'
 import styled from 'styled-components'
 import type { TabData } from '@/_components/ContextHooks/TabsContext'
 
@@ -17,15 +16,10 @@ const formatDate = (date: Date): string => {
   const now = new Date()
   const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
 
-  if (diffInHours < 1) {
-    return 'Just now'
-  } else if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`
-  } else if (diffInHours < 24 * 7) {
-    return `${Math.floor(diffInHours / 24)}d ago`
-  } else {
-    return date.toLocaleDateString()
-  }
+  if (diffInHours < 1) return 'Just now'
+  if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`
+  if (diffInHours < 24 * 7) return `${Math.floor(diffInHours / 24)}d ago`
+  return date.toLocaleDateString()
 }
 
 const TabItemWrapper = styled.div<{
@@ -37,16 +31,19 @@ const TabItemWrapper = styled.div<{
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${({ $isActive }) => ($isActive ? '#a0d4ff' : '#cfe8ff')};
-  color: #1e3a8a;
+  background: ${({ $isActive }) => ($isActive ? '#99ccff' : '#b3e0ff')};
+  color: #1d3c66;
   font-family: 'Instrument Sans', sans-serif;
+  font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
 
   &:hover {
-    background: #a0d4ff;
+    background: #99ccff;
+    font-weight: bold;
   }
 
   &:active {
-    transform: scale(0.98);
+    background: #99ccff;
+    font-weight: bold;
   }
 `
 
@@ -70,7 +67,7 @@ const TabInfo = styled.div<{ $isCollapsed: boolean }>`
 const TabName = styled.span`
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,11 +79,13 @@ const TabMeta = styled.div`
   gap: 8px;
   margin-top: 2px;
   opacity: 0.7;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabStats = styled.span`
   font-size: 11px;
   font-weight: 400;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabIcon = styled.div<{ $isActive: boolean }>`
@@ -102,6 +101,7 @@ const TabIcon = styled.div<{ $isActive: boolean }>`
   color: ${({ $isActive }) => ($isActive ? 'white' : '#6b7280')};
   flex-shrink: 0;
   margin-right: 8px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabActions = styled.div<{ $isCollapsed: boolean; $isActive: boolean }>`
@@ -125,6 +125,7 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  font-family: 'Instrument Sans', sans-serif;
   transition: all 0.2s ease;
   opacity: 0;
 
@@ -201,32 +202,26 @@ const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid
-    ${({ $variant }) => ($variant === 'primary' ? '#007acc' : '#d1d5db')};
+    ${({ $variant }) => ($variant === 'primary' ? '#a0d1ff' : '#d1d5db')};
   background: ${({ $variant }) =>
-    $variant === 'primary' ? '#007acc' : 'white'};
-  color: ${({ $variant }) => ($variant === 'primary' ? 'white' : '#374151')};
+    $variant === 'primary' ? '#b3e0ff' : 'white'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#1d3c66' : '#333')};
 
   &:hover {
     background: ${({ $variant }) =>
-      $variant === 'primary' ? '#005f99' : '#f3f4f6'};
+      $variant === 'primary' ? '#99ccff' : '#f3f4f6'};
     border-color: ${({ $variant }) =>
-      $variant === 'primary' ? '#005f99' : '#9ca3af'};
+      $variant === 'primary' ? '#99ccff' : '#9ca3af'};
     transform: scale(1.05);
   }
 
   &:active {
-    transform: scale(0.95);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+    transform: scale(0.97);
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
   }
 `
 
