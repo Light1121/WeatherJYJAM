@@ -40,10 +40,11 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     )
     return pool
 
-def _init_db(app):
+def init_db(app):
     """Initialize database with SQLAlchemy (supports Cloud SQL and SQLite)."""
 
-    use_cloud_sql = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
+    # use_cloud_sql = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
+    use_cloud_sql = True
 
     if use_cloud_sql:
         # Use Cloud SQL connection
@@ -66,7 +67,7 @@ def _init_db(app):
         db.create_all()
 
 
-def init_db(app):
+def _init_db(app):
     """Initialize database with SQLAlchemy"""
     db_path = app.config.get('DATABASE_PATH', './instance/weather_app.db')
     

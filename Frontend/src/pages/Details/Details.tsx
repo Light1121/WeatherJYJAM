@@ -1,4 +1,4 @@
-import type { FC, useContext } from 'react'
+import type { FC } from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import LineChartBox from './_components/LineChartBox'
@@ -157,42 +157,44 @@ const Details: FC = () => {
     setTimeValues(newValues)
   }
 
+  const metricMap: Record<string, "temperature" | "humidity" | "wind_speed" | "precipitation"> = {
+  "Temperature Trends": "temperature",
+  "Humidity Patterns": "humidity",
+  "Wind Speed Analysis": "wind_speed",
+  "Precipitation Data": "precipitation",
+}
+
   const GraphComponent: FC<{ title: string; graphIndex: number }> = ({
     title,
     graphIndex,
-  }) => (
-    <GraphSection>
-      <GraphTitle>{title}</GraphTitle>
-      <GraphBox>Graph {graphIndex + 1} goes here
+  }) => {
+    const metric = metricMap[title] // get the correct metric for this graph
 
-        <LineChartBox
-          data={[
-            { name: 'Jan', value: 24 },
-            { name: 'Feb', value: 28 },
-            { name: 'Mar', value: 31 },
-            { name: 'Apr', value: 26 },
-            { name: 'May', value: 30 },
-          ]}
-        />
-        
-      </GraphBox>
-      <SliderContainer>
-        <SliderLabel>Time Period</SliderLabel>
-        <TimeSlider
-          type="range"
-          min={0}
-          max={timeOptions.length - 1}
-          value={timeValues[graphIndex]}
-          onChange={(e) =>
-            handleSliderChange(graphIndex, parseInt(e.target.value))
-          }
-        />
-        <TimeDisplay>
-          {timeOptions[timeValues[graphIndex]]?.value || '01-2020'}
-        </TimeDisplay>
-      </SliderContainer>
-    </GraphSection>
-  )
+    return (
+      <GraphSection>
+        <GraphTitle>{title}</GraphTitle>
+        <GraphBox>
+          <LineChartBox metric={metric} />
+        </GraphBox>
+        <SliderContainer>
+          <SliderLabel>Time Period</SliderLabel>
+          <TimeSlider
+            type="range"
+            min={0}
+            max={timeOptions.length - 1}
+            value={timeValues[graphIndex]}
+            onChange={(e) =>
+              handleSliderChange(graphIndex, parseInt(e.target.value))
+            }
+          />
+          <TimeDisplay>
+            {timeOptions[timeValues[graphIndex]]?.value || '01-2020'}
+          </TimeDisplay>
+        </SliderContainer>
+      </GraphSection>
+    )
+  }
+
 
   return (
     <FullScreenLayout>
