@@ -1,6 +1,7 @@
 import type { FC } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 
 const AccordionItem = styled.div<{ isExpanded?: boolean }>`
   background-color: white;
@@ -81,7 +82,6 @@ const ToggleButton = styled.button<{ disabled?: boolean }>`
   margin-top: 8px;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
-
   &:hover {
     background-color: #005f99;
   }
@@ -103,7 +103,6 @@ const ResultItem = styled.div<{ selected?: boolean }>`
   border-radius: 4px;
   cursor: pointer;
   background-color: ${({ selected }) => (selected ? '#c2e9ff' : 'transparent')};
-
   &:hover {
     background-color: #d0eaff;
   }
@@ -137,18 +136,36 @@ const CompareMenu: FC<CompareMenuProps> = ({
   closeLoc1,
   closeLoc2,
 }) => {
+  const { locationOnePin, locationTwoPin } = usePinContext()
+
+  // Inputs
   const [searchInput1, setSearchInput1] = useState('')
   const [searchInput2, setSearchInput2] = useState('')
+
+  // Search results
   const [results1, setResults1] = useState<string[]>([])
   const [results2, setResults2] = useState<string[]>([])
+
+  // Pending selections from dropdown search
   const [pendingSelection1, setPendingSelection1] = useState<string | null>(
     null,
   )
   const [pendingSelection2, setPendingSelection2] = useState<string | null>(
     null,
   )
-  const [selected1, setSelected1] = useState<string | null>(null)
-  const [selected2, setSelected2] = useState<string | null>(null)
+
+  // Sync input fields with pins when map pins change
+  useEffect(() => {
+    if (locationOnePin?.locationName) {
+      setSearchInput1(locationOnePin.locationName)
+    }
+  }, [locationOnePin])
+
+  useEffect(() => {
+    if (locationTwoPin?.locationName) {
+      setSearchInput2(locationTwoPin.locationName)
+    }
+  }, [locationTwoPin])
 
   const handleSearch1 = (value: string) => {
     setSearchInput1(value)
@@ -173,27 +190,24 @@ const CompareMenu: FC<CompareMenuProps> = ({
   const handleClickResult1 = (loc: string) => setPendingSelection1(loc)
   const handleClickResult2 = (loc: string) => setPendingSelection2(loc)
 
+  // Toggle selection: selects pending or deselects current text
   const toggleSelection1 = () => {
-    if (pendingSelection1) {
-      setSelected1(pendingSelection1)
-      setSearchInput1(pendingSelection1)
-      setResults1([])
-      setPendingSelection1(null)
-    } else {
-      setSelected1(null)
+    if (searchInput1) {
       setSearchInput1('')
+      setPendingSelection1(null)
+    } else if (pendingSelection1) {
+      setSearchInput1(pendingSelection1)
+      setPendingSelection1(null)
     }
   }
 
   const toggleSelection2 = () => {
-    if (pendingSelection2) {
-      setSelected2(pendingSelection2)
-      setSearchInput2(pendingSelection2)
-      setResults2([])
-      setPendingSelection2(null)
-    } else {
-      setSelected2(null)
+    if (searchInput2) {
       setSearchInput2('')
+      setPendingSelection2(null)
+    } else if (pendingSelection2) {
+      setSearchInput2(pendingSelection2)
+      setPendingSelection2(null)
     }
   }
 
@@ -230,10 +244,10 @@ const CompareMenu: FC<CompareMenuProps> = ({
             </SearchResultsColumn>
           )}
           <ToggleButton
-            disabled={!pendingSelection1 && !selected1}
+            disabled={!pendingSelection1 && !searchInput1}
             onClick={toggleSelection1}
           >
-            {selected1 ? 'Deselect' : 'Select'}
+            {searchInput1 ? 'Deselect' : 'Select'}
           </ToggleButton>
         </AccordionContent>
       </AccordionItem>
@@ -269,10 +283,10 @@ const CompareMenu: FC<CompareMenuProps> = ({
             </SearchResultsColumn>
           )}
           <ToggleButton
-            disabled={!pendingSelection2 && !selected2}
+            disabled={!pendingSelection2 && !searchInput2}
             onClick={toggleSelection2}
           >
-            {selected2 ? 'Deselect' : 'Select'}
+            {searchInput2 ? 'Deselect' : 'Select'}
           </ToggleButton>
         </AccordionContent>
       </AccordionItem>
