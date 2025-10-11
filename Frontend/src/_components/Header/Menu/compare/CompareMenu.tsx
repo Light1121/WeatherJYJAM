@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-//import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import styled from 'styled-components'
 import LocSearchBar from '../LocSearchBar'
 
@@ -51,10 +51,53 @@ const AccordionContent = styled.div<{ isOpen?: boolean }>`
 
 const LocTitle = styled.h4`
   border: none;
-  text-align: middle;
   margin: 4px 0;
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
+`
+
+const SearchResultsColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: #e5f3ff;
+  border-radius: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 8px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+`
+
+const ResultItem = styled.div`
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: #d0eaff;
+  }
+`
+
+const ButtonRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  gap: 8px;
+`
+
+const ActionButton = styled.button`
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Instrument Sans', sans-serif;
+  cursor: pointer;
+  font-size: 0.85rem;
+
+  &:hover {
+    background-color: #005f99;
+  }
 `
 
 interface CompareMenuProps {
@@ -74,8 +117,25 @@ const CompareMenu: FC<CompareMenuProps> = ({
   closeLoc1,
   closeLoc2,
 }) => {
+  const [searchInput1, setSearchInput1] = useState('')
+  const [searchInput2, setSearchInput2] = useState('')
+  const [results1, setResults1] = useState<string[]>([])
+  const [results2, setResults2] = useState<string[]>([])
+
+  // Dummy search logic
+  const handleSearch1 = (value: string) => {
+    setSearchInput1(value)
+    setResults1(value ? [`${value} 1`, `${value} 2`, `${value} 3`] : [])
+  }
+
+  const handleSearch2 = (value: string) => {
+    setSearchInput2(value)
+    setResults2(value ? [`${value} 1`, `${value} 2`, `${value} 3`] : [])
+  }
+
   return (
     <>
+      {/* Location 1 */}
       <AccordionItem isExpanded={isLoc1Open}>
         <AccordionButton
           onClick={() => {
@@ -87,11 +147,32 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc1Open}>
           <LocTitle>Set Location 1</LocTitle>
-
-          <LocSearchBar />
+          <LocSearchBar
+            placeholder="Search Location 1"
+            value={searchInput1}
+            onChange={(e) => handleSearch1(e.target.value)}
+          />
+          {results1.length > 0 && (
+            <SearchResultsColumn>
+              {results1.map((item, idx) => (
+                <ResultItem key={idx}>{item}</ResultItem>
+              ))}
+            </SearchResultsColumn>
+          )}
+          <ButtonRow>
+            <ActionButton onClick={() => alert(`Selected ${searchInput1}`)}>
+              Select
+            </ActionButton>
+            <ActionButton
+              onClick={() => alert(`Searching for ${searchInput1}`)}
+            >
+              Search
+            </ActionButton>
+          </ButtonRow>
         </AccordionContent>
       </AccordionItem>
 
+      {/* Location 2 */}
       <AccordionItem isExpanded={isLoc2Open}>
         <AccordionButton
           onClick={() => {
@@ -103,8 +184,28 @@ const CompareMenu: FC<CompareMenuProps> = ({
         </AccordionButton>
         <AccordionContent isOpen={isLoc2Open}>
           <LocTitle>Set Location 2</LocTitle>
-
-          <LocSearchBar />
+          <LocSearchBar
+            placeholder="Search Location 2"
+            value={searchInput2}
+            onChange={(e) => handleSearch2(e.target.value)}
+          />
+          {results2.length > 0 && (
+            <SearchResultsColumn>
+              {results2.map((item, idx) => (
+                <ResultItem key={idx}>{item}</ResultItem>
+              ))}
+            </SearchResultsColumn>
+          )}
+          <ButtonRow>
+            <ActionButton onClick={() => alert(`Selected ${searchInput2}`)}>
+              Select
+            </ActionButton>
+            <ActionButton
+              onClick={() => alert(`Searching for ${searchInput2}`)}
+            >
+              Search
+            </ActionButton>
+          </ButtonRow>
         </AccordionContent>
       </AccordionItem>
     </>
