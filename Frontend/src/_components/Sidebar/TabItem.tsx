@@ -1,5 +1,5 @@
-import type { FC } from 'react'
-import styled from 'styled-components'
+import { useState, type FC, useEffect } from 'react'
+import styled, { keyframes } from 'styled-components'
 import type { TabData } from '@/_components/ContextHooks/TabsContext'
 
 interface TabItemProps {
@@ -12,6 +12,38 @@ interface TabItemProps {
   canDelete: boolean
 }
 
+const formatDate = (date: Date): string => {
+  const now = new Date()
+  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+  if (diffInHours < 1) return 'Just now'
+  if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`
+  if (diffInHours < 24 * 7) return `${Math.floor(diffInHours / 24)}d ago`
+  return date.toLocaleDateString()
+}
+
+// --- Animations ---
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`
+
+const bounceIn = keyframes`
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+`
+
+const bounceOut = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+`
+
+// --- Styled Components ---
 const TabItemWrapper = styled.div<{
   $isActive: boolean
   $isCollapsed: boolean
@@ -21,18 +53,19 @@ const TabItemWrapper = styled.div<{
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${({ $isActive }) => ($isActive ? '#007acc' : 'transparent')};
-  color: ${({ $isActive }) => ($isActive ? 'white' : '#374151')};
-  border: ${({ $isActive }) =>
-    $isActive ? '1px solid #007acc' : '1px solid transparent'};
+  background: ${({ $isActive }) => ($isActive ? '#99ccff' : '#b3e0ff')};
+  color: #1d3c66;
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
 
   &:hover {
-    background: ${({ $isActive }) => ($isActive ? '#005f99' : '#f3f4f6')};
-    ${({ $isActive }) => !$isActive && 'border-color: #d1d5db;'}
+    background: #99ccff;
+    font-weight: bold;
   }
 
   &:active {
-    transform: scale(0.98);
+    background: #99ccff;
+    font-weight: bold;
   }
 `
 
@@ -56,7 +89,7 @@ const TabInfo = styled.div<{ $isCollapsed: boolean }>`
 const TabName = styled.span`
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -68,11 +101,13 @@ const TabMeta = styled.div`
   gap: 8px;
   margin-top: 2px;
   opacity: 0.7;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabStats = styled.span`
   font-size: 11px;
   font-weight: 400;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabIcon = styled.div<{ $isActive: boolean }>`
@@ -87,6 +122,8 @@ const TabIcon = styled.div<{ $isActive: boolean }>`
   font-size: 12px;
   color: ${({ $isActive }) => ($isActive ? 'white' : '#6b7280')};
   flex-shrink: 0;
+  margin-right: 8px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabActions = styled.div<{ $isCollapsed: boolean; $isActive: boolean }>`
@@ -110,6 +147,7 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  font-family: 'Instrument Sans', sans-serif;
   transition: all 0.2s ease;
   opacity: 0;
 
@@ -128,20 +166,71 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   }
 `
 
-const formatDate = (date: Date): string => {
-  const now = new Date()
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+const DeleteModalBackdrop = styled.div<{ $isClosing: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: ${({ $isClosing }) => ($isClosing ? fadeOut : fadeIn)} 0.2s ease
+    forwards;
+`
 
-  if (diffInHours < 1) {
-    return 'Just now'
-  } else if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`
-  } else if (diffInHours < 24 * 7) {
-    return `${Math.floor(diffInHours / 24)}d ago`
-  } else {
-    return date.toLocaleDateString()
+const DeleteModalContent = styled.div<{ $isClosing: boolean }>`
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Instrument Sans', sans-serif;
+  min-width: 300px;
+  animation: ${({ $isClosing }) => ($isClosing ? bounceOut : bounceIn)} 0.25s
+    ease forwards;
+`
+
+const ModalButtons = styled.div`
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+`
+
+const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? '#a0d1ff' : '#d1d5db')};
+  background: ${({ $variant }) =>
+    $variant === 'primary' ? '#b3e0ff' : 'white'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#1d3c66' : '#333')};
+
+  &:hover {
+    background: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#f3f4f6'};
+    border-color: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#9ca3af'};
+    transform: scale(1.05);
   }
-}
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
 
 const TabItem: FC<TabItemProps> = ({
   tab,
@@ -152,6 +241,9 @@ const TabItem: FC<TabItemProps> = ({
   onDelete,
   canDelete,
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
     onEdit()
@@ -159,64 +251,83 @@ const TabItem: FC<TabItemProps> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (
-      canDelete &&
-      window.confirm(`Are you sure you want to delete "${tab.name}"?`)
-    ) {
-      onDelete()
-    }
+    setShowDeleteModal(true)
   }
 
-  const handleMouseEnter = () => {
-    // Actions will show on hover via CSS
+  const confirmDelete = () => {
+    onDelete()
+    setIsClosing(true)
   }
 
-  const handleMouseLeave = () => {
-    // Actions will hide on hover via CSS
-  }
+  const cancelDelete = () => setIsClosing(true)
+
+  useEffect(() => {
+    if (!isClosing) return
+    const timer = setTimeout(() => {
+      setShowDeleteModal(false)
+      setIsClosing(false)
+    }, 250)
+    return () => clearTimeout(timer)
+  }, [isClosing])
 
   return (
-    <TabItemWrapper
-      $isActive={isActive}
-      $isCollapsed={isCollapsed}
-      onClick={onClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <TabContent $isCollapsed={isCollapsed}>
-        <TabIcon $isActive={isActive}>📍</TabIcon>
+    <>
+      <TabItemWrapper
+        $isActive={isActive}
+        $isCollapsed={isCollapsed}
+        onClick={onClick}
+      >
+        <TabContent $isCollapsed={isCollapsed}>
+          <TabIcon $isActive={isActive}>📍</TabIcon>
 
-        <TabInfo $isCollapsed={isCollapsed}>
-          <TabName>{tab.name}</TabName>
-          <TabMeta>
-            <TabStats>{tab.pins.length} pins</TabStats>
-            <TabStats>•</TabStats>
-            <TabStats>{formatDate(tab.lastModified)}</TabStats>
-          </TabMeta>
-        </TabInfo>
+          <TabInfo $isCollapsed={isCollapsed}>
+            <TabName>{tab.name}</TabName>
+            <TabMeta>
+              <TabStats>{tab.pins.length} pins</TabStats>
+              <TabStats>•</TabStats>
+              <TabStats>{formatDate(tab.lastModified)}</TabStats>
+            </TabMeta>
+          </TabInfo>
 
-        <TabActions $isCollapsed={isCollapsed} $isActive={isActive}>
-          <ActionButton
-            $isActive={isActive}
-            onClick={handleEdit}
-            aria-label="Edit tab"
-            title="Edit tab"
-          >
-            ✏️
-          </ActionButton>
-          {canDelete && (
+          <TabActions $isCollapsed={isCollapsed} $isActive={isActive}>
             <ActionButton
               $isActive={isActive}
-              onClick={handleDelete}
-              aria-label="Delete tab"
-              title="Delete tab"
+              onClick={handleEdit}
+              aria-label="Edit tab"
+              title="Edit tab"
             >
-              🗑️
+              ✏️
             </ActionButton>
-          )}
-        </TabActions>
-      </TabContent>
-    </TabItemWrapper>
+            {canDelete && (
+              <ActionButton
+                $isActive={isActive}
+                onClick={handleDelete}
+                aria-label="Delete tab"
+                title="Delete tab"
+              >
+                🗑️
+              </ActionButton>
+            )}
+          </TabActions>
+        </TabContent>
+      </TabItemWrapper>
+
+      {showDeleteModal && (
+        <DeleteModalBackdrop $isClosing={isClosing}>
+          <DeleteModalContent $isClosing={isClosing}>
+            <p>Are you sure you want to delete "{tab.name}"?</p>
+            <ModalButtons>
+              <Button $variant="primary" onClick={confirmDelete}>
+                Yes
+              </Button>
+              <Button $variant="secondary" onClick={cancelDelete}>
+                Cancel
+              </Button>
+            </ModalButtons>
+          </DeleteModalContent>
+        </DeleteModalBackdrop>
+      )}
+    </>
   )
 }
 
