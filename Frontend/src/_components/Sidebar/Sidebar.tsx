@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import TabItem from './TabItem.tsx'
 import AddTabButton from './AddTabButton.tsx'
 import EditTabModal from './EditTabModal.tsx'
@@ -12,19 +12,55 @@ interface SidebarProps {
   onToggle: () => void
 }
 
+const slideIn = keyframes`
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+`
+
 const SidebarWrapper = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: ${({ $isOpen }) => ($isOpen ? '280px' : '60px')};
+  width: ${({ $isOpen }) => ($isOpen ? '280px' : '0px')};
   background: linear-gradient(180deg, #ffffff 0%, #f8fafb 100%);
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  transition: width 0.3s ease;
+  box-shadow: ${({ $isOpen }) =>
+    $isOpen ? '2px 0 8px rgba(0, 0, 0, 0.1)' : 'none'};
+  transition:
+    width 0.3s ease,
+    box-shadow 0.3s ease;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+`
+
+const ToggleButtonWrapper = styled.div<{ $isOpen: boolean }>`
+  position: fixed;
+  top: 16px;
+  left: ${({ $isOpen }) => ($isOpen ? '280px' : '16px')};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1001;
+  transition:
+    all 0.3s ease,
+    left 0.3s ease;
+
+  &:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `
 
 const SidebarHeader = styled.div<{ $isOpen: boolean }>`
@@ -49,58 +85,35 @@ const SidebarTitle = styled.h2<{ $isOpen: boolean }>`
   overflow: hidden;
 `
 
-const ToggleButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #6b7280;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #f3f4f6;
-    border-color: #9ca3af;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-`
-
 const TabsContainer = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 8px;
 
-  /* Custom scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
-
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-
   &::-webkit-scrollbar-thumb {
     background: #d1d5db;
     border-radius: 3px;
   }
-
   &::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
   }
 `
 
-const TabsList = styled.div`
+const TabsList = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  /* Animate tab items sliding in */
+  & > * {
+    animation: ${slideIn} 0.3s ease forwards;
+  }
 `
 
 const SidebarFooter = styled.div`
@@ -114,52 +127,31 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onToggle }) => {
     useTabsContext()
   const [editingTabId, setEditingTabId] = useState<string | null>(null)
 
-  const handleAddTab = () => {
-    addTab()
-  }
-
+  const handleAddTab = () => addTab()
   const handleTabClick = (tabId: string) => {
-    if (tabId !== activeTabId) {
-      switchTab(tabId)
-    }
+    if (tabId !== activeTabId) switchTab(tabId)
   }
-
-  const handleTabEdit = (tabId: string) => {
-    setEditingTabId(tabId)
-  }
-
+  const handleTabEdit = (tabId: string) => setEditingTabId(tabId)
   const handleTabDelete = (tabId: string) => {
-    if (tabs.length > 1) {
-      removeTab(tabId)
-    }
+    if (tabs.length > 1) removeTab(tabId)
   }
-
   const handleTabRename = (tabId: string, newName: string) => {
     renameTab(tabId, newName)
     setEditingTabId(null)
   }
-
-  const handleModalClose = () => {
-    setEditingTabId(null)
-  }
-
+  const handleModalClose = () => setEditingTabId(null)
   const editingTab = tabs.find((tab) => tab.id === editingTabId)
 
   return (
     <>
+      {/* Sidebar panel */}
       <SidebarWrapper $isOpen={isOpen}>
         <SidebarHeader $isOpen={isOpen}>
           {isOpen && <SidebarTitle $isOpen={isOpen}>Map Tabs</SidebarTitle>}
-          <ToggleButton
-            onClick={onToggle}
-            aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-          >
-            {isOpen ? '‹' : '›'}
-          </ToggleButton>
         </SidebarHeader>
 
         <TabsContainer>
-          <TabsList>
+          <TabsList $isOpen={isOpen}>
             {tabs.map((tab) => (
               <TabItem
                 key={tab.id}
@@ -180,6 +172,11 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onToggle }) => {
           <AddTabButton onClick={handleAddTab} isCollapsed={!isOpen} />
         </SidebarFooter>
       </SidebarWrapper>
+
+      {/* Circular toggle button */}
+      <ToggleButtonWrapper $isOpen={isOpen} onClick={onToggle}>
+        {isOpen ? '‹' : '›'}
+      </ToggleButtonWrapper>
 
       {editingTab && (
         <EditTabModal
