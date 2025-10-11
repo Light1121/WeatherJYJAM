@@ -35,12 +35,29 @@ const StyledBottomSheet = styled.div<{ isOpen: boolean }>`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: ${({ isOpen }) => (isOpen ? '16px 20px' : '8px 20px')};
   width: 100%;
-  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '60px')};
+  max-height: ${({ isOpen }) => (isOpen ? '50vh' : '60px')};
   overflow: hidden;
   transition:
     max-height 0.3s ease,
     padding 0.3s ease;
   position: relative;
+`
+
+const ScrollableContent = styled.div`
+  overflow-y: auto;
+  max-height: calc(50vh - 60px);
+  padding-right: 8px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `
 
 const BottomSheet: FC = () => {
@@ -53,7 +70,9 @@ const BottomSheet: FC = () => {
       </HandleButton>
 
       <StyledBottomSheet isOpen={isOpen}>
-        <WeatherStats isExpanded={isOpen} />
+        <ScrollableContent>
+          <WeatherStats isExpanded={isOpen} />
+        </ScrollableContent>
       </StyledBottomSheet>
     </BottomSheetWrapper>
   )
