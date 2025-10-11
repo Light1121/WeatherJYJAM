@@ -1,7 +1,11 @@
-import type { FC } from 'react'
+import type { FC, useContext } from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import LineChartBox from './_components/LineChartBox'
 import { FullScreenLayout, MainLayout } from '../../_components'
+
+
+
 
 const DetailsContainer = styled.div`
   flex: 1;
@@ -9,7 +13,7 @@ const DetailsContainer = styled.div`
   padding: 2rem;
   margin: 1rem;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(32, 15, 15, 0.2);
   overflow: auto;
 `
 
@@ -159,7 +163,19 @@ const Details: FC = () => {
   }) => (
     <GraphSection>
       <GraphTitle>{title}</GraphTitle>
-      <GraphBox>Graph {graphIndex + 1} goes here</GraphBox>
+      <GraphBox>Graph {graphIndex + 1} goes here
+
+        <LineChartBox
+          data={[
+            { name: 'Jan', value: 24 },
+            { name: 'Feb', value: 28 },
+            { name: 'Mar', value: 31 },
+            { name: 'Apr', value: 26 },
+            { name: 'May', value: 30 },
+          ]}
+        />
+        
+      </GraphBox>
       <SliderContainer>
         <SliderLabel>Time Period</SliderLabel>
         <TimeSlider
