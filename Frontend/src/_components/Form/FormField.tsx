@@ -15,7 +15,7 @@ const Label = styled.label`
   color: #3c3939;
   font-weight: 400;
   text-align: left;
-  margin-left: 1px;
+  margin-left: 15px;
 `
 
 interface FormFieldProps {
