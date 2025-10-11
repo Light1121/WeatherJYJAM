@@ -37,15 +37,12 @@ const TabItemWrapper = styled.div<{
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${({ $isActive }) => ($isActive ? '#007acc' : 'transparent')};
-  color: ${({ $isActive }) => ($isActive ? 'white' : '#374151')};
-  border: ${({ $isActive }) =>
-    $isActive ? '1px solid #007acc' : '1px solid transparent'};
+  background: ${({ $isActive }) => ($isActive ? '#a0d4ff' : '#cfe8ff')};
+  color: #1e3a8a;
   font-family: 'Instrument Sans', sans-serif;
 
   &:hover {
-    background: ${({ $isActive }) => ($isActive ? '#005f99' : '#f3f4f6')};
-    ${({ $isActive }) => !$isActive && 'border-color: #d1d5db;'}
+    background: #a0d4ff;
   }
 
   &:active {
@@ -73,7 +70,7 @@ const TabInfo = styled.div<{ $isCollapsed: boolean }>`
 const TabName = styled.span`
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
