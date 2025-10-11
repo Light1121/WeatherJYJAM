@@ -146,7 +146,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
   const [results1, setResults1] = useState<string[]>([])
   const [results2, setResults2] = useState<string[]>([])
 
-  // Pending selections from dropdown search
+  // Pending selections
   const [pendingSelection1, setPendingSelection1] = useState<string | null>(
     null,
   )
@@ -154,20 +154,29 @@ const CompareMenu: FC<CompareMenuProps> = ({
     null,
   )
 
+  // Input lock state
+  const [locked1, setLocked1] = useState(false)
+  const [locked2, setLocked2] = useState(false)
+
   // Sync input fields with pins when map pins change
   useEffect(() => {
     if (locationOnePin?.locationName) {
       setSearchInput1(locationOnePin.locationName)
+      setLocked1(true) // lock input
+      setPendingSelection1(null)
     }
   }, [locationOnePin])
 
   useEffect(() => {
     if (locationTwoPin?.locationName) {
       setSearchInput2(locationTwoPin.locationName)
+      setLocked2(true) // lock input
+      setPendingSelection2(null)
     }
   }, [locationTwoPin])
 
   const handleSearch1 = (value: string) => {
+    if (locked1) return
     setSearchInput1(value)
     setResults1(
       australianStates.filter((state) =>
@@ -178,6 +187,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
   }
 
   const handleSearch2 = (value: string) => {
+    if (locked2) return
     setSearchInput2(value)
     setResults2(
       australianStates.filter((state) =>
@@ -187,27 +197,38 @@ const CompareMenu: FC<CompareMenuProps> = ({
     setPendingSelection2(null)
   }
 
-  const handleClickResult1 = (loc: string) => setPendingSelection1(loc)
-  const handleClickResult2 = (loc: string) => setPendingSelection2(loc)
+  const handleClickResult1 = (loc: string) => {
+    setPendingSelection1(loc)
+  }
 
-  // Toggle selection: selects pending or deselects current text
+  const handleClickResult2 = (loc: string) => {
+    setPendingSelection2(loc)
+  }
+
+  // Toggle selection
   const toggleSelection1 = () => {
-    if (searchInput1) {
-      setSearchInput1('')
-      setPendingSelection1(null)
-    } else if (pendingSelection1) {
+    if (!locked1 && pendingSelection1) {
+      // Lock the input
       setSearchInput1(pendingSelection1)
+      setLocked1(true)
+      setResults1([])
       setPendingSelection1(null)
+    } else if (locked1) {
+      // Unlock
+      setSearchInput1('')
+      setLocked1(false)
     }
   }
 
   const toggleSelection2 = () => {
-    if (searchInput2) {
-      setSearchInput2('')
-      setPendingSelection2(null)
-    } else if (pendingSelection2) {
+    if (!locked2 && pendingSelection2) {
       setSearchInput2(pendingSelection2)
+      setLocked2(true)
+      setResults2([])
       setPendingSelection2(null)
+    } else if (locked2) {
+      setSearchInput2('')
+      setLocked2(false)
     }
   }
 
@@ -229,6 +250,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
             placeholder="Search Location 1"
             value={searchInput1}
             onChange={(e) => handleSearch1(e.target.value)}
+            disabled={locked1}
           />
           {results1.length > 0 && (
             <SearchResultsColumn>
@@ -244,10 +266,10 @@ const CompareMenu: FC<CompareMenuProps> = ({
             </SearchResultsColumn>
           )}
           <ToggleButton
-            disabled={!pendingSelection1 && !searchInput1}
+            disabled={!pendingSelection1 && !locked1}
             onClick={toggleSelection1}
           >
-            {searchInput1 ? 'Deselect' : 'Select'}
+            {locked1 ? 'Deselect' : 'Select'}
           </ToggleButton>
         </AccordionContent>
       </AccordionItem>
@@ -268,6 +290,7 @@ const CompareMenu: FC<CompareMenuProps> = ({
             placeholder="Search Location 2"
             value={searchInput2}
             onChange={(e) => handleSearch2(e.target.value)}
+            disabled={locked2}
           />
           {results2.length > 0 && (
             <SearchResultsColumn>
@@ -283,10 +306,10 @@ const CompareMenu: FC<CompareMenuProps> = ({
             </SearchResultsColumn>
           )}
           <ToggleButton
-            disabled={!pendingSelection2 && !searchInput2}
+            disabled={!pendingSelection2 && !locked2}
             onClick={toggleSelection2}
           >
-            {searchInput2 ? 'Deselect' : 'Select'}
+            {locked2 ? 'Deselect' : 'Select'}
           </ToggleButton>
         </AccordionContent>
       </AccordionItem>
