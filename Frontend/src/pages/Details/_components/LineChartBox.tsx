@@ -43,34 +43,21 @@ const LineChartBox: FC<LineChartBoxProps> = ({
     value: row[metric],
   }))
 
-  const { position, locationName } = selectedPin
-  const { lat, lng } = position
+//   const { position, locationName } = selectedPin
+//   const { lat, lng } = position
+//   console.log(position)
 
   return (
+    
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {/* Selected location info */}
-      <div>
-        <h3>Selected Location</h3>
-        <p>
-          <strong>Name:</strong> {locationName}
-        </p>
-        <p>
-          <strong>Latitude:</strong> {lat}
-        </p>
-        <p>
-          <strong>Longitude:</strong> {lng}
-        </p>
-        <p>
-          <strong>Data:</strong> {metric}
-        </p>
-      </div>
+
 
       {/* Line chart */}
       {
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width={500} height={250}>
           <LineChart data={formattedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
             <Line

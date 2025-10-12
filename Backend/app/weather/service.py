@@ -15,17 +15,26 @@ class WeatherService:
 
         query = """
             SELECT
-                `Station Name`,
-                DATE_FORMAT(`Date`, '%Y-%m-%d') AS `Date`,
-                `Rain 0900-0900 (mm)`,
-                `Maximum Temperature (°C)`,
-                `Minimum Temperature (°C)`,
-                `Maximum Relative Humidity (%)`,
-                `Minimum Relative Humidity (%)`,
-                `Average 10m Wind Speed (m/sec)`
-            FROM weather_data
-            WHERE `Station Name` LIKE :station_name
-            ORDER BY `Date` ASC
+                w.`Station Name`,
+                DATE_FORMAT(MIN(w.Date), '%Y-%m-%d') AS Date,
+                AVG(w.`Rain 0900-0900 (mm)`) AS Avg_Rainfall,
+                AVG((w.`Maximum Temperature (°C)` + w.`Minimum Temperature (°C)`) / 2) AS Avg_Temperature,
+                AVG((w.`Maximum Relative Humidity (%)` + w.`Minimum Relative Humidity (%)`) / 2) AS Avg_Relative_Humidity,
+                AVG(w.`Average 10m Wind Speed (m/sec)`) AS Avg_Wind_Speed
+            FROM
+                weather_data w
+            JOIN
+                Dates d ON w.Date = d.Date
+            WHERE
+            `Station Name` = 'ADELAIDE AIRPORT'
+            GROUP BY
+                d.Year,
+                d.Month,
+                w.`Station Name`
+            ORDER BY
+                d.Year,
+                d.Month
+                ASC;
         """
 
         def clean_row(row):
@@ -35,10 +44,6 @@ class WeatherService:
             }
 
         with db.engine.connect() as conn:
-            # result = conn.execute(sqlalchemy_text(
-            #     "SELECT * FROM weather_data WHERE `Station Name` LIKE :station_name ORDER BY Date ASC"
-            # ), {"station_name": f"%{station_name}%"})
-
             result = conn.execute(sqlalchemy_text(query), {"station_name": f"%{station_name}%"})
         
         
@@ -52,6 +57,54 @@ class WeatherService:
 
         return cleaned
     
+    def get_avg_weather_by_station(self, station_name: str) -> dict:
+        """Return weather data for a station as a list for charting"""
+
+        print(f"Searching for station: '{station_name}'")
+
+        query = """
+            SELECT
+                w.`Station Name`,
+                DATE_FORMAT(MIN(w.Date), '%Y-%m-%d') AS Date,
+                AVG(w.`Rain 0900-0900 (mm)`) AS Avg_Rainfall,
+                AVG((w.`Maximum Temperature (°C)` + w.`Minimum Temperature (°C)`) / 2) AS Avg_Temperature,
+                AVG((w.`Maximum Relative Humidity (%)` + w.`Minimum Relative Humidity (%)`) / 2) AS Avg_Relative_Humidity,
+                AVG(w.`Average 10m Wind Speed (m/sec)`) AS Avg_Wind_Speed
+            FROM
+                weather_data w
+            JOIN
+                Dates d ON w.Date = d.Date
+            WHERE
+            `Station Name` = 'ADELAIDE AIRPORT'
+            GROUP BY
+                d.Year,
+                d.Month,
+                w.`Station Name`
+            ORDER BY
+                d.Year,
+                d.Month
+                ASC;
+        """
+
+        def clean_row(row):
+            return {
+                k: float(v) if isinstance(v, Decimal) else v
+                for k, v in row.items()
+            }
+
+        with db.engine.connect() as conn:
+            result = conn.execute(sqlalchemy_text(query), {"station_name": f"%{station_name}%"})
+        
+        
+        rows = result.mappings().all()  # <--- use mappings()
+
+
+        cleaned = [clean_row(row) for row in rows]
+
+        if cleaned:
+            print("First cleaned row:", cleaned[0])
+
+        return cleaned
 
     
     def get_all_weather_stations(self) -> list[dict]:

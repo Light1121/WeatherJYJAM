@@ -2,28 +2,11 @@ import type { FC } from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import LineChartBox from './_components/LineChartBox'
-import { FullScreenLayout, MainLayout } from '../../_components'
+import { FullScreenLayout, MainLayout } from '@/_components'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
+import type { RawWeatherEntry, FormattedWeatherData } from '@/pages/Details/_components/types'
 
-// ---------- Interfaces ----------
-interface RawWeatherEntry {
-  'Station Name': string
-  Date: string
-  'Rain 0900-0900 (mm)': number
-  'Maximum Temperature (°C)': number
-  'Minimum Temperature (°C)': number
-  'Maximum Relative Humidity (%)': number
-  'Minimum Relative Humidity (%)': number
-  'Average 10m Wind Speed (m/sec)': number
-}
 
-interface FormattedWeatherData {
-  date: string
-  temperature: number
-  humidity: number
-  wind_speed: number
-  precipitation: number
-}
 
 // ---------- Styled Components ----------
 const DetailsContainer = styled.div`
@@ -36,9 +19,9 @@ const DetailsContainer = styled.div`
   overflow: auto;
 `
 
-const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: opacity 0.5s ease ${({ delay }) => (delay ? `${delay}ms` : '0ms')};
+const FadeDiv = styled.div<{ $visible: boolean; $delay?: number }>`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 0.5s ease ${({ $delay }) => ($delay ? `${$delay}ms` : '0ms')};
 `
 
 const HeaderSection = styled.div`
@@ -84,6 +67,7 @@ const GraphTitle = styled.h2`
 `
 
 const GraphBox = styled.div`
+  width: 500px;
   background-color: #fffffff6;
   border: 1px dashed #ddd;
   border-radius: 10px;
@@ -135,6 +119,22 @@ const TimeSlider = styled.input`
   }
 `
 
+const Spinner = styled.div`
+  border: 4px solid #eee;
+  border-top: 4px solid #007acc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`
+
 // ---------- Component ----------
 
 const TimeDisplay = styled.div`
@@ -159,16 +159,15 @@ const Details: FC = () => {
   }, [])
 
   // ---------- Time Slider Setup ----------
-  // Generate time options from 01-2020 to 12-2024
+  // Generate time options from 01-2015 to 12-2024
   const generateTimeOptions = () => {
     const options = []
-    for (let year = 2020; year <= 2024; year++) {
-      for (let month = 1; month <= 12; month++) {
-        options.push({
-          value: `${month.toString().padStart(2, '0')}-${year}`,
+    for (let year = 2015; year <= 2024; year++) {
+      options.push({
+          value: `${year}`,
           index: options.length,
         })
-      }
+
     }
     return options
   }
@@ -184,8 +183,8 @@ const Details: FC = () => {
   // ---------- Fetch Weather Data ----------
   const { locationOnePin, locationTwoPin } = usePinContext()
   const selectedPin = locationOnePin ?? locationTwoPin
-  const [, setLoading] = useState(false)
-  const [, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [weatherData, setWeatherData] = useState<
     {
       date: string
@@ -216,41 +215,43 @@ const Details: FC = () => {
         if (nearestJson.status !== 'success')
           throw new Error(nearestJson.message)
 
-        const stationName = nearestJson.data.station_name
+        const stationName = nearestJson.data['Station Name']
+
+
 
         // Step 2: Get detailed weather data by station name
         const stationRes = await fetch(
-          `http://127.0.0.1:2333/api/weather/${stationName}`,
+          `http://127.0.0.1:2333/api/weather/avg_${stationName}`,
         )
         if (!stationRes.ok)
           throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
         const stationJson = await stationRes.json()
-        if (stationJson.status !== 'success')
-          throw new Error(stationJson.message)
 
-        // Assume stationJson[0].data is an array of monthly data points
-        const weather = stationJson[0].data
+        if (stationJson.length === 0)
+          throw new Error("Failed to retrieve weather data")
 
-        // Format for LineChartBox: each entry must include date + 4 metrics
-        // const formatted = weather.map((entry: RawWeatherEntry) => ({
-        //   date: entry.date ?? entry.month ?? 'Unknown',
-        //   temperature: entry.temperature,
-        //   humidity: entry.humidity,
-        //   wind_speed: entry.wind_speed,
-        //   precipitation: entry.precipitation,
-        // }))
 
-        const formatted: FormattedWeatherData[] = weather.map(
+        // Transform the data
+        const formatted: FormattedWeatherData[] = stationJson.map(
           (entry: RawWeatherEntry) => ({
-            date: entry['Date'],
-            temperature: entry['Maximum Temperature (°C)'],
-            humidity: entry['Maximum Relative Humidity (%)'],
-            wind_speed: entry['Average 10m Wind Speed (m/sec)'],
-            precipitation: entry['Rain 0900-0900 (mm)'],
+            date: entry['Date'] ?? 'Unknown',
+            temperature: Number(entry['Avg_Temperature']) ?? null,
+            humidity: Number(entry['Avg_Relative_Humidity']) ?? null,
+            wind_speed: Number(entry['Avg_Wind_Speed']) ?? null,
+            precipitation: Number(entry['Avg_Rainfall']) ?? null,
           }),
         )
 
+        // console.log('Sample stationJson entry:', stationJson[0]);
+        // console.log('Keys:', Object.keys(stationJson[0]));
+
         setWeatherData(formatted)
+
+        console.log(' Weather data received:', weatherData)
+        if (Array.isArray(weatherData)) {
+          console.log(' Array length:', weatherData.length)
+          console.log(' First item:', weatherData[0])
+        }
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message)
@@ -262,6 +263,7 @@ const Details: FC = () => {
       }
     }
 
+
     fetchWeatherData()
   }, [selectedPin])
 
@@ -271,19 +273,37 @@ const Details: FC = () => {
     graphIndex: number
     metric: 'temperature' | 'humidity' | 'wind_speed' | 'precipitation'
   }> = ({ title, graphIndex, metric }) => {
+      const selectedYear = timeOptions[timeValues[graphIndex]]?.value
+
+      // Filter the weatherData for this graph's selected year
+      const filteredData = weatherData.filter((entry) => {
+        const year = entry.date.split('-')[0] 
+        return year === selectedYear.toString()
+      })
+
+      
     return (
       <GraphSection>
         <GraphTitle>{title}</GraphTitle>
         <GraphBox>
           {/* Linechart box itself*/}
-          {/* Find some way to pass in which parameter this linechartbox should show... e.g.precipitation data */}
-          <LineChartBox metric={metric} data={weatherData} />
+          {loading ? (
+            <div>
+              <Spinner />
+              <p style={{ textAlign: 'center', fontWeight: 500, color: '#007acc' }}>
+              Loading weather data...
+            </p>
+            </div>           
+          ) : error ? (
+            <p style={{ textAlign: 'center', color: 'red' }}>
+              Error: {error}
+            </p>
+          ) : (
+            <div>
+            <LineChartBox metric={metric} data={filteredData} />
+            </div>
+          )}
 
-          {/* Now we only fetch once, but pass filtered data to each chart */}
-          {/* <LineChartBox metric="wind_speed" data={weatherData} color="#007acc" />
-          <LineChartBox metric="temperature" data={weatherData} color="#ff7300" />
-          <LineChartBox metric="humidity" data={weatherData} color="#82ca9d" />
-          <LineChartBox metric="precipitation" data={weatherData} color="#8884d8" /> */}
         </GraphBox>
         <SliderContainer>
           <SliderLabel>Time Period</SliderLabel>
@@ -297,7 +317,7 @@ const Details: FC = () => {
             }
           />
           <TimeDisplay>
-            {timeOptions[timeValues[graphIndex]]?.value || '01-2020'}
+            {timeOptions[timeValues[graphIndex]]?.value || '2024'}
           </TimeDisplay>
         </SliderContainer>
       </GraphSection>
@@ -313,7 +333,7 @@ const Details: FC = () => {
             <Title>Weather Data Analysis</Title>
           </HeaderSection>
 
-          <FadeDiv visible={contentVisible} delay={200}>
+          <FadeDiv $visible={contentVisible} $delay={200}>
             <ContentGrid>
               <GraphComponent
                 title="Temperature Trends"
