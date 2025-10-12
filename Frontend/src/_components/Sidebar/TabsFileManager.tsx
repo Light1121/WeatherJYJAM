@@ -75,6 +75,96 @@ const StatusMessage = styled.div<{ $type: 'success' | 'error' }>`
     ${(props) => (props.$type === 'success' ? '#c3e6cb' : '#f5c6cb')};
 `
 
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Instrument Sans', sans-serif;
+  min-width: 300px;
+  animation: slideDown 0.2s ease;
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+`
+
+const ModalButtons = styled.div`
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+`
+
+const ModalButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? '#007acc' : '#d1d5db')};
+  background: ${({ $variant }) =>
+    $variant === 'primary' ? '#b3e0ff' : 'white'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#333' : '#333')};
+
+  &:hover {
+    background: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#f3f4f6'};
+    border-color: ${({ $variant }) =>
+      $variant === 'primary' ? '#99ccff' : '#9ca3af'};
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+`
+
 export const TabsFileManager: React.FC = () => {
   const { tabs, exportTabsToJSON, importTabsFromJSON, clearAllTabs } =
     useTabsContext()

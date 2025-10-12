@@ -83,6 +83,7 @@ const ToggleButton = styled.button<{ disabled?: boolean }>`
   margin-top: 8px;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+
   &:hover {
     background-color: #005f99;
   }
@@ -104,6 +105,7 @@ const ResultItem = styled.div<{ selected?: boolean }>`
   border-radius: 4px;
   cursor: pointer;
   background-color: ${({ selected }) => (selected ? '#c2e9ff' : 'transparent')};
+
   &:hover {
     background-color: #d0eaff;
   }

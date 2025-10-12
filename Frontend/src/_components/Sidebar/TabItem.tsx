@@ -13,6 +13,38 @@ interface TabItemProps {
   canDelete: boolean
 }
 
+const formatDate = (date: Date): string => {
+  const now = new Date()
+  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+  if (diffInHours < 1) return 'Just now'
+  if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`
+  if (diffInHours < 24 * 7) return `${Math.floor(diffInHours / 24)}d ago`
+  return date.toLocaleDateString()
+}
+
+// --- Animations ---
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`
+
+const bounceIn = keyframes`
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+`
+
+const bounceOut = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+`
+
+// --- Styled Components ---
 const TabItemWrapper = styled.div<{
   $isActive: boolean
   $isCollapsed: boolean
@@ -28,6 +60,11 @@ const TabItemWrapper = styled.div<{
   font-family: 'Instrument Sans', sans-serif;
 
   &:hover {
+    background: #99ccff;
+    font-weight: bold;
+  }
+
+  &:active {
     background: #99ccff;
     font-weight: bold;
   }
