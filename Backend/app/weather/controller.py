@@ -21,10 +21,14 @@ class WeatherListApi(Resource):
 class WeatherApi(Resource):
     def get(self, station_name):
         """Get weather data by station name"""
+        print(f"Fetching weather data for station: {station_name}")
+
         weather = weather_service.get_weather_by_station(station_name)
+
         if not weather:
-            api.abort(404, f'Weather data for station {station_name} not found')
-        return [to_dict(weather) for weather in weather]
+            api.abort(404, f"Weather data for station '{station_name}' not found")
+
+        return weather, 200
 
 @api.route("/nearest")
 class NearestStation(Resource):

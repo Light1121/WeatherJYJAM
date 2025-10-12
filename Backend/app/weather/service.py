@@ -10,13 +10,49 @@ class WeatherService:
     
     def get_weather_by_station(self, station_name: str) -> dict:
         """Return weather data for a station as a list for charting"""
+
+        print(f"Searching for station: '{station_name}'")
+
+        query = """
+            SELECT
+                `Station Name`,
+                DATE_FORMAT(`Date`, '%Y-%m-%d') AS `Date`,
+                `Rain 0900-0900 (mm)`,
+                `Maximum Temperature (°C)`,
+                `Minimum Temperature (°C)`,
+                `Maximum Relative Humidity (%)`,
+                `Minimum Relative Humidity (%)`,
+                `Average 10m Wind Speed (m/sec)`
+            FROM weather_data
+            WHERE `Station Name` LIKE :station_name
+            ORDER BY `Date` ASC
+        """
+
+        def clean_row(row):
+            return {
+                k: float(v) if isinstance(v, Decimal) else v
+                for k, v in row.items()
+            }
+
         with db.engine.connect() as conn:
-            result = conn.execute(sqlalchemy_text(
-                "SELECT * FROM weather_data WHERE station_name = :station_name ORDER BY date ASC"
-            ), {"station_name": station_name})
-            rows = result.fetchall()
+            # result = conn.execute(sqlalchemy_text(
+            #     "SELECT * FROM weather_data WHERE `Station Name` LIKE :station_name ORDER BY Date ASC"
+            # ), {"station_name": f"%{station_name}%"})
+
+            result = conn.execute(sqlalchemy_text(query), {"station_name": f"%{station_name}%"})
         
-        return [{"name": row["date"], "value": row["temperature"]} for row in rows]
+        
+        rows = result.mappings().all()  # <--- use mappings()
+
+
+        cleaned = [clean_row(row) for row in rows]
+
+        if cleaned:
+            print("First cleaned row:", cleaned[0])
+
+        return cleaned
+    
+
     
     def get_all_weather_stations(self) -> list[dict]:
         """Get all weather stations"""
@@ -42,8 +78,8 @@ class WeatherService:
                 ORDER BY distance ASC
                 LIMIT 1
             """
-            # result = conn.execute(sqlalchemy_text(query), {"lat": lat, "lng": lng})
-            result = conn.execute(sqlalchemy_text("SELECT `Station Name` FROM stations LIMIT 1"))
+            result = conn.execute(sqlalchemy_text(query), {"lat": lat, "lng": lng})
+            # result = conn.execute(sqlalchemy_text("SELECT `Station Name` FROM stations LIMIT 1"))
             row = result.mappings().first()  # safer
             if not row:
                 return None
