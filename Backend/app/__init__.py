@@ -26,8 +26,6 @@ def create_app():
     # init database
     init_db(app)
 
-    print("Connected to database at:", app.config["SQLALCHEMY_DATABASE_URI"])
-
     # CORS
     CORS(app)
 
