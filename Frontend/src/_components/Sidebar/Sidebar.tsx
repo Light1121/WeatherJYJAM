@@ -3,7 +3,7 @@ import { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import TabItem from './TabItem.tsx'
 import AddTabButton from './AddTabButton.tsx'
-import EditTabModal from './EditTabModal.tsx'
+import { EditTabModal } from './EditTabModal.tsx'
 import { TabsFileManager } from './TabsFileManager.tsx'
 import { useTabsContext } from '@/_components/ContextHooks/useTabsContext'
 

@@ -17,9 +17,9 @@ const styledVariant: Interpolation<{ $variant: Variant }> = ({ $variant }) =>
       box-shadow: 0 2px 12px 0 rgb(0 0 0 / 6%);
     `,
     ink: css`
-      background-color: #23272a;
-      color: #fff;
-      border: 1px solid #23272a;
+      background-color: #ffffffff;
+      color: #23272a;
+      border: 1px solid #eee;
       box-shadow: 0 2px 12px 0 rgb(0 0 0 / 20%);
     `,
   })[$variant]

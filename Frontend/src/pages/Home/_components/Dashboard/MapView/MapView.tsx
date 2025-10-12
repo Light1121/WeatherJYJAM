@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 import Map from './Map'
 import ControlPanel from './ControlPanel'
+import BottomSheet from '../../BottomSheet/BottomSheet'
 
 const MapContainer = styled.div`
   width: 100%;
@@ -27,14 +28,23 @@ const MapTitle = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 
+const BottomSheetWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500; /* above the map but below overlays */
+`
+
 const MapView: FC = () => {
   return (
     <MapContainer>
       <Map />
-
       <MapTitle>empty</MapTitle>
-
-      <ControlPanel />
+      <ControlPanel />\
+      <BottomSheetWrapper>
+        <BottomSheet />
+      </BottomSheetWrapper>
     </MapContainer>
   )
 }
