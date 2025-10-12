@@ -1,10 +1,14 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
-from google.cloud.sql.connector import Connector
+from google.cloud.sql.connector import Connector, IPTypes
 import pymysql
 import sqlalchemy
+import json, os
+from google.oauth2 import service_account
 
 db = SQLAlchemy()
+
+
 
 def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     """Initializes a secure connection pool for Cloud SQL (MySQL)."""
@@ -14,7 +18,11 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     db_pass = os.getenv("DB_PASS")
     db_name = os.getenv("DB_NAME")
 
-    connector = Connector()  # Uses GOOGLE_APPLICATION_CREDENTIALS internally
+    ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
+
+    creds_info = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
+    credentials = service_account.Credentials.from_service_account_info(creds_info)
+    connector = Connector(ip_type=ip_type, credentials=credentials)
 
     def getconn() -> pymysql.connections.Connection:
         conn: pymysql.connections.Connection = connector.connect(
