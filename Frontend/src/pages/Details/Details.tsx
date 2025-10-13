@@ -34,10 +34,10 @@ const Details: FC = () => {
 
   // ---------- Year Range State ----------
   const [yearRanges, setYearRanges] = useState<Array<[number, number]>>([
-    [2020, 2020], // Graph 0
-    [2020, 2020], // Graph 1
-    [2020, 2020], // Graph 2
-    [2020, 2020], // Graph 3
+    [2025, 2025], // Graph 0
+    [2025, 2025], // Graph 1
+    [2025, 2025], // Graph 2
+    [2025, 2025], // Graph 3
   ])
 
   // Slider onChange handler
@@ -133,7 +133,7 @@ const Details: FC = () => {
   }> = ({ title, graphIndex, metric }) => {
   
 
-    const [startYear, endYear] = yearRanges[graphIndex] || [2015, 2024]
+    const [startYear, endYear] = yearRanges[graphIndex] || [2015, 2025]
 
     // Filter weatherData according to the selected range
     const filteredData = weatherData.filter((entry) => {
@@ -173,7 +173,7 @@ const Details: FC = () => {
             yearRange={yearRanges[graphIndex]}
             onYearRangeChange={(range) => handleSliderChange(graphIndex, range[0], range[1])}
             minYear={2015}
-            maxYear={2024}
+            maxYear={2025}
           />
           <TimeDisplay>
             {startYear} - {endYear}

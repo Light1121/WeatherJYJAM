@@ -21,16 +21,13 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
   const [internalRange, setInternalRange] = useState(yearRange)
   const [dragging, setDragging] = useState(false)
 
-  const [draggedThumb, setDraggedThumb] = useState<0 | 1 | null>(null)
+
   const trackRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!dragging) setInternalRange(yearRange)
   }, [yearRange, dragging])
 
-  const handleChange = (values: number[]) => {
-    return setInternalRange(values as [number, number])
-  }
   const handleMouseDown = () => setDragging(true)
   const handleMouseUp = () => {
     setDragging(false)
@@ -62,16 +59,24 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
     <RangeContainer>
         {/* Slider */}
         <ReactRange
-          values={yearRange}
+          values={internalRange}
           step={STEP}
           min={minYear}
           max={maxYear}
-          onChange={handleChange}
+          onChange={(values) => {
+            setInternalRange(values as [number, number])
+            setDragging(true) // mark that drag started
+          }}
+          onFinalChange={(values) => {
+            setInternalRange(values as [number, number])
+            onYearRangeChange(values as [number,number]) // commit to parent
+            setDragging(false)      // drag finished
+          }}
           renderTrack={({ props, children }) => (
             <Track
               {...props}
               background={getTrackBackground({
-                values: yearRange,
+                values: internalRange,
                 colors: ['#ddd', '#007acc', '#ddd'],
                 min: minYear,
                 max: maxYear,
@@ -85,7 +90,7 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
           renderThumb={({ props, index, isDragged }) => (
             <Thumb 
             {...props} 
-            isDragged={isDragged || draggedThumb === index}
+            isDragged={isDragged || dragging}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             key={index}

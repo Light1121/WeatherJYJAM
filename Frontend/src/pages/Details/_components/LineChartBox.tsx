@@ -46,31 +46,38 @@ const LineChartBox: FC<LineChartBoxProps> = ({
   const selectedPin = locationOnePin ?? locationTwoPin
 
   if (!selectedPin) return <div
-      style={{
-        width: '100%',
-        height: '100%', // same as your chart height or GraphBox height
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#666',
-        fontSize: '16px',
-        fontWeight: 500,
-      }}
-    >
-      Please select a location
-    </div>
+    style={{
+      width: '100%',
+      height: '100%', // same as your chart height or GraphBox height
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#666',
+      fontSize: '16px',
+      fontWeight: 500,
+    }}
+  >
+    Please select a location
+  </div>
+
+  
+  const years = data.map((row) => row.date.split('-')[0]); // "YYY
+  const uniqueYears = Array.from(new Set(years));
+  const multipleYears = uniqueYears.length > 1;
 
   const formattedData: { date: string; value: number }[] = data.map((row) => {
     const [year, month, day] = row.date.split('-') // YYYY-MM-DD
     const monthName = new Date(`${year}-${month}-01`).toLocaleString('en-US', {
-      month: 'short', // "Jan", "Feb", etc.
-    })
+    month: 'short', // "Jan", "Feb"
+    year: multipleYears ? 'numeric' : undefined, // only show year if multiple years
+  });
 
-    day
-    return {
-      date: monthName,
-      value: row[metric],
-    }
+
+  day
+  return {
+    date: monthName,
+    value: row[metric],
+  }
   })
 
   return (
