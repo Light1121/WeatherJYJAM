@@ -205,7 +205,7 @@ const Details: FC = () => {
       try {
         // Step 1: Get nearest station
         const nearestRes = await fetch(
-          `http://127.0.0.1:2333/api/weather/nearest?lat=${selectedPin.position.lat}&lng=${selectedPin.position.lng}`,
+          `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${selectedPin.position.lat}&lng=${selectedPin.position.lng}`,
         )
         if (!nearestRes.ok)
           throw new Error(
@@ -221,7 +221,7 @@ const Details: FC = () => {
 
         // Step 2: Get detailed weather data by station name
         const stationRes = await fetch(
-          `http://127.0.0.1:2333/api/weather/avg_${stationName}`,
+          `https://weatherjyjam-production.up.railway.app/api/weather/avg_${stationName}`,
         )
         if (!stationRes.ok)
           throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
