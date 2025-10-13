@@ -6,6 +6,8 @@ import sqlalchemy
 
 from app.weather.service import WeatherService
 from app._utils.serializer import to_dict
+from urllib.parse import unquote
+
 
 api = Namespace('weather')
 weather_service = WeatherService()
@@ -35,6 +37,7 @@ class WeatherApi(Resource):
     def get(self, station_name):
         """Get weather data by station name"""
         print(f"Fetching weather data for station: {station_name}")
+        station_name = unquote(station_name)
 
         weather = weather_service.get_avg_weather_by_station(station_name)
 
