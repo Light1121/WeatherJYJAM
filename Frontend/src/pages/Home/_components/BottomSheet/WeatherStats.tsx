@@ -7,6 +7,9 @@ import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
 import type { WeatherData } from '@/_components/ContextHooks/contexts'
 
+const Spacer = styled.div`
+  height: 40px;
+`
 const HeaderRow = styled.div`
   display: flex;
   font-family: 'Instrument Sans', sans-serif;
@@ -216,6 +219,8 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
                   renderWeatherBars(locationTwoPin.weatherData)}
               </BarsRow>
 
+              <Spacer />
+
               <PastGrid>
                 <SectionTitle>Past Weather Report</SectionTitle>
 
@@ -311,6 +316,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
 
           {isExpanded && (
             <div style={{ width: '100%' }}>
+              <Spacer />
               <SectionTitle
                 style={{ textAlign: 'center', margin: '20px 0 16px 0' }}
               >

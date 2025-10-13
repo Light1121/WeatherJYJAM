@@ -83,7 +83,7 @@ const LoginForm: FC = () => {
         value={formData.email}
         onChange={(e) => updateFormData('email', e.target.value)}
         disabled={isLoading}
-        width="80%"
+        width="90%"
         margin="12px 0 14px 0"
       />
 
@@ -93,7 +93,7 @@ const LoginForm: FC = () => {
         value={formData.password}
         onChange={(e) => updateFormData('password', e.target.value)}
         disabled={isLoading}
-        width="80%"
+        width="90%"
         margin="12px 0 6px 0"
         showPasswordToggle={true}
         passwordVisible={passwordVisible}

@@ -7,6 +7,7 @@ import Menu from './Menu'
 
 const StyledHeader = styled.header`
   position: relative;
+  z-index: 600;
   padding: 50px 50px;
   border-bottom: 1px solid #d2f4ffff;
   display: flex;
