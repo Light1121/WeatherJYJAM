@@ -16,4 +16,12 @@ interface FormattedWeatherData {
   precipitation: number
 }
 
-export type { RawWeatherEntry, FormattedWeatherData };
+interface TimeRangeSliderProps {
+  minYear?: number
+  maxYear?: number
+  yearRange: [number, number]
+  onYearRangeChange: (range: [number, number]) => void
+  graphIndex?: number
+}
+
+export type { RawWeatherEntry, FormattedWeatherData , TimeRangeSliderProps };

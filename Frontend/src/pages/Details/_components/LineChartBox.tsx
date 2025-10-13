@@ -7,6 +7,8 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
+  Label,
+  Legend,
 } from 'recharts'
 
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
@@ -28,6 +30,13 @@ interface LineChartBoxProps {
   color?: string
 }
 
+const metricLabels: Record<string, string> = {
+  temperature: 'Temperature (°C)',
+  humidity: 'Humidity (%)',
+  wind_speed: 'Wind Speed (m/s)',
+  precipitation: 'Precipitation (mm)',
+}
+
 const LineChartBox: FC<LineChartBoxProps> = ({
   metric,
   data,
@@ -36,40 +45,84 @@ const LineChartBox: FC<LineChartBoxProps> = ({
   const { locationOnePin, locationTwoPin } = usePinContext()
   const selectedPin = locationOnePin ?? locationTwoPin
 
-  if (!selectedPin) return <div>Please select a location</div>
+  if (!selectedPin) return <div
+      style={{
+        width: '100%',
+        height: '100%', // same as your chart height or GraphBox height
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#666',
+        fontSize: '16px',
+        fontWeight: 500,
+      }}
+    >
+      Please select a location
+    </div>
 
-  const formattedData: { date: string; value: number }[] = data.map((row) => ({
-    date: row.date,
-    value: row[metric],
-  }))
+  const formattedData: { date: string; value: number }[] = data.map((row) => {
+    const [year, month, day] = row.date.split('-') // YYYY-MM-DD
+    const monthName = new Date(`${year}-${month}-01`).toLocaleString('en-US', {
+      month: 'short', // "Jan", "Feb", etc.
+    })
 
-//   const { position, locationName } = selectedPin
-//   const { lat, lng } = position
-//   console.log(position)
+    day
+    return {
+      date: monthName,
+      value: row[metric],
+    }
+  })
 
   return (
-    
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
+    <div style={{ width: '100%', height: '300px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={formattedData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+          {/* Grid */}
+          <CartesianGrid strokeDasharray="4 4" stroke="#e0e0e0" />
 
-      {/* Line chart */}
-      {
-        <ResponsiveContainer width={500} height={250}>
-          <LineChart data={formattedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={color}
-              strokeWidth={2}
-              dot={false}
+          {/* X Axis */}
+          <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#555' }} interval={Math.floor(formattedData.length / 6)}>
+            <Label value="Month" offset={-10} position="insideBottom" style={{ fontWeight: 'bold', fill: '#333' }} />
+          </XAxis>
+
+          {/* Y Axis */}
+          <YAxis tick={{ fontSize: 12, fill: '#555' }}>
+            <Label
+              angle={-90}
+              position="insideLeft"
+              style={{ textAnchor: 'middle', fontWeight: 'bold', fill: '#333' }}
+              value={metricLabels[metric]}
             />
-          </LineChart>
-        </ResponsiveContainer>
-      }
+          </YAxis>
+
+          {/* Tooltip */}
+          <Tooltip
+            contentStyle={{ backgroundColor: '#f0f8ff', borderRadius: '8px', border: '1px solid #007acc' }}
+            labelStyle={{ fontWeight: 'bold' }}
+          />
+
+          {/* Legend */}
+          <Legend verticalAlign="top" height={36} />
+
+          {/* Line with gradient */}
+          <defs>
+            <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity={0.4} />
+              <stop offset="75%" stopColor={color} stopOpacity={0.05} />
+            </linearGradient>
+          </defs>
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={2}
+            dot={{ r: 3, fill: color }}
+            activeDot={{ r: 6 }}
+            fill="url(#lineGradient)"
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   )
 }
