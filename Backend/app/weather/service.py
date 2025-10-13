@@ -4,6 +4,8 @@ from decimal import Decimal
 
 from sqlalchemy import text as sqlalchemy_text
 from app.database import db
+from urllib.parse import unquote
+        
 
 class WeatherService:
     """Weather service layer for business logic"""
@@ -47,6 +49,7 @@ class WeatherService:
     def get_avg_weather_by_station(self, station_name: str) -> dict:
         """Return weather data for a station as a list for charting"""
 
+        station_name = unquote(station_name)
         print(f"Searching for station: '{station_name}'")
 
         query = """

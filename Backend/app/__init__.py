@@ -17,6 +17,7 @@ api = Api(api_bp)
 def create_app():
     app = Flask(__name__)
 
+
     # simplest: use file path instead of URI
     app.config["DATABASE_PATH"] = os.path.join(app.instance_path, "weather_app.db")
 

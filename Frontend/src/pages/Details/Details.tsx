@@ -93,7 +93,7 @@ const Details: FC = () => {
 
         // Step 2: Get detailed weather data by station name
         const stationRes = await fetch(
-          `https://weatherjyjam-production.up.railway.app/api/weather/avg_${stationName}`,
+          `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
         )
         if (!stationRes.ok)
           throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
