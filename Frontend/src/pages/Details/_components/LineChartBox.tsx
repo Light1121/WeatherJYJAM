@@ -45,52 +45,63 @@ const LineChartBox: FC<LineChartBoxProps> = ({
   const { locationOnePin, locationTwoPin } = usePinContext()
   const selectedPin = locationOnePin ?? locationTwoPin
 
-  if (!selectedPin) return <div
-    style={{
-      width: '100%',
-      height: '100%', // same as your chart height or GraphBox height
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#666',
-      fontSize: '16px',
-      fontWeight: 500,
-    }}
-  >
-    Please select a location
-  </div>
+  if (!selectedPin)
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%', // same as your chart height or GraphBox height
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#666',
+          fontSize: '16px',
+          fontWeight: 500,
+        }}
+      >
+        Please select a location
+      </div>
+    )
 
-  
-  const years = data.map((row) => row.date.split('-')[0]); // "YYY
-  const uniqueYears = Array.from(new Set(years));
-  const multipleYears = uniqueYears.length > 1;
+  const years = data.map((row) => row.date.split('-')[0]) // "YYY
+  const uniqueYears = Array.from(new Set(years))
+  const multipleYears = uniqueYears.length > 1
 
   const formattedData: { date: string; value: number }[] = data.map((row) => {
-    const [year, month, day] = row.date.split('-') // YYYY-MM-DD
+    const [year, month] = row.date.split('-') // YYYY-MM-DD
     const monthName = new Date(`${year}-${month}-01`).toLocaleString('en-US', {
-    month: 'short', // "Jan", "Feb"
-    year: multipleYears ? 'numeric' : undefined, // only show year if multiple years
-  });
+      month: 'short', // "Jan", "Feb"
+      year: multipleYears ? 'numeric' : undefined, // only show year if multiple years
+    })
 
-
-  day
-  return {
-    date: monthName,
-    value: row[metric],
-  }
+    return {
+      date: monthName,
+      value: row[metric],
+    }
   })
 
   return (
-
     <div style={{ width: '100%', height: '300px' }}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={formattedData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+        <LineChart
+          data={formattedData}
+          margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+        >
           {/* Grid */}
           <CartesianGrid strokeDasharray="4 4" stroke="#e0e0e0" />
 
           {/* X Axis */}
-          <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#555' }} interval={Math.floor(formattedData.length / 6)}>
-            <Label value="Month" offset={-10} position="insideBottom" style={{ fontWeight: 'bold', fill: '#333' }} />
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 12, fill: '#555' }}
+            interval={Math.floor(formattedData.length / 6)}
+          >
+            <Label
+              value="Month"
+              offset={-10}
+              position="insideBottom"
+              style={{ fontWeight: 'bold', fill: '#333' }}
+            />
           </XAxis>
 
           {/* Y Axis */}
@@ -105,7 +116,11 @@ const LineChartBox: FC<LineChartBoxProps> = ({
 
           {/* Tooltip */}
           <Tooltip
-            contentStyle={{ backgroundColor: '#f0f8ff', borderRadius: '8px', border: '1px solid #007acc' }}
+            contentStyle={{
+              backgroundColor: '#f0f8ff',
+              borderRadius: '8px',
+              border: '1px solid #007acc',
+            }}
             labelStyle={{ fontWeight: 'bold' }}
           />
 

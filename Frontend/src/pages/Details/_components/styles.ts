@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 // ---------- Styled Components ----------
 const DetailsContainer = styled.div`
   flex: 1;
@@ -14,7 +13,8 @@ const DetailsContainer = styled.div`
 
 const FadeDiv = styled.div<{ $visible: boolean; $delay?: number }>`
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  transition: opacity 0.5s ease ${({ $delay }) => ($delay ? `${$delay}ms` : '0ms')};
+  transition: opacity 0.5s ease
+    ${({ $delay }) => ($delay ? `${$delay}ms` : '0ms')};
 `
 
 const HeaderSection = styled.div`
@@ -153,25 +153,25 @@ const RangeHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
+`
 
 const RangeLabel = styled.span`
   font-size: 0.9rem;
   color: #555;
-`;
+`
 
 const RangeValue = styled.span`
   font-size: 0.9rem;
   font-weight: 600;
   color: #007acc;
-`;
+`
 
 const TrackContainer = styled.div`
   width: 100%;
   display: flex;
   height: 6px;
   align-items: center;
-`;
+`
 
 const Track = styled.div<{ background: string }>`
   height: 6px;
@@ -180,7 +180,7 @@ const Track = styled.div<{ background: string }>`
   background: ${({ background }) => background};
   display: flex;
   align-items: bottom;
-`;
+`
 
 // const Thumb = styled.div.withConfig({
 //   shouldForwardProp: (prop) => prop !== 'isDragged'
@@ -193,24 +193,22 @@ const Track = styled.div<{ background: string }>`
 //   transition: transform 0s ease;
 //   transform: ${({ isDragged }) => (isDragged ? "scale(1)" : "scale(1)")};
 //   cursor: pointer;
-  
+
 // `;
 
 const Thumb = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isDragged'
+  shouldForwardProp: (prop) => prop !== 'isDragged',
 })<{ isDragged: boolean }>`
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background-color: ${({ isDragged }) => (isDragged ? "#005fa3" : "#007acc")};
+  background-color: ${({ isDragged }) => (isDragged ? '#005fa3' : '#007acc')};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   &:hover {
-    transform: ${({ isDragged }) => (isDragged ? "scale(1.5)" : "scale(1.2)")};
+    transform: ${({ isDragged }) => (isDragged ? 'scale(1.5)' : 'scale(1.2)')};
   }
 `
-
-
 
 const YearLabels = styled.div`
   display: flex;
@@ -218,10 +216,10 @@ const YearLabels = styled.div`
   font-size: 0.8rem;
   color: #666;
   width: 100%;
-`;
+`
 
-
-export {  DetailsContainer,
+export {
+  DetailsContainer,
   FadeDiv,
   HeaderSection,
   Title,
@@ -233,7 +231,7 @@ export {  DetailsContainer,
   SliderLabel,
   TimeSlider,
   Spinner,
-  TimeDisplay, 
+  TimeDisplay,
   RangeContainer,
   RangeHeader,
   RangeLabel,
@@ -242,6 +240,4 @@ export {  DetailsContainer,
   Thumb,
   YearLabels,
   TrackContainer,
-
 }
-

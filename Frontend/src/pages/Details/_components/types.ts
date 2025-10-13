@@ -1,11 +1,11 @@
 // ---------- Interfaces ----------
 interface RawWeatherEntry {
-  'Station Name': string;
-  Date: string;
-  'Avg_Rainfall': number;
-  'Avg_Temperature': number;
-  'Avg_Relative_Humidity': number;
-  'Avg_Wind_Speed': number;
+  'Station Name': string
+  Date: string
+  Avg_Rainfall: number
+  Avg_Temperature: number
+  Avg_Relative_Humidity: number
+  Avg_Wind_Speed: number
 }
 
 interface FormattedWeatherData {
@@ -24,4 +24,4 @@ interface TimeRangeSliderProps {
   graphIndex?: number
 }
 
-export type { RawWeatherEntry, FormattedWeatherData , TimeRangeSliderProps };
+export type { RawWeatherEntry, FormattedWeatherData, TimeRangeSliderProps }

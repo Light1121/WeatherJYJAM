@@ -3,8 +3,12 @@ import { useState, useEffect } from 'react'
 import LineChartBox from './_components/LineChartBox'
 import { FullScreenLayout, MainLayout } from '@/_components'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
-import type { RawWeatherEntry, FormattedWeatherData } from '@/pages/Details/_components/types'
-import {  DetailsContainer,
+import type {
+  RawWeatherEntry,
+  FormattedWeatherData,
+} from '@/pages/Details/_components/types'
+import {
+  DetailsContainer,
   FadeDiv,
   HeaderSection,
   Title,
@@ -20,7 +24,6 @@ import {  DetailsContainer,
 } from './_components/styles'
 
 import TimeRangeSlider from './_components/TimeRangeSlider'
-
 
 // ---------- Main Component ----------
 const Details: FC = () => {
@@ -41,7 +44,11 @@ const Details: FC = () => {
   ])
 
   // Slider onChange handler
-  const handleSliderChange = (graphIndex: number, newStart: number, newEnd: number) => {
+  const handleSliderChange = (
+    graphIndex: number,
+    newStart: number,
+    newEnd: number,
+  ) => {
     const updatedRanges = [...yearRanges]
     updatedRanges[graphIndex] = [newStart, newEnd]
     setYearRanges(updatedRanges)
@@ -61,7 +68,6 @@ const Details: FC = () => {
       precipitation: number
     }[]
   >([])
-
 
   // Fetch data when selectedPin changes
   useEffect(() => {
@@ -85,8 +91,6 @@ const Details: FC = () => {
 
         const stationName = nearestJson.data['Station Name']
 
-
-
         // Step 2: Get detailed weather data by station name
         const stationRes = await fetch(
           `https://weatherjyjam-production.up.railway.app/api/weather/avg_${stationName}`,
@@ -96,22 +100,20 @@ const Details: FC = () => {
         const stationJson = await stationRes.json()
 
         if (stationJson.length === 0)
-          throw new Error("Failed to retrieve weather data")
-
+          throw new Error('Failed to retrieve weather data')
 
         // Transform the data
         const formatted: FormattedWeatherData[] = stationJson.map(
           (entry: RawWeatherEntry) => ({
-            date: entry['Date'] ?? 'Unknown',
-            temperature: Number(entry['Avg_Temperature']) ?? null,
-            humidity: Number(entry['Avg_Relative_Humidity']) ?? null,
-            wind_speed: Number(entry['Avg_Wind_Speed']) ?? null,
-            precipitation: Number(entry['Avg_Rainfall']) ?? null,
+            date: entry['Date']!,
+            temperature: Number(entry['Avg_Temperature'])!,
+            humidity: Number(entry['Avg_Relative_Humidity'])!,
+            wind_speed: Number(entry['Avg_Wind_Speed'])!,
+            precipitation: Number(entry['Avg_Rainfall'])!,
           }),
         )
 
         setWeatherData(formatted)
-
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message)
@@ -131,8 +133,6 @@ const Details: FC = () => {
     graphIndex: number
     metric: 'temperature' | 'humidity' | 'wind_speed' | 'precipitation'
   }> = ({ title, graphIndex, metric }) => {
-  
-
     const [startYear, endYear] = yearRanges[graphIndex] || [2015, 2025]
 
     // Filter weatherData according to the selected range
@@ -140,7 +140,7 @@ const Details: FC = () => {
       const year = Number(entry.date.split('-')[0])
       return year >= startYear && year <= endYear
     })
- 
+
     return (
       <GraphSection>
         <GraphTitle>{title}</GraphTitle>
@@ -150,20 +150,23 @@ const Details: FC = () => {
           {loading ? (
             <div>
               <Spinner />
-              <p style={{ textAlign: 'center', fontWeight: 500, color: '#007acc' }}>
-              Loading weather data...
-            </p>
-            </div>           
+              <p
+                style={{
+                  textAlign: 'center',
+                  fontWeight: 500,
+                  color: '#007acc',
+                }}
+              >
+                Loading weather data...
+              </p>
+            </div>
           ) : error ? (
-            <p style={{ textAlign: 'center', color: 'red' }}>
-              Error: {error}
-            </p>
+            <p style={{ textAlign: 'center', color: 'red' }}>Error: {error}</p>
           ) : (
             <div>
-            <LineChartBox metric={metric} data={filteredData} />
+              <LineChartBox metric={metric} data={filteredData} />
             </div>
           )}
-
         </GraphBox>
         <SliderContainer>
           <SliderLabel>Select Year Range</SliderLabel>
@@ -171,7 +174,9 @@ const Details: FC = () => {
           <TimeRangeSlider
             graphIndex={graphIndex}
             yearRange={yearRanges[graphIndex]}
-            onYearRangeChange={(range) => handleSliderChange(graphIndex, range[0], range[1])}
+            onYearRangeChange={(range) =>
+              handleSliderChange(graphIndex, range[0], range[1])
+            }
             minYear={2015}
             maxYear={2025}
           />

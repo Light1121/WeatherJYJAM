@@ -15,26 +15,13 @@ class WeatherService:
 
         query = """
             SELECT
-                w.`Station Name`,
-                DATE_FORMAT(MIN(w.Date), '%Y-%m-%d') AS Date,
-                AVG(w.`Rain 0900-0900 (mm)`) AS Avg_Rainfall,
-                AVG((w.`Maximum Temperature (°C)` + w.`Minimum Temperature (°C)`) / 2) AS Avg_Temperature,
-                AVG((w.`Maximum Relative Humidity (%)` + w.`Minimum Relative Humidity (%)`) / 2) AS Avg_Relative_Humidity,
-                AVG(w.`Average 10m Wind Speed (m/sec)`) AS Avg_Wind_Speed
+                *
             FROM
-                weather_data w
-            JOIN
-                Dates d ON w.Date = d.Date
+                weather_data
             WHERE
-            `Station Name` = 'ADELAIDE AIRPORT'
-            GROUP BY
-                d.Year,
-                d.Month,
-                w.`Station Name`
+            `Station Name` = :station_name
             ORDER BY
-                d.Year,
-                d.Month
-                ASC;
+                Date;
         """
 
         def clean_row(row):
@@ -75,7 +62,7 @@ class WeatherService:
             JOIN
                 Dates d ON w.Date = d.Date
             WHERE
-            `Station Name` = 'ADELAIDE AIRPORT'
+            `Station Name` = :station_name
             GROUP BY
                 d.Year,
                 d.Month,

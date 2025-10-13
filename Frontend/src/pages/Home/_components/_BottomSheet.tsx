@@ -15,7 +15,7 @@ const StyledBottomSheet = styled.div`
 
 const BottomSheet: FC = () => (
   <StyledBottomSheet>
-    <div>↑ BottomSheetTEST</div>
+    <div>↑ BottomSheet</div>
   </StyledBottomSheet>
 )
 
