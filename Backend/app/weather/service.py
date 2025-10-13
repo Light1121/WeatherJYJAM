@@ -63,7 +63,7 @@ class WeatherService:
             JOIN
                 Dates d ON w.Date = d.Date
             WHERE
-            `Station Name` = :station_name
+            `Station Name` LIKE :station_name
             GROUP BY
                 d.Year,
                 d.Month,
