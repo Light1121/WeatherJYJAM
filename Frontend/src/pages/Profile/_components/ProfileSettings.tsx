@@ -70,9 +70,14 @@ const FileName = styled.p`
   font-family: 'Instrument Sans', sans-serif;
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+`
+
 const SubmitButton = styled.button`
-  width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem 1rem;
   background-color: #007acc;
   color: white;
   border: none;
@@ -80,7 +85,7 @@ const SubmitButton = styled.button`
   font-weight: 500;
   font-family: 'Instrument Sans', sans-serif;
   cursor: pointer;
-  margin-top: 1rem;
+  font-size: 0.85rem;
 
   &:hover {
     background-color: #005f99;
@@ -179,8 +184,9 @@ const ProfileSettings: React.FC = () => {
             <option value="grayscale">Grayscale</option>
           </Select>
         </FormField>
-
-        <SubmitButton type="submit">Save Changes</SubmitButton>
+        <ButtonContainer>
+          <SubmitButton type="submit">Save Changes</SubmitButton>
+        </ButtonContainer>
       </form>
     </Section>
   )

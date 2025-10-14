@@ -1,6 +1,7 @@
-import type { FC } from 'react'
+import { useState, type FC } from 'react'
 import styled from 'styled-components'
 import type { TabData } from '@/_components/ContextHooks/TabsContext'
+import DeleteModal from './DeleteModal'
 
 interface TabItemProps {
   tab: TabData
@@ -21,18 +22,14 @@ const TabItemWrapper = styled.div<{
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${({ $isActive }) => ($isActive ? '#007acc' : 'transparent')};
-  color: ${({ $isActive }) => ($isActive ? 'white' : '#374151')};
-  border: ${({ $isActive }) =>
-    $isActive ? '1px solid #007acc' : '1px solid transparent'};
+  background: ${({ $isActive }) => ($isActive ? '#99ccff' : '#b3e0ff')};
+  color: #1d3c66;
+  font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
+  font-family: 'Instrument Sans', sans-serif;
 
   &:hover {
-    background: ${({ $isActive }) => ($isActive ? '#005f99' : '#f3f4f6')};
-    ${({ $isActive }) => !$isActive && 'border-color: #d1d5db;'}
-  }
-
-  &:active {
-    transform: scale(0.98);
+    background: #99ccff;
+    font-weight: bold;
   }
 `
 
@@ -42,37 +39,7 @@ const TabContent = styled.div<{ $isCollapsed: boolean }>`
   justify-content: ${({ $isCollapsed }) =>
     $isCollapsed ? 'center' : 'space-between'};
   width: 100%;
-`
-
-const TabInfo = styled.div<{ $isCollapsed: boolean }>`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  opacity: ${({ $isCollapsed }) => ($isCollapsed ? 0 : 1)};
-  transition: opacity 0.3s ease;
-`
-
-const TabName = styled.span`
   font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
-const TabMeta = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-  opacity: 0.7;
-`
-
-const TabStats = styled.span`
-  font-size: 11px;
-  font-weight: 400;
 `
 
 const TabIcon = styled.div<{ $isActive: boolean }>`
@@ -86,7 +53,8 @@ const TabIcon = styled.div<{ $isActive: boolean }>`
   justify-content: center;
   font-size: 12px;
   color: ${({ $isActive }) => ($isActive ? 'white' : '#6b7280')};
-  flex-shrink: 0;
+  margin-right: 8px;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const TabActions = styled.div<{ $isCollapsed: boolean; $isActive: boolean }>`
@@ -95,6 +63,7 @@ const TabActions = styled.div<{ $isCollapsed: boolean; $isActive: boolean }>`
   gap: 4px;
   opacity: ${({ $isCollapsed }) => ($isCollapsed ? 0 : 1)};
   transition: opacity 0.3s ease;
+  font-family: 'Instrument Sans', sans-serif;
 `
 
 const ActionButton = styled.button<{ $isActive: boolean }>`
@@ -110,12 +79,8 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  font-family: 'Instrument Sans', sans-serif;
   transition: all 0.2s ease;
-  opacity: 0;
-
-  ${TabItemWrapper}:hover & {
-    opacity: 1;
-  }
 
   &:hover {
     background: ${({ $isActive }) =>
@@ -128,22 +93,7 @@ const ActionButton = styled.button<{ $isActive: boolean }>`
   }
 `
 
-const formatDate = (date: Date): string => {
-  const now = new Date()
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-
-  if (diffInHours < 1) {
-    return 'Just now'
-  } else if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`
-  } else if (diffInHours < 24 * 7) {
-    return `${Math.floor(diffInHours / 24)}d ago`
-  } else {
-    return date.toLocaleDateString()
-  }
-}
-
-const TabItem: FC<TabItemProps> = ({
+export const TabItem: FC<TabItemProps> = ({
   tab,
   isActive,
   isCollapsed,
@@ -152,6 +102,8 @@ const TabItem: FC<TabItemProps> = ({
   onDelete,
   canDelete,
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
     onEdit()
@@ -159,64 +111,59 @@ const TabItem: FC<TabItemProps> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (
-      canDelete &&
-      window.confirm(`Are you sure you want to delete "${tab.name}"?`)
-    ) {
-      onDelete()
-    }
+    setShowDeleteModal(true)
   }
 
-  const handleMouseEnter = () => {
-    // Actions will show on hover via CSS
+  const handleConfirmDelete = () => {
+    onDelete()
+    setShowDeleteModal(false)
   }
 
-  const handleMouseLeave = () => {
-    // Actions will hide on hover via CSS
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false)
   }
 
   return (
-    <TabItemWrapper
-      $isActive={isActive}
-      $isCollapsed={isCollapsed}
-      onClick={onClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <TabContent $isCollapsed={isCollapsed}>
-        <TabIcon $isActive={isActive}>📍</TabIcon>
+    <>
+      <TabItemWrapper
+        $isActive={isActive}
+        $isCollapsed={isCollapsed}
+        onClick={onClick}
+      >
+        <TabContent $isCollapsed={isCollapsed}>
+          <TabIcon $isActive={isActive}>📍</TabIcon>
 
-        <TabInfo $isCollapsed={isCollapsed}>
-          <TabName>{tab.name}</TabName>
-          <TabMeta>
-            <TabStats>{tab.pins.length} pins</TabStats>
-            <TabStats>•</TabStats>
-            <TabStats>{formatDate(tab.lastModified)}</TabStats>
-          </TabMeta>
-        </TabInfo>
-
-        <TabActions $isCollapsed={isCollapsed} $isActive={isActive}>
-          <ActionButton
-            $isActive={isActive}
-            onClick={handleEdit}
-            aria-label="Edit tab"
-            title="Edit tab"
-          >
-            ✏️
-          </ActionButton>
-          {canDelete && (
-            <ActionButton
-              $isActive={isActive}
-              onClick={handleDelete}
-              aria-label="Delete tab"
-              title="Delete tab"
-            >
-              🗑️
-            </ActionButton>
+          {!isCollapsed && (
+            <div style={{ flex: 1, fontFamily: 'Instrument Sans, sans-serif' }}>
+              <div>{tab.name}</div>
+              <div style={{ fontSize: 11, opacity: 0.7 }}>
+                {tab.pins.length} pins • {tab.lastModified.toLocaleDateString()}
+              </div>
+            </div>
           )}
-        </TabActions>
-      </TabContent>
-    </TabItemWrapper>
+
+          <TabActions $isCollapsed={isCollapsed} $isActive={isActive}>
+            <ActionButton $isActive={isActive} onClick={handleEdit}>
+              ✏️
+            </ActionButton>
+            {canDelete && (
+              <ActionButton $isActive={isActive} onClick={handleDelete}>
+                🗑️
+              </ActionButton>
+            )}
+          </TabActions>
+        </TabContent>
+      </TabItemWrapper>
+
+      {showDeleteModal && (
+        <DeleteModal
+          isOpen={showDeleteModal}
+          message={`Are you sure you want to delete "${tab.name}"?`}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
+    </>
   )
 }
 

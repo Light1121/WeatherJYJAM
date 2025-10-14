@@ -8,11 +8,20 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import db
 
+"""
+
+DEPRECREATED: Using raw SQL queries in service layer instead of ORM models for better compatibility with Cloud SQL.
+Previously used SQLAlchemy ORM model for Weather data. Connected to service layer via SQLAlchemy session.
+Now using raw SQL queries in service layer to avoid compatibility issues with Cloud SQL and connection pooling.
+
+
+"""
+
+
+
 class weather(db.Model):
     """Weather model using SQLAlchemy ORM"""
-    __tablename__ = 'weather'
-    
-    
+    __tablename__ = 'weather'    
     
     # Weather fields
     station_name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)

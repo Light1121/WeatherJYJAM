@@ -22,6 +22,7 @@ npm-debug.log*
 
 # Backend
 .venv/
+Backend/.venv/
 __pycache__/
 .pycache/
 db/*.db

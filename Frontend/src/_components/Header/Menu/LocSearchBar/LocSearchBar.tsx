@@ -1,5 +1,12 @@
-import type { FC } from 'react'
+import type { FC, ChangeEvent } from 'react'
 import styled from 'styled-components'
+
+interface LocSearchBarProps {
+  placeholder?: string
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onClick?: () => void
+}
 
 const LocSearchInput = styled.input`
   width: 100%;
@@ -14,7 +21,22 @@ const LocSearchInput = styled.input`
     color: #333;
   }
 `
-const LocSearchBar: FC = () => {
-  return <LocSearchInput type="text" placeholder="Search..." />
+
+const LocSearchBar: FC<LocSearchBarProps> = ({
+  placeholder,
+  value,
+  onChange,
+  onClick,
+}) => {
+  return (
+    <LocSearchInput
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      onClick={onClick}
+    />
+  )
 }
+
 export default LocSearchBar

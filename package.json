@@ -2,6 +2,8 @@
   "name": "weatherjyjam-monorepo",
   "private": true,
   "devDependencies": {
+    "@types/node": "^24.7.1",
+    "@types/styled-components": "^5.1.34",
     "husky": "^9.1.7"
   },
   "scripts": {
