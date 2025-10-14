@@ -1,183 +1,264 @@
 import type { FC } from 'react'
 import { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { FullScreenLayout, MainLayout } from '../../_components'
+import LineChartBox from './_components/LineChartBox'
+import { FullScreenLayout, MainLayout } from '@/_components'
+import { usePinContext } from '@/_components/ContextHooks/usePinContext'
+import type { PinData } from '@/_components/ContextHooks/contexts'
+import type { RawWeatherEntry } from '@/pages/Details/_components/types'
+import {
+  DetailsContainer,
+  FadeDiv,
+  HeaderSection,
+  Title,
+  ContentGrid,
+  GraphSection,
+  GraphTitle,
+  GraphBox,
+  SliderContainer,
+  SliderLabel,
+  // TimeSlider,
+  Spinner,
+  TimeDisplay,
+} from './_components/styles'
 
-const DetailsContainer = styled.div`
-  flex: 1;
-  background-color: #f6fcff;
-  padding: 2rem;
-  margin: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  overflow: auto;
-`
+import TimeRangeSlider from './_components/TimeRangeSlider'
 
-const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: opacity 0.5s ease ${({ delay }) => (delay ? `${delay}ms` : '0ms')};
-`
-
-const HeaderSection = styled.div`
-  padding: 1rem 2rem;
-  background-color: #c2e9ff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  font-family: 'Instrument Sans', sans-serif;
-  text-align: center;
-`
-
-const Title = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-`
-
-const ContentGrid = styled.div`
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-`
-
-const GraphSection = styled.div`
-  background-color: #c2e9ff;
-  border-radius: 1rem;
-  padding: 1rem 1.5rem 2.5rem 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-family: 'Instrument Sans', sans-serif;
-`
-
-const GraphTitle = styled.h2`
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-align: center;
-`
-
-const GraphBox = styled.div`
-  background-color: #fffffff6;
-  border: 1px dashed #ddd;
-  border-radius: 10px;
-  min-height: 250px;
-  display: grid;
-  place-items: center;
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 1rem;
-`
-
-const SliderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
-`
-
-const SliderLabel = styled.label`
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #333;
-`
-
-const TimeSlider = styled.input`
-  width: 100%;
-  height: 6px;
-  background: #ddd;
-  border-radius: 3px;
-  outline: none;
-  appearance: none;
-
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #007acc;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  &::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    background: #007acc;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-  }
-`
-
-const TimeDisplay = styled.div`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #007acc;
-  background-color: #fffffff6;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-`
-
+// ---------- Main Component ----------
 const Details: FC = () => {
   const [contentVisible, setContentVisible] = useState(false)
-  const [timeValues, setTimeValues] = useState([0, 0, 0, 0])
 
+  // ---------- Fade in ----------
   useEffect(() => {
     const fadeInContent = setTimeout(() => setContentVisible(true), 300)
     return () => clearTimeout(fadeInContent)
   }, [])
 
-  // Generate time options from 01-2020 to 12-2024
-  const generateTimeOptions = () => {
-    const options = []
-    for (let year = 2020; year <= 2024; year++) {
-      for (let month = 1; month <= 12; month++) {
-        options.push({
-          value: `${month.toString().padStart(2, '0')}-${year}`,
-          index: options.length,
-        })
+  // ---------- Year Range State ----------
+  const [yearRanges, setYearRanges] = useState<Array<[number, number]>>([
+    [2025, 2025], // Graph 0
+    [2025, 2025], // Graph 1
+    [2025, 2025], // Graph 2
+    [2025, 2025], // Graph 3
+  ])
+
+  // Slider onChange handler
+  const handleSliderChange = (
+    graphIndex: number,
+    newStart: number,
+    newEnd: number,
+  ) => {
+    const updatedRanges = [...yearRanges]
+    updatedRanges[graphIndex] = [newStart, newEnd]
+    setYearRanges(updatedRanges)
+  }
+
+  // ---------- Fetch Weather Data ----------
+  // const { locationOnePin, locationTwoPin } = usePinContext()
+  // const selectedPin = locationOnePin ?? locationTwoPin
+  // const [loading, setLoading] = useState(false)
+  // const [error, setError] = useState<string | null>(null)
+  const { locationOnePin, locationTwoPin } = usePinContext()
+  // const selectedPin = locationOnePin ?? locationTwoPin
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [weatherData, setWeatherData] = useState<
+    {
+      date: string
+      temperature: number
+      humidity: number
+      wind_speed: number
+      precipitation: number
+      pinId: string
+      locationName: string
+    }[]
+  >([])
+
+  useEffect(() => {
+    const pins = [locationOnePin, locationTwoPin].filter(Boolean) as PinData[]
+    if (pins.length === 0) return
+
+    const fetchWeatherForPin = async (pin: PinData) => {
+      /// Step 1: Get nearest station for this pin
+      const nearestRes = await fetch(
+        `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${pin.position.lat}&lng=${pin.position.lng}`,
+      )
+      if (!nearestRes.ok)
+        throw new Error(`Failed to fetch nearest station: ${nearestRes.status}`)
+
+      const nearestJson = await nearestRes.json()
+      if (nearestJson.status !== 'success') throw new Error(nearestJson.message)
+
+      const stationName = nearestJson.data['Station Name']
+
+      // Step 2: Get detailed weather data
+      const stationRes = await fetch(
+        `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
+      )
+      if (!stationRes.ok)
+        throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
+
+      const stationJson = await stationRes.json()
+      if (stationJson.length === 0)
+        throw new Error('Failed to retrieve weather data')
+
+      // Step 3: Transform and tag data
+      return stationJson.map((entry: RawWeatherEntry) => ({
+        date: entry['Date'],
+        temperature: Number(entry['Avg_Temperature']),
+        humidity: Number(entry['Avg_Relative_Humidity']),
+        wind_speed: Number(entry['Avg_Wind_Speed']),
+        precipitation: Number(entry['Avg_Rainfall']),
+        pinId: pin.id,
+        locationName: pin.locationName,
+      }))
+    }
+
+    const fetchAllWeatherData = async () => {
+      setLoading(true)
+      setError(null)
+
+      try {
+        // Fetch in parallel for all available pins
+        const results = await Promise.all(pins.map(fetchWeatherForPin))
+        // Combine both (or single) datasets into one
+        const combined = results.flat()
+        setWeatherData(combined)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || 'An unexpected error occurred')
+        } else {
+          setError('An unexpected error occurred')
+        }
+      } finally {
+        setLoading(false)
       }
     }
-    return options
+
+    fetchAllWeatherData()
+  }, [locationOnePin, locationTwoPin])
+
+  // // Fetch data when selectedPin changes
+  // useEffect(() => {
+  //   if (!selectedPin) return
+  //   const fetchWeatherData = async () => {
+  //     setLoading(true)
+  //     setError(null)
+
+  //     try {
+  //       // Step 1: Get nearest station
+  //       const nearestRes = await fetch(
+  //         `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${selectedPin.position.lat}&lng=${selectedPin.position.lng}`,
+  //       )
+  //       if (!nearestRes.ok)
+  //         throw new Error(
+  //           `Failed to fetch nearest station: ${nearestRes.status}`,
+  //         )
+  //       const nearestJson = await nearestRes.json()
+  //       if (nearestJson.status !== 'success')
+  //         throw new Error(nearestJson.message)
+
+  //       const stationName = nearestJson.data['Station Name']
+
+  //       // Step 2: Get detailed weather data by station name
+  //       console.log(`https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`)
+  //       const stationRes = await fetch(
+  //         `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
+  //       )
+  //       if (!stationRes.ok)
+  //         throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
+  //       const stationJson = await stationRes.json()
+
+  //       if (stationJson.length === 0)
+  //         throw new Error('Failed to retrieve weather data')
+
+  //       // Transform the data
+  //       const formatted: FormattedWeatherData[] = stationJson.map(
+  //         (entry: RawWeatherEntry) => ({
+  //           date: entry['Date']!,
+  //           temperature: Number(entry['Avg_Temperature'])!,
+  //           humidity: Number(entry['Avg_Relative_Humidity'])!,
+  //           wind_speed: Number(entry['Avg_Wind_Speed'])!,
+  //           precipitation: Number(entry['Avg_Rainfall'])!,
+  //         }),
+  //       )
+
+  //       setWeatherData(formatted)
+  //     } catch (err: unknown) {
+  //       if (err instanceof Error) {
+  //         setError(err.message)
+  //       } else {
+  //         setError(String(err))
+  //       }
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchWeatherData()
+  // }, [selectedPin])
+
+  // ---------- Graph Component ----------
+
+  const GraphComponent: FC<{
+    title: string
+    graphIndex: number
+    metric: 'temperature' | 'humidity' | 'wind_speed' | 'precipitation'
+  }> = ({ title, graphIndex, metric }) => {
+    const [startYear, endYear] = yearRanges[graphIndex] || [2015, 2025]
+
+    // Filter weatherData according to the selected range
+    const filteredData = weatherData.filter((entry) => {
+      const year = Number(entry.date.split('-')[0])
+      return year >= startYear && year <= endYear
+    })
+
+    return (
+      <GraphSection>
+        <GraphTitle>{title}</GraphTitle>
+
+        <GraphBox>
+          {/* Linechart box itself*/}
+          {loading ? (
+            <div>
+              <Spinner />
+              <p
+                style={{
+                  textAlign: 'center',
+                  fontWeight: 500,
+                  color: '#007acc',
+                }}
+              >
+                Loading weather data...
+              </p>
+            </div>
+          ) : error ? (
+            <p style={{ textAlign: 'center', color: 'red' }}>Error: {error}</p>
+          ) : (
+            <div>
+              <LineChartBox metric={metric} data={filteredData} />
+            </div>
+          )}
+        </GraphBox>
+        <SliderContainer>
+          <SliderLabel>Select Year Range</SliderLabel>
+
+          <TimeRangeSlider
+            graphIndex={graphIndex}
+            yearRange={yearRanges[graphIndex]}
+            onYearRangeChange={(range) =>
+              handleSliderChange(graphIndex, range[0], range[1])
+            }
+            minYear={2015}
+            maxYear={2025}
+          />
+          <TimeDisplay>
+            {startYear} - {endYear}
+          </TimeDisplay>
+        </SliderContainer>
+      </GraphSection>
+    )
   }
 
-  const timeOptions = generateTimeOptions()
-
-  const handleSliderChange = (graphIndex: number, value: number) => {
-    const newValues = [...timeValues]
-    newValues[graphIndex] = value
-    setTimeValues(newValues)
-  }
-
-  const GraphComponent: FC<{ title: string; graphIndex: number }> = ({
-    title,
-    graphIndex,
-  }) => (
-    <GraphSection>
-      <GraphTitle>{title}</GraphTitle>
-      <GraphBox>Graph {graphIndex + 1} goes here</GraphBox>
-      <SliderContainer>
-        <SliderLabel>Time Period</SliderLabel>
-        <TimeSlider
-          type="range"
-          min={0}
-          max={timeOptions.length - 1}
-          value={timeValues[graphIndex]}
-          onChange={(e) =>
-            handleSliderChange(graphIndex, parseInt(e.target.value))
-          }
-        />
-        <TimeDisplay>
-          {timeOptions[timeValues[graphIndex]]?.value || '01-2020'}
-        </TimeDisplay>
-      </SliderContainer>
-    </GraphSection>
-  )
-
+  // ---------- Main Render ----------
   return (
     <FullScreenLayout>
       <MainLayout>
@@ -186,12 +267,28 @@ const Details: FC = () => {
             <Title>Weather Data Analysis</Title>
           </HeaderSection>
 
-          <FadeDiv visible={contentVisible} delay={200}>
+          <FadeDiv $visible={contentVisible} $delay={200}>
             <ContentGrid>
-              <GraphComponent title="Temperature Trends" graphIndex={0} />
-              <GraphComponent title="Humidity Patterns" graphIndex={1} />
-              <GraphComponent title="Wind Speed Analysis" graphIndex={2} />
-              <GraphComponent title="Precipitation Data" graphIndex={3} />
+              <GraphComponent
+                title="Temperature Trends"
+                graphIndex={0}
+                metric="temperature"
+              />
+              <GraphComponent
+                title="Humidity Patterns"
+                graphIndex={1}
+                metric="humidity"
+              />
+              <GraphComponent
+                title="Wind Speed Analysis"
+                graphIndex={2}
+                metric="wind_speed"
+              />
+              <GraphComponent
+                title="Precipitation Data"
+                graphIndex={3}
+                metric="precipitation"
+              />
             </ContentGrid>
           </FadeDiv>
         </DetailsContainer>

@@ -93,8 +93,13 @@ _Backend/
 ├── instance/
 │   └── weather_app.db       # SQLite database (auto-created)
 ├── requirements.txt         # Dependencies
-└── server.py               # Application entry point
+├── server.py               # Application entry point
+├── Procfile          # web: python server.py
+└── runtime.txt       # python-3.11.10
 ```
+
+
+
 
 ## Database Creation Logic
 
