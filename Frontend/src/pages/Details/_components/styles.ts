@@ -174,7 +174,7 @@ const TrackContainer = styled.div`
 `
 
 const Track = styled.div<{ background: string }>`
-  height: 6px;
+  height: 12px;
   width: 100%;
   border-radius: 4px;
   background: ${({ background }) => background};
@@ -199,8 +199,8 @@ const Track = styled.div<{ background: string }>`
 const Thumb = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isDragged',
 })<{ isDragged: boolean }>`
-  height: 12px;
-  width: 12px;
+  height: 24px;
+  width: 24px;
   border-radius: 50%;
   background-color: ${({ isDragged }) => (isDragged ? '#005fa3' : '#007acc')};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);

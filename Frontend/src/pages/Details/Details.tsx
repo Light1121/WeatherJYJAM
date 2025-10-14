@@ -3,10 +3,8 @@ import { useState, useEffect } from 'react'
 import LineChartBox from './_components/LineChartBox'
 import { FullScreenLayout, MainLayout } from '@/_components'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
-import type {
-  RawWeatherEntry,
-  FormattedWeatherData,
-} from '@/pages/Details/_components/types'
+import type { PinData } from '@/_components/ContextHooks/contexts'
+import type { RawWeatherEntry } from '@/pages/Details/_components/types'
 import {
   DetailsContainer,
   FadeDiv,
@@ -55,8 +53,12 @@ const Details: FC = () => {
   }
 
   // ---------- Fetch Weather Data ----------
+  // const { locationOnePin, locationTwoPin } = usePinContext()
+  // const selectedPin = locationOnePin ?? locationTwoPin
+  // const [loading, setLoading] = useState(false)
+  // const [error, setError] = useState<string | null>(null)
   const { locationOnePin, locationTwoPin } = usePinContext()
-  const selectedPin = locationOnePin ?? locationTwoPin
+  // const selectedPin = locationOnePin ?? locationTwoPin
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [weatherData, setWeatherData] = useState<
@@ -66,68 +68,136 @@ const Details: FC = () => {
       humidity: number
       wind_speed: number
       precipitation: number
+      pinId: string
+      locationName: string
     }[]
   >([])
 
-  // Fetch data when selectedPin changes
   useEffect(() => {
-    if (!selectedPin) return
-    const fetchWeatherData = async () => {
+    const pins = [locationOnePin, locationTwoPin].filter(Boolean) as PinData[]
+    if (pins.length === 0) return
+
+    const fetchWeatherForPin = async (pin: PinData) => {
+      /// Step 1: Get nearest station for this pin
+      const nearestRes = await fetch(
+        `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${pin.position.lat}&lng=${pin.position.lng}`,
+      )
+      if (!nearestRes.ok)
+        throw new Error(`Failed to fetch nearest station: ${nearestRes.status}`)
+
+      const nearestJson = await nearestRes.json()
+      if (nearestJson.status !== 'success') throw new Error(nearestJson.message)
+
+      const stationName = nearestJson.data['Station Name']
+
+      // Step 2: Get detailed weather data
+      const stationRes = await fetch(
+        `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
+      )
+      if (!stationRes.ok)
+        throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
+
+      const stationJson = await stationRes.json()
+      if (stationJson.length === 0)
+        throw new Error('Failed to retrieve weather data')
+
+      // Step 3: Transform and tag data
+      return stationJson.map((entry: RawWeatherEntry) => ({
+        date: entry['Date'],
+        temperature: Number(entry['Avg_Temperature']),
+        humidity: Number(entry['Avg_Relative_Humidity']),
+        wind_speed: Number(entry['Avg_Wind_Speed']),
+        precipitation: Number(entry['Avg_Rainfall']),
+        pinId: pin.id,
+        locationName: pin.locationName,
+      }))
+    }
+
+    const fetchAllWeatherData = async () => {
       setLoading(true)
       setError(null)
 
       try {
-        // Step 1: Get nearest station
-        const nearestRes = await fetch(
-          `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${selectedPin.position.lat}&lng=${selectedPin.position.lng}`,
-        )
-        if (!nearestRes.ok)
-          throw new Error(
-            `Failed to fetch nearest station: ${nearestRes.status}`,
-          )
-        const nearestJson = await nearestRes.json()
-        if (nearestJson.status !== 'success')
-          throw new Error(nearestJson.message)
-
-        const stationName = nearestJson.data['Station Name']
-
-        // Step 2: Get detailed weather data by station name
-        const stationRes = await fetch(
-          `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
-        )
-        if (!stationRes.ok)
-          throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
-        const stationJson = await stationRes.json()
-
-        if (stationJson.length === 0)
-          throw new Error('Failed to retrieve weather data')
-
-        // Transform the data
-        const formatted: FormattedWeatherData[] = stationJson.map(
-          (entry: RawWeatherEntry) => ({
-            date: entry['Date']!,
-            temperature: Number(entry['Avg_Temperature'])!,
-            humidity: Number(entry['Avg_Relative_Humidity'])!,
-            wind_speed: Number(entry['Avg_Wind_Speed'])!,
-            precipitation: Number(entry['Avg_Rainfall'])!,
-          }),
-        )
-
-        setWeatherData(formatted)
+        // Fetch in parallel for all available pins
+        const results = await Promise.all(pins.map(fetchWeatherForPin))
+        // Combine both (or single) datasets into one
+        const combined = results.flat()
+        setWeatherData(combined)
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(err.message)
+          setError(err.message || 'An unexpected error occurred')
         } else {
-          setError(String(err))
+          setError('An unexpected error occurred')
         }
       } finally {
         setLoading(false)
       }
     }
-    fetchWeatherData()
-  }, [selectedPin])
+
+    fetchAllWeatherData()
+  }, [locationOnePin, locationTwoPin])
+
+  // // Fetch data when selectedPin changes
+  // useEffect(() => {
+  //   if (!selectedPin) return
+  //   const fetchWeatherData = async () => {
+  //     setLoading(true)
+  //     setError(null)
+
+  //     try {
+  //       // Step 1: Get nearest station
+  //       const nearestRes = await fetch(
+  //         `https://weatherjyjam-production.up.railway.app/api/weather/nearest?lat=${selectedPin.position.lat}&lng=${selectedPin.position.lng}`,
+  //       )
+  //       if (!nearestRes.ok)
+  //         throw new Error(
+  //           `Failed to fetch nearest station: ${nearestRes.status}`,
+  //         )
+  //       const nearestJson = await nearestRes.json()
+  //       if (nearestJson.status !== 'success')
+  //         throw new Error(nearestJson.message)
+
+  //       const stationName = nearestJson.data['Station Name']
+
+  //       // Step 2: Get detailed weather data by station name
+  //       console.log(`https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`)
+  //       const stationRes = await fetch(
+  //         `https://weatherjyjam-production.up.railway.app/api/weather/avg_${encodeURIComponent(stationName)}`,
+  //       )
+  //       if (!stationRes.ok)
+  //         throw new Error(`Failed to fetch weather data: ${stationRes.status}`)
+  //       const stationJson = await stationRes.json()
+
+  //       if (stationJson.length === 0)
+  //         throw new Error('Failed to retrieve weather data')
+
+  //       // Transform the data
+  //       const formatted: FormattedWeatherData[] = stationJson.map(
+  //         (entry: RawWeatherEntry) => ({
+  //           date: entry['Date']!,
+  //           temperature: Number(entry['Avg_Temperature'])!,
+  //           humidity: Number(entry['Avg_Relative_Humidity'])!,
+  //           wind_speed: Number(entry['Avg_Wind_Speed'])!,
+  //           precipitation: Number(entry['Avg_Rainfall'])!,
+  //         }),
+  //       )
+
+  //       setWeatherData(formatted)
+  //     } catch (err: unknown) {
+  //       if (err instanceof Error) {
+  //         setError(err.message)
+  //       } else {
+  //         setError(String(err))
+  //       }
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchWeatherData()
+  // }, [selectedPin])
 
   // ---------- Graph Component ----------
+
   const GraphComponent: FC<{
     title: string
     graphIndex: number

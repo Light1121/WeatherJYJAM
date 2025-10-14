@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import { useState } from 'react'
 import {
   LineChart,
   Line,
@@ -9,25 +10,31 @@ import {
   ResponsiveContainer,
   Label,
   Legend,
+  type LegendPayload,
 } from 'recharts'
 
-import { usePinContext } from '@/_components/ContextHooks/usePinContext'
-
-interface WeatherData {
+interface MultiPinWeatherData {
   date: string
-  temperature: number
-  humidity: number
-  wind_speed: number
-  precipitation: number
+  temperature?: number
+  humidity?: number
+  wind_speed?: number
+  precipitation?: number
+  pinId: string
+  locationName: string
 }
 
 interface LineChartBoxProps {
   metric: keyof Pick<
-    WeatherData,
+    MultiPinWeatherData,
     'temperature' | 'humidity' | 'wind_speed' | 'precipitation'
   >
-  data: WeatherData[]
+  data: MultiPinWeatherData[]
   color?: string
+}
+
+type FormattedDataRow = {
+  date: string
+  [key: string]: string | number | undefined
 }
 
 const metricLabels: Record<string, string> = {
@@ -37,20 +44,48 @@ const metricLabels: Record<string, string> = {
   precipitation: 'Precipitation (mm)',
 }
 
-const LineChartBox: FC<LineChartBoxProps> = ({
-  metric,
-  data,
-  color = '#007acc',
-}) => {
-  const { locationOnePin, locationTwoPin } = usePinContext()
-  const selectedPin = locationOnePin ?? locationTwoPin
+const colors = ['#007acc', '#e67e22']
 
-  if (!selectedPin)
+const LineChartBox: FC<LineChartBoxProps> = ({ metric, data }) => {
+  const [highlighted, setHighlighted] = useState<string | null>(null)
+
+  // Get unique pin names
+  const pins: string[] = Array.from(new Set(data.map((d) => d.locationName)))
+  const locations = Array.from(new Set(data.map((d) => d.locationName)))
+    .filter(Boolean)
+    .slice(0, 2)
+
+  // Group data by pin
+  const groupedData: Record<string, MultiPinWeatherData[]> = {}
+  for (const d of data) {
+    if (!groupedData[d.locationName]) groupedData[d.locationName] = []
+    groupedData[d.locationName].push(d)
+  }
+
+  // Collect all dates across pins
+  const allDates: string[] = Array.from(new Set(data.map((d) => d.date))).sort()
+
+  // Merge into a single dataset for Recharts
+  const mergedData = allDates.map((date: string) => {
+    const entry: Record<string, string | number | undefined> = { date }
+    for (const pin of pins) {
+      const found = groupedData[pin]?.find(
+        (d: MultiPinWeatherData) => d.date === date,
+      )
+      if (found) entry[pin] = found[metric]
+    }
+    return entry
+  })
+
+  // Handle no data / no pins case
+  const hasData = data.length > 0 && locations.length > 0
+
+  if (!hasData) {
     return (
       <div
         style={{
           width: '100%',
-          height: '100%', // same as your chart height or GraphBox height
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -62,23 +97,41 @@ const LineChartBox: FC<LineChartBoxProps> = ({
         Please select a location
       </div>
     )
+  }
 
-  const years = data.map((row) => row.date.split('-')[0]) // "YYY
+  // Handle legend click
+  const handleLegendClick = (o: LegendPayload) => {
+    const key = o.dataKey as string
+    setHighlighted((prev) => (prev === key ? null : key))
+  }
+
+  // Format x-axis labels
+  const years = data.map((row) => row.date.split('-')[0])
   const uniqueYears = Array.from(new Set(years))
   const multipleYears = uniqueYears.length > 1
 
-  const formattedData: { date: string; value: number }[] = data.map((row) => {
-    const [year, month] = row.date.split('-') // YYYY-MM-DD
+  const formattedData: FormattedDataRow[] = mergedData.map((row) => {
+    const [year, month] = String(row.date).split('-')
     const monthName = new Date(`${year}-${month}-01`).toLocaleString('en-US', {
-      month: 'short', // "Jan", "Feb"
-      year: multipleYears ? 'numeric' : undefined, // only show year if multiple years
+      month: 'short',
+      year: multipleYears ? 'numeric' : undefined,
     })
 
     return {
-      date: monthName,
-      value: row[metric],
+      ...row,
+      date: monthName, // this replaces "2025-01-01" with "Jan"
     }
   })
+
+  // If two locations exist, compute difference (A - B)
+  if (locations.length === 2) {
+    const [locA, locB] = locations
+    formattedData.forEach((d) => {
+      const a = Number(d[locA]) || Number(d[locB]) || 0
+      const b = Number(d[locB]) || Number(d[locA]) || 0
+      d.difference = Math.abs(a - b)
+    })
+  }
 
   return (
     <div style={{ width: '100%', height: '300px' }}>
@@ -125,24 +178,45 @@ const LineChartBox: FC<LineChartBoxProps> = ({
           />
 
           {/* Legend */}
-          <Legend verticalAlign="top" height={36} />
+          <Legend verticalAlign="top" height={36} onClick={handleLegendClick} />
 
-          {/* Line with gradient */}
-          <defs>
-            <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.4} />
-              <stop offset="75%" stopColor={color} stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={color}
-            strokeWidth={2}
-            dot={{ r: 3, fill: color }}
-            activeDot={{ r: 6 }}
-            fill="url(#lineGradient)"
-          />
+          {/* Each line now uses a field in formattedData */}
+          {locations.map((loc, idx) => (
+            <Line
+              key={loc}
+              type="monotone"
+              dataKey={loc} //  this references the mergedData column
+              name={loc}
+              stroke={colors[idx]}
+              strokeWidth={highlighted === loc ? 3 : 2}
+              strokeOpacity={highlighted && highlighted !== loc ? 0.3 : 1}
+              dot={false}
+              onClick={() =>
+                setHighlighted((prev) => (prev === loc ? null : loc))
+              }
+              style={{ cursor: 'pointer' }}
+            />
+          ))}
+
+          {/* Dotted difference line */}
+          {locations.length === 2 && (
+            <Line
+              type="monotone"
+              dataKey="difference"
+              stroke="#555"
+              strokeWidth={highlighted === 'difference' ? 3 : 2}
+              strokeDasharray="5 5"
+              dot={false}
+              opacity={highlighted && highlighted !== 'difference' ? 0.3 : 0.6}
+              name={`Difference`}
+              onClick={() =>
+                setHighlighted((prev) =>
+                  prev === 'difference' ? null : 'difference',
+                )
+              }
+              style={{ cursor: 'pointer' }}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
     </div>
