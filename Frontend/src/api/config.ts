@@ -25,3 +25,4 @@ export const API_ENDPOINTS = {
   user: `${API_BASE_URL}/api/user`,
   me: `${API_BASE_URL}/api/me`,
 } as const
+
