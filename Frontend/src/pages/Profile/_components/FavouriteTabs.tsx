@@ -29,9 +29,9 @@ const Item = styled.div`
   font-weight: 500;
 `
 
-const FavouriteLocations: FC = () => (
+const FavouriteTabs: FC = () => (
   <Section>
-    <Title>Favourite Locations</Title>
+    <Title>Favourite Tabs</Title>
     <Grid>
       <Item>Location 1</Item>
       <Item>Location 2</Item>
@@ -44,4 +44,4 @@ const FavouriteLocations: FC = () => (
   </Section>
 )
 
-export default FavouriteLocations
+export default FavouriteTabs

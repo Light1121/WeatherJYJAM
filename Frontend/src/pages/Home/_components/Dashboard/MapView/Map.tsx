@@ -1,10 +1,11 @@
 import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, ScaleControl, useMap, useMapEvents } from 'react-leaflet'
 import type { LatLngExpression, LatLngBoundsExpression } from 'leaflet'
 import WeatherLayers from './WeatherLayers'
 import MapPins from './MapPins'
+import MapLegend from './MapLegend'
 import { useControlPanelContext } from '@/_components/ContextHooks/useControlPanelContext'
 import { useTabsContext } from '@/_components/ContextHooks/useTabsContext'
 
@@ -222,8 +223,10 @@ const Map: FC = () => {
       >
         <ZoomController />
         <MapViewController />
+        <ScaleControl position="topright" imperial={true} metric={true} />
         <WeatherLayers apiKey={API_KEY} />
         <MapPins />
+        <MapLegend />
       </MapContainer>
     </MapWrapper>
   )

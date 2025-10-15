@@ -19,20 +19,20 @@ class UserListApi(Resource):
     
 
 
-@api.route('/users/<string:user_id>')
+@api.route('/users/<string:uid>')
 class UserApi(Resource):
-    def put(self, user_id):
+    def put(self, uid):
         """Update user by ID"""
         data = request.get_json()
         
-        username = data.get('username')
+        name = data.get('name')
         email = data.get('email')
         password = data.get('password')
         
         try:
-            user = user_service.update_user(user_id, username, email, password)
+            user = user_service.update_user(uid, name, email, password)
             if not user:
-                api.abort(404, f'User {user_id} not found')
+                api.abort(404, f'User {uid} not found')
             
             return {
                 'success': True,
@@ -40,18 +40,16 @@ class UserApi(Resource):
                 'user': to_dict(user)
             }
         except IntegrityError as e:
-            if 'UNIQUE constraint failed: users.email' in str(e):
+            if 'UNIQUE constraint failed: users.email' in str(e) or 'Duplicate entry' in str(e):
                 api.abort(400, 'Email already exists')
-            elif 'UNIQUE constraint failed: users.username' in str(e):
-                api.abort(400, 'Username already exists')
             else:
                 api.abort(400, 'Database constraint violation')
     
-    def delete(self, user_id):
+    def delete(self, uid):
         """Delete user by ID"""
-        success = user_service.delete_user(user_id)
+        success = user_service.delete_user(uid)
         if not success:
-            api.abort(404, f'User {user_id} not found')
+            api.abort(404, f'User {uid} not found')
         
         return {
             'success': True,
@@ -65,12 +63,15 @@ class RegisterApi(Resource):
         """Create a new user"""
         data = request.get_json()
         
-        username = data.get('username')
+        name = data.get('name')
         email = data.get('email')
         password = data.get('password')
         
+        if not name or not email or not password:
+            api.abort(400, 'Name, email and password are required')
+        
         try:
-            user = user_service.create_user(username, email, password)
+            user = user_service.create_user(name, email, password)
             return {
                 'success': True,
                 'message': 'User created successfully',
@@ -78,10 +79,8 @@ class RegisterApi(Resource):
             }, 201
         except IntegrityError as e:
             # handle unique constraint error
-            if 'UNIQUE constraint failed: users.email' in str(e):
+            if 'UNIQUE constraint failed: users.email' in str(e) or 'Duplicate entry' in str(e):
                 api.abort(400, 'Email already exists')
-            elif 'UNIQUE constraint failed: users.username' in str(e):
-                api.abort(400, 'Username already exists')
             else:
                 api.abort(400, 'Database constraint violation')
 
@@ -92,11 +91,13 @@ class LoginApi(Resource):
         """User login"""
         data = request.get_json()
         
-        username = data.get('username')
         email = data.get('email')
         password = data.get('password')
         
-        user = user_service.authenticate_user(username, email, password)
+        if not email or not password:
+            api.abort(400, 'Email and password are required')
+        
+        user = user_service.authenticate_user(email, password)
         if not user:
             api.abort(401, 'Invalid credentials')
         
@@ -123,7 +124,7 @@ class MeApi(Resource):
         """Get current user profile (dummy)"""
         return {
             'user': {
-                'username': 'dummy_user',
+                'name': 'dummy_user',
                 'email': 'dummy@example.com'
             }
         }
@@ -134,7 +135,7 @@ class MySettingApi(Resource):
     def get(self):
         """Get current user's setting (dummy)"""
         return {
-            'user_id': 'me',
+            'uid': 'me',
             'settings': {
                 'theme': 'light',
                 'language': 'en-US'
@@ -146,7 +147,7 @@ class MySettingApi(Resource):
         data = request.get_json() or {}
         return {
             'success': True,
-            'user_id': 'me',
+            'uid': 'me',
             'updated_settings': data
         }
 

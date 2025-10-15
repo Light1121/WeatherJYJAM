@@ -2,8 +2,7 @@ import type { FC } from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FullScreenLayout, MainLayout } from '../../_components'
-import FavouriteComparisons from './_components/FavouriteComparisons'
-import FavouriteLocations from './_components/FavouriteLocations'
+import FavouriteTabs from './_components/FavouriteTabs'
 import ProfileSettings from './_components/ProfileSettings'
 
 const ProfileContainer = styled.div`
@@ -94,8 +93,7 @@ const Profile: FC = () => {
 
           <FadeDiv visible={contentVisible} delay={200}>
             <ContentGrid>
-              <FavouriteLocations />
-              <FavouriteComparisons />
+              <FavouriteTabs />
               <ProfileSettings />
             </ContentGrid>
           </FadeDiv>

@@ -150,60 +150,76 @@ export const PinProvider: React.FC<PinProviderProps> = ({ children }) => {
 
     console.log('Adding pin at:', position) // Debug log
 
+    // Create initial pin with loading state immediately
+    const loadingPin: PinData = {
+      id: pinId,
+      position,
+      locationName: 'Loading...',
+      weatherData: {
+        temperature: 0,
+        windSpeed: 0,
+        humidity: 0,
+        description: 'Loading...',
+        isLoading: true,
+      },
+    }
+
+    // Immediately place the pin (this shows the pin and bottomsheet instantly)
+    if (!locationOnePin) {
+      console.log('Setting as location one pin (loading)') // Debug log
+      setLocationOnePin(loadingPin)
+    } else if (!locationTwoPin) {
+      console.log('Setting as location two pin (loading)') // Debug log
+      setLocationTwoPin(loadingPin)
+    } else {
+      console.log('Shifting pins - new pin to location two (loading)') // Debug log
+      setLocationOnePin(locationTwoPin)
+      setLocationTwoPin(loadingPin)
+    }
+
+    // Fetch data in the background and update the pin
     try {
-      // Get location name from OpenStreetMap and weather data from OpenWeatherMap
       const [locationName, weatherData] = await Promise.all([
         getLocationName(position.lat, position.lng),
         getWeatherData(position.lat, position.lng),
       ])
 
-      const newPin: PinData = {
+      // Update the pin with actual data
+      const updatedPin: PinData = {
         id: pinId,
-        position, // Keep the original LatLng object
+        position,
         locationName,
-        weatherData,
+        weatherData: {
+          ...weatherData,
+          isLoading: false,
+        },
       }
 
-      console.log('Created new pin:', newPin) // Debug log
+      console.log('Updated pin with data:', updatedPin) // Debug log
 
-      if (!locationOnePin) {
-        console.log('Setting as location one pin') // Debug log
-        setLocationOnePin(newPin)
-      } else if (!locationTwoPin) {
-        console.log('Setting as location two pin') // Debug log
-        setLocationTwoPin(newPin)
-      } else {
-        console.log(
-          'Shifting pins - moving location two to one, new pin to two',
-        ) // Debug log
-        // Both slots filled, shift locations
-        setLocationOnePin(locationTwoPin)
-        setLocationTwoPin(newPin)
-      }
+      // Use functional updates to ensure we're working with the latest state
+      setLocationOnePin((prev) => (prev?.id === pinId ? updatedPin : prev))
+      setLocationTwoPin((prev) => (prev?.id === pinId ? updatedPin : prev))
     } catch (error) {
-      console.error('Error adding pin:', error)
+      console.error('Error loading pin data:', error)
 
-      // Create pin with fallback data
-      const fallbackPin: PinData = {
+      // Update with error state
+      const errorPin: PinData = {
         id: pinId,
-        position, // Keep the original LatLng object
+        position,
         locationName: `Location ${position.lat.toFixed(2)}, ${position.lng.toFixed(2)}`,
         weatherData: {
           temperature: 0,
           windSpeed: 0,
           humidity: 0,
-          description: 'Data unavailable',
+          description: 'Failed to load data',
+          isLoading: false,
         },
       }
 
-      if (!locationOnePin) {
-        setLocationOnePin(fallbackPin)
-      } else if (!locationTwoPin) {
-        setLocationTwoPin(fallbackPin)
-      } else {
-        setLocationOnePin(locationTwoPin)
-        setLocationTwoPin(fallbackPin)
-      }
+      // Use functional updates for error state
+      setLocationOnePin((prev) => (prev?.id === pinId ? errorPin : prev))
+      setLocationTwoPin((prev) => (prev?.id === pinId ? errorPin : prev))
     }
   }
 
