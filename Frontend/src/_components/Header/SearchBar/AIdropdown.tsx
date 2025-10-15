@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import { renderAIContent } from '@/_components/ContextHooks/aiRender'
+import { useAISearch } from './_hooks'
 
 const Container = styled.div<{ width: number }>`
   position: absolute;
@@ -53,6 +54,7 @@ interface AIDropdownProps {
   loadingDots: number
   onAskAI: () => void
   onClear: () => void
+  onStreamComplete?: () => void
   inputWidth: number
   aiDescription?: string
 }
@@ -63,9 +65,16 @@ const AIdropdown: FC<AIDropdownProps> = ({
   loadingDots,
   onAskAI,
   onClear,
+  onStreamComplete,
   inputWidth,
-  aiDescription = 'Ask the AI to generate a response based on your input.',
+  aiDescription = 'Ask the AI about weather conditions.',
 }) => {
+  const { aiResponse, isStreaming } = useAISearch({
+    prompt,
+    aiState,
+    onStreamComplete,
+  })
+
   return (
     <Container width={inputWidth} onMouseDown={(e) => e.preventDefault()}>
       {aiState === 'idle' && (
@@ -77,11 +86,17 @@ const AIdropdown: FC<AIDropdownProps> = ({
         </>
       )}
       {aiState === 'loading' && (
-        <TextBlock>AI Response: Loading{'.'.repeat(loadingDots)}</TextBlock>
+        <>
+          {isStreaming && aiResponse ? (
+            <TextBlock>{renderAIContent(aiResponse)}</TextBlock>
+          ) : (
+            <TextBlock>AI is thinking{'.'.repeat(loadingDots)}</TextBlock>
+          )}
+        </>
       )}
       {aiState === 'done' && (
         <>
-          <TextBlock>AI Response: {renderAIContent(prompt)}</TextBlock>
+          <TextBlock>{renderAIContent(aiResponse)}</TextBlock>
           <ButtonRow>
             <AIButton onClick={onClear}>Clear</AIButton>
           </ButtonRow>

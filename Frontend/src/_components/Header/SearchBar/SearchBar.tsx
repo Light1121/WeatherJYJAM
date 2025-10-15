@@ -60,21 +60,15 @@ const SearchBar: FC = () => {
     else setShowDropdown(false)
   }, [focused, mode])
 
-  //AI loading animation
+  //AI loading animation (dots only, stream will update state)
   useEffect(() => {
     if (aiState === 'loading') {
       const interval = setInterval(() => {
         setLoadingDots((prev) => (prev % 5) + 1)
       }, 500)
 
-      const timeout = setTimeout(() => {
-        setAiState('done')
-        clearInterval(interval)
-      }, 3000)
-
       return () => {
         clearInterval(interval)
-        clearTimeout(timeout)
       }
     }
   }, [aiState])
@@ -96,11 +90,7 @@ const SearchBar: FC = () => {
     setShowDropdown(false)
   }
 
-  const handleSelect = (loc: {
-    id: number
-    title: string
-    subtitle: string
-  }) => {
+  const handleSelect = (loc: { title: string; subtitle: string }) => {
     setQuery(loc.title)
     setShowDropdown(false)
     console.log('Selected location:', loc)
@@ -140,6 +130,7 @@ const SearchBar: FC = () => {
           loadingDots={loadingDots}
           onAskAI={handleAskAI}
           onClear={handleClearAI}
+          onStreamComplete={() => setAiState('done')}
           inputWidth={inputWidth}
         />
       )}
