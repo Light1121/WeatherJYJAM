@@ -30,7 +30,7 @@ export interface TabsContextType {
   tabs: TabData[]
   activeTabId: string | null
   activeTab: TabData | null
-  addTab: (name?: string) => string
+  addTab: () => string
   removeTab: (tabId: string) => void
   renameTab: (tabId: string, newName: string) => void
   switchTab: (tabId: string) => void
@@ -77,13 +77,13 @@ const defaultControlPanelSettings: ControlPanelState = {
   },
 }
 
-const createNewTab = (name?: string): TabData => {
+const createNewTab = (): TabData => {
   const now = new Date()
   const id = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
   return {
     id,
-    name: name || `Tab ${Date.now().toString().slice(-4)}`,
+    name: 'default', // Always use 'default' as tab name
     createdAt: now,
     lastModified: now,
     pins: [],
@@ -156,7 +156,7 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
 
   // Initialize with default tab on mount
   useEffect(() => {
-    const defaultTab = createNewTab('Default')
+    const defaultTab = createNewTab() // Will create tab named 'default'
     setTabs([defaultTab])
     setActiveTabId(defaultTab.id)
   }, [])
@@ -222,8 +222,8 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || null
 
-  const addTab = (name?: string): string => {
-    const newTab = createNewTab(name)
+  const addTab = (): string => {
+    const newTab = createNewTab()
     setTabs((prevTabs) => [...prevTabs, newTab])
     setActiveTabId(newTab.id)
     return newTab.id
@@ -245,7 +245,7 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
           setActiveTabId(newActiveTab.id)
         } else {
           // If no tabs left, create a new default tab
-          const defaultTab = createNewTab('Default')
+          const defaultTab = createNewTab() // Will create tab named 'default'
           setActiveTabId(defaultTab.id)
           return [defaultTab]
         }
@@ -399,7 +399,7 @@ export const TabsProvider: React.FC<TabsProviderProps> = ({ children }) => {
   }
 
   const clearAllTabs = () => {
-    const defaultTab = createNewTab('Default')
+    const defaultTab = createNewTab() // Will create tab named 'default'
     setTabs([defaultTab])
     setActiveTabId(defaultTab.id)
     console.log('All tabs cleared, reset to default')

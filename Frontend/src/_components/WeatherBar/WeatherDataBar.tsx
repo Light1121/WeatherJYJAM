@@ -6,6 +6,7 @@ type BaseProps = {
   label?: string
   leftText: string
   rightText: string
+  centerValue?: string
   variant?: BarVariant
   customGradient?: string
   valuePosition?: number
@@ -36,7 +37,7 @@ const Track = styled.div<{
   height: 12px;
   border-radius: 999px;
   background: ${({ $gradient }) => $gradient};
-  overflow: hidden;
+  overflow: visible;
   ${({ $customStyle }) =>
     $customStyle &&
     `
@@ -57,6 +58,23 @@ const Thumb = styled.div<{ $leftPct: number }>`
   opacity: 0.9;
 `
 
+const CenterValue = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-shadow:
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+  pointer-events: none;
+  z-index: 2;
+`
+
 const Ends = styled.div`
   display: flex;
   justify-content: space-between;
@@ -68,6 +86,7 @@ const WeatherDataBar: FC<BaseProps> = ({
   label,
   leftText,
   rightText,
+  centerValue,
   variant = 'temperature',
   customGradient,
   valuePosition = 50,
@@ -83,6 +102,7 @@ const WeatherDataBar: FC<BaseProps> = ({
       <Head>{label}</Head>
       <Track $gradient={gradient} $customStyle={customStyle}>
         <Thumb $leftPct={pct} />
+        {centerValue && <CenterValue>{centerValue}</CenterValue>}
       </Track>
       <Ends>
         <span>{leftText}</span>
@@ -100,40 +120,61 @@ type SimpleProps = {
 }
 
 export const TemperatureBar: FC<SimpleProps> = ({
-  valuePosition,
+  valuePosition = 50,
   customStyle,
-}) => (
-  <WeatherDataBar
-    variant="temperature"
-    label="Temperature Report"
-    leftText="-20°C"
-    rightText="40°C"
-    valuePosition={valuePosition}
-    customStyle={customStyle}
-  />
-)
+}) => {
+  // Convert position (0-100) to temperature (-20 to 40)
+  const temp = (valuePosition / 100) * 60 - 20
 
-export const WindBar: FC<SimpleProps> = ({ valuePosition, customStyle }) => (
-  <WeatherDataBar
-    variant="wind"
-    label="Wind Speed Report"
-    leftText="0 kt"
-    rightText="60 kt"
-    valuePosition={valuePosition}
-    customStyle={customStyle}
-  />
-)
+  return (
+    <WeatherDataBar
+      variant="temperature"
+      label="Temperature Report"
+      leftText="-20°C"
+      rightText="40°C"
+      centerValue={`${temp.toFixed(1)}°C`}
+      valuePosition={valuePosition}
+      customStyle={customStyle}
+    />
+  )
+}
+
+export const WindBar: FC<SimpleProps> = ({
+  valuePosition = 50,
+  customStyle,
+}) => {
+  // Convert position (0-100) to wind speed (0 to 60)
+  const wind = (valuePosition / 100) * 60
+
+  return (
+    <WeatherDataBar
+      variant="wind"
+      label="Wind Speed Report"
+      leftText="0 kt"
+      rightText="60 kt"
+      centerValue={`${wind.toFixed(1)} kt`}
+      valuePosition={valuePosition}
+      customStyle={customStyle}
+    />
+  )
+}
 
 export const HumidityBar: FC<SimpleProps> = ({
-  valuePosition,
+  valuePosition = 50,
   customStyle,
-}) => (
-  <WeatherDataBar
-    variant="humidity"
-    label="Humidity Report"
-    leftText="30%"
-    rightText="100%"
-    valuePosition={valuePosition}
-    customStyle={customStyle}
-  />
-)
+}) => {
+  // Convert position (0-100) to humidity (30 to 100)
+  const humidity = (valuePosition / 100) * 70 + 30
+
+  return (
+    <WeatherDataBar
+      variant="humidity"
+      label="Humidity Report"
+      leftText="30%"
+      rightText="100%"
+      centerValue={`${humidity.toFixed(0)}%`}
+      valuePosition={valuePosition}
+      customStyle={customStyle}
+    />
+  )
+}

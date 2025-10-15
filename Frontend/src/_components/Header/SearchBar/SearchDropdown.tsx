@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
 import { useSearch } from './_hooks'
+import type { StationResult } from '@/api'
 
 const Container = styled.div<{ width: number }>`
   position: absolute;
@@ -38,7 +39,7 @@ const LoadingText = styled.div`
 
 interface SearchDropdownProps {
   query: string
-  onSelect: (loc: { title: string; subtitle: string }) => void
+  onSelect: (result: StationResult) => void
   inputWidth: number
 }
 
@@ -76,18 +77,13 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
   return (
     <Container width={inputWidth}>
       {results.map((result, index) => {
-        // Split "Station Name, State" format
-        const parts = result.split(', ')
-        const title = parts[0] || result
-        const subtitle = parts[1] || ''
-
         return (
           <ResultItem
-            key={`${result}-${index}`}
+            key={`${result.station_name}-${index}`}
             onMouseDown={(e) => e.preventDefault()}
-            onClick={() => onSelect({ title, subtitle })}
+            onClick={() => onSelect(result)}
           >
-            {result}
+            {result.name}
           </ResultItem>
         )
       })}

@@ -42,19 +42,24 @@ const TabContent = styled.div<{ $isCollapsed: boolean }>`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-const TabIcon = styled.div<{ $isActive: boolean }>`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background: ${({ $isActive }) =>
-    $isActive ? 'rgba(255,255,255,0.2)' : '#e5e7eb'};
+const HeartButton = styled.button<{ $isFavorite: boolean }>`
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 2px;
+  color: ${({ $isFavorite }) => ($isFavorite ? '#e74c3c' : '#bdc3c7')};
+  transition: color 0.2s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: ${({ $isActive }) => ($isActive ? 'white' : '#6b7280')};
+  cursor: pointer;
   margin-right: 8px;
-  font-family: 'Instrument Sans', sans-serif;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+  &:active {
+    transform: scale(0.9);
+  }
 `
 
 const TabActions = styled.div<{ $isCollapsed: boolean; $isActive: boolean }>`
@@ -103,6 +108,7 @@ export const TabItem: FC<TabItemProps> = ({
   canDelete,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -123,6 +129,19 @@ export const TabItem: FC<TabItemProps> = ({
     setShowDeleteModal(false)
   }
 
+  const handleHeartClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsFavorite(!isFavorite)
+    console.log(
+      '♥ Favorite button clicked for tab:',
+      tab.name,
+      'ID:',
+      tab.id,
+      'isFavorite:',
+      !isFavorite,
+    )
+  }
+
   return (
     <>
       <TabItemWrapper
@@ -131,7 +150,13 @@ export const TabItem: FC<TabItemProps> = ({
         onClick={onClick}
       >
         <TabContent $isCollapsed={isCollapsed}>
-          <TabIcon $isActive={isActive}>📍</TabIcon>
+          <HeartButton
+            $isFavorite={isFavorite}
+            onClick={handleHeartClick}
+            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            ♥
+          </HeartButton>
 
           {!isCollapsed && (
             <div style={{ flex: 1, fontFamily: 'Instrument Sans, sans-serif' }}>

@@ -5,9 +5,17 @@
 
 import { API_ENDPOINTS } from './config'
 
+export interface StationResult {
+  name: string
+  station_name: string
+  state: string
+  lat: number | null
+  lon: number | null
+}
+
 export interface SearchResult {
   query: string
-  results: string[]
+  results: StationResult[]
 }
 
 export interface AISearchRequest {

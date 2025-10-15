@@ -12,10 +12,10 @@ from app.search.tools import geocode_location, fetch_open_meteo
 class SearchService:
     """Search service layer for business logic"""
     
-    def search_stations(self, query: str) -> List[str]:
+    def search_stations(self, query: str) -> List[dict]:
         """
         Search for weather stations by name
-        Returns a list of unique station names with state (format: "Station Name, State")
+        Returns a list of station objects with name, state, lat, lon
         """
         if not query:
             return []
@@ -23,7 +23,9 @@ class SearchService:
         sql_query = """
             SELECT DISTINCT
                 `Station Name`,
-                state
+                state,
+                lat,
+                lon
             FROM
                 stations
             WHERE
@@ -40,9 +42,15 @@ class SearchService:
             )
             rows = result.mappings().all()
         
-        # Format as "Station Name, State"
+        # Format as list of dictionaries with station info
         formatted_results = [
-            f"{row['Station Name']}, {row['state']}" 
+            {
+                "name": f"{row['Station Name']}, {row['state']}",
+                "station_name": row['Station Name'],
+                "state": row['state'],
+                "lat": float(row['lat']) if row['lat'] is not None else None,
+                "lon": float(row['lon']) if row['lon'] is not None else None
+            }
             for row in rows
         ]
         

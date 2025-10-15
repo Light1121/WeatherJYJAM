@@ -4,10 +4,10 @@
  */
 
 import { useState, useEffect } from 'react'
-import { searchStations } from '@/api'
+import { searchStations, type StationResult } from '@/api'
 
 export const useSearch = (query: string) => {
-  const [results, setResults] = useState<string[]>([])
+  const [results, setResults] = useState<StationResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

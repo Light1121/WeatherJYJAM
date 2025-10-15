@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { FullScreenLayout, MainLayout } from '../../_components'
 import FavouriteTabs from './_components/FavouriteTabs'
 import ProfileSettings from './_components/ProfileSettings'
+import { useAuthContext } from '@/_components/ContextHooks/hooks'
 
 const ProfileContainer = styled.div`
   flex: 1;
@@ -23,8 +24,9 @@ const FadeDiv = styled.div<{ visible: boolean; delay?: number }>`
 const UserSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
+  gap: 1rem;
+  padding: 2rem 2rem;
+  min-height: 100px;
   background-color: #c2e9ff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -32,12 +34,13 @@ const UserSection = styled.div`
   font-family: 'Instrument Sans', sans-serif;
 `
 
-const Circle = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: white;
-  border: 2px solid #256392ff;
+const ProfileImagePlaceholder = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  border: 3px solid #256392ff;
+  object-fit: cover;
+  flex-shrink: 0;
 `
 
 const UserInfo = styled.div`
@@ -71,23 +74,25 @@ const ContentGrid = styled.div`
 
 const Profile: FC = () => {
   const [contentVisible, setContentVisible] = useState(false)
+  const { user } = useAuthContext()
 
   useEffect(() => {
     const fadeInContent = setTimeout(() => setContentVisible(true), 300)
     return () => clearTimeout(fadeInContent)
   }, [])
-  const username = 'Username'
-  const email = 'username@gmail.com'
 
   return (
     <FullScreenLayout>
       <MainLayout>
         <ProfileContainer>
           <UserSection>
-            <Circle />
+            <ProfileImagePlaceholder
+              src="/src/_assets/defualtuser.jpg"
+              alt="User Avatar"
+            />
             <UserInfo>
-              <WelcomeText>Hello, {username}</WelcomeText>
-              <EmailText>{email}</EmailText>
+              <WelcomeText>Hello, {user?.name || 'Guest'}</WelcomeText>
+              <EmailText>{user?.email || 'Not logged in'}</EmailText>
             </UserInfo>
           </UserSection>
 

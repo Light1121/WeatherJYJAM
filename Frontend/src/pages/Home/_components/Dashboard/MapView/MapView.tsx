@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Map from './Map'
 import ControlPanel from './ControlPanel'
 import BottomSheet from '../../BottomSheet/BottomSheet'
+import { useTabsContext } from '@/_components/ContextHooks/hooks'
 
 const MapContainer = styled.div`
   width: 100%;
@@ -37,11 +38,13 @@ const BottomSheetWrapper = styled.div`
 `
 
 const MapView: FC = () => {
+  const { activeTab } = useTabsContext()
+
   return (
     <MapContainer>
       <Map />
-      <MapTitle>empty</MapTitle>
-      <ControlPanel />\
+      <MapTitle>{activeTab?.name || 'Untitled'}</MapTitle>
+      <ControlPanel />
       <BottomSheetWrapper>
         <BottomSheet />
       </BottomSheetWrapper>

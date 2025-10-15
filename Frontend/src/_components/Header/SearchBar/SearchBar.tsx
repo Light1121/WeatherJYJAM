@@ -1,9 +1,12 @@
 import type { FC } from 'react'
 import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { LatLng } from 'leaflet'
 import SearchDropdown from './SearchDropdown'
 import AIdropdown from './AIdropdown'
 import SearchSwitch from './SearchSwitch'
+import { usePinContext } from '../../ContextHooks/hooks'
+import type { StationResult } from '@/api'
 
 const Wrapper = styled.div`
   position: relative;
@@ -52,6 +55,7 @@ const SearchBar: FC = () => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const { addPin } = usePinContext()
 
   //Update width dynamically based on focus
   useEffect(() => {
@@ -90,10 +94,16 @@ const SearchBar: FC = () => {
     setShowDropdown(false)
   }
 
-  const handleSelect = (loc: { title: string; subtitle: string }) => {
-    setQuery(loc.title)
+  const handleSelect = async (result: StationResult) => {
+    setQuery(result.name)
     setShowDropdown(false)
-    console.log('Selected location:', loc)
+    console.log('Selected location:', result)
+
+    // 如果有坐标，添加 pin 到地图
+    if (result.lat !== null && result.lon !== null) {
+      const position = new LatLng(result.lat, result.lon)
+      await addPin(position)
+    }
   }
 
   return (

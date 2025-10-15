@@ -20,6 +20,12 @@ export const useAISearch = ({
   const [aiResponse, setAiResponse] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const onStreamCompleteRef = useRef(onStreamComplete)
+
+  // Keep the callback ref up to date
+  useEffect(() => {
+    onStreamCompleteRef.current = onStreamComplete
+  }, [onStreamComplete])
 
   useEffect(() => {
     if (aiState !== 'loading') return
@@ -41,7 +47,7 @@ export const useAISearch = ({
         )
 
         setIsStreaming(false)
-        onStreamComplete?.()
+        onStreamCompleteRef.current?.()
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== 'AbortError') {
           console.error('Error streaming AI response:', err)
@@ -58,7 +64,7 @@ export const useAISearch = ({
         abortControllerRef.current.abort()
       }
     }
-  }, [aiState, prompt, onStreamComplete])
+  }, [aiState, prompt])
 
   useEffect(() => {
     if (aiState === 'idle') {
