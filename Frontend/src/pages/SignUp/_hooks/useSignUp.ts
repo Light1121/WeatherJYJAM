@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { register } from '../../../api'
 
 interface SignUpFormData {
   username: string
@@ -92,36 +93,23 @@ export const useSignUp = () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
     try {
-      const response = await fetch('http://localhost:2333/api/users/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: state.formData.username,
-          email: state.formData.email,
-          password: state.formData.password,
-        }),
+      const result = await register({
+        name: state.formData.username,
+        email: state.formData.email,
+        password: state.formData.password,
       })
 
-      if (response.ok) {
-        const result = await response.json()
-        console.log('User created:', result)
+      console.log('User created:', result)
 
-        setFadeOut(true)
-        setTimeout(() => navigate('/login'), 500)
-      } else {
-        const errorData = await response.json()
-        setState((prev) => ({
-          ...prev,
-          error: errorData.message || 'Sign up failed',
-          isLoading: false,
-        }))
-      }
-    } catch {
+      setFadeOut(true)
+      setTimeout(() => navigate('/login'), 500)
+    } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: 'Network error. Please try again.',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Sign up failed. Please try again.',
         isLoading: false,
       }))
     }

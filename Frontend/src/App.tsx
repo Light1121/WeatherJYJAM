@@ -12,6 +12,7 @@ import {
   AuthProvider,
 } from './_components/ContextHooks'
 import { TabsPinIntegration } from './_components/ContextHooks/TabsPinIntegration' // Re-enabled with fixes
+import { AuthTabsSync } from './_components/ContextHooks/AuthTabsSync'
 
 const App: FC = () => (
   <AuthProvider>
@@ -19,6 +20,7 @@ const App: FC = () => (
       <PinProvider>
         <ControlPanelProvider>
           <TabsPinIntegration />
+          <AuthTabsSync />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

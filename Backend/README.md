@@ -1,6 +1,6 @@
 # WeatherJYJAM Backend
 
-A simple Flask REST API backend with MVC architecture for user management using SQLAlchemy ORM.
+A Flask REST API backend with MVC architecture, JWT authentication, and SQLAlchemy ORM.
 
 ## Setup
 
@@ -15,7 +15,15 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Run Server
+### 3. Environment Configuration
+Create a `.env.local` file in the Backend directory:
+```bash
+FLASK_APP_NAME=WeatherJYJAM_app
+FLASK_ENV=development
+JWT_SECRET_KEY=your-secret-key-change-in-production
+```
+
+### 4. Run Server
 ```bash
 python server.py
 ```
@@ -24,45 +32,120 @@ The server will start on `http://localhost:2333` and automatically create the da
 
 ## API Endpoints
 
-### Users API
+### Authentication API
 
-Base URL: `http://localhost:2333/api/users`
+Base URL: `http://localhost:2333/api/auth`
 
-- **GET** `/api/users/` - Get all users
+- **POST** `/api/auth/register` - Register new user
   ```bash
-  curl -X GET http://localhost:2333/api/users/
-  ```
-
-- **POST** `/api/users/` - Create new user
-  ```bash
-  curl -X POST http://localhost:2333/api/users/ \
+  curl -X POST http://localhost:2333/api/auth/register \
     -H "Content-Type: application/json" \
     -d '{
-      "username": "testuser",
+      "name": "Test User",
       "email": "test@example.com", 
       "password": "password123"
     }'
   ```
 
-- **GET** `/api/users/{user_id}` - Get user by ID
+- **POST** `/api/auth/login` - User login (returns JWT token)
   ```bash
-  curl -X GET http://localhost:2333/api/users/{user_id}
-  ```
-
-- **PUT** `/api/users/{user_id}` - Update user
-  ```bash
-  curl -X PUT http://localhost:2333/api/users/{user_id} \
+  curl -X POST http://localhost:2333/api/auth/login \
     -H "Content-Type: application/json" \
     -d '{
-      "username": "newusername",
-      "email": "newemail@example.com"
+      "email": "test@example.com",
+      "password": "password123"
+    }'
+  ```
+  
+  Response:
+  ```json
+  {
+    "success": true,
+    "message": "Login successful",
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+    "user": {
+      "uid": "user-uuid",
+      "name": "Test User",
+      "email": "test@example.com"
+    }
+  }
+  ```
+
+- **POST** `/api/auth/logout` - User logout
+  ```bash
+  curl -X POST http://localhost:2333/api/auth/logout
+  ```
+
+### User Profile API (JWT Required)
+
+Base URL: `http://localhost:2333/api/me`
+
+- **GET** `/api/me/` - Get current user profile
+  ```bash
+  curl -X GET http://localhost:2333/api/me/ \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  ```
+
+### Tabs API (JWT Required)
+
+Base URL: `http://localhost:2333/api/my`
+
+- **GET** `/api/my/tabs` - Get current user's tabs
+  ```bash
+  curl -X GET http://localhost:2333/api/my/tabs \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  ```
+
+- **PUT** `/api/my/tabs` - Update current user's tabs
+  ```bash
+  curl -X PUT http://localhost:2333/api/my/tabs \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "tabs": [
+        {
+          "tab_name": "My Tab",
+          "map": {"center": [0, 0], "zoom": 5},
+          "pin": {"location": [0, 0]}
+        }
+      ]
     }'
   ```
 
-- **DELETE** `/api/users/{user_id}` - Delete user
+- **GET** `/api/my/tabs/{tab_id}` - Get specific tab
   ```bash
-  curl -X DELETE http://localhost:2333/api/users/{user_id}
+  curl -X GET http://localhost:2333/api/my/tabs/1 \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN"
   ```
+
+- **PUT** `/api/my/tabs/{tab_id}` - Update specific tab
+  ```bash
+  curl -X PUT http://localhost:2333/api/my/tabs/1 \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "tab_name": "Updated Tab Name",
+      "map": {"center": [1, 1], "zoom": 10}
+    }'
+  ```
+
+- **DELETE** `/api/my/tabs/{tab_id}` - Delete specific tab
+  ```bash
+  curl -X DELETE http://localhost:2333/api/my/tabs/1 \
+    -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  ```
+
+### Weather API
+
+- **GET** `/api/weather/` - Get all weather stations
+- **GET** `/api/weather/{station_name}` - Get weather data by station
+- **GET** `/api/weather/avg_{station_name}` - Get average weather data
+- **GET** `/api/weather/nearest?lat={lat}&lng={lng}` - Get nearest station
+
+### Search API
+
+- **GET** `/api/search?q={query}` - Search weather stations
+- **POST** `/api/search/ai` - AI search with streaming
 
 ## Data Storage
 
@@ -76,6 +159,8 @@ The database is automatically created when you first run the server.
 - **bcrypt**: Password hashing and verification
 - **Flask-RESTX**: API endpoints with auto-documentation
 - **Flask-CORS**: Cross-origin resource sharing
+- **Flask-JWT-Extended**: JWT authentication and authorization
+- **OpenAI API**: AI-powered search functionality
 
 ## Project Structure
 

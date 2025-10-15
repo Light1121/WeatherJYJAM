@@ -1,5 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { login as apiLogin } from '../../../api'
+import {
+  useAuthContext,
+  useTabsContext,
+} from '../../../_components/ContextHooks/hooks'
 
 interface LoginFormData {
   email: string
@@ -17,6 +22,8 @@ interface LoginState {
 
 export const useLogin = () => {
   const navigate = useNavigate()
+  const { login: authLogin } = useAuthContext()
+  const { loadTabsFromBackend } = useTabsContext()
 
   const [state, setState] = useState<LoginState>({
     formData: {
@@ -72,16 +79,31 @@ export const useLogin = () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
     try {
-      console.log('Login attempt:', state.formData)
+      const response = await apiLogin({
+        email: state.formData.email,
+        password: state.formData.password,
+      })
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Update auth context with user info
+      authLogin({
+        id: response.user.uid,
+        email: response.user.email,
+        name: response.user.name,
+      })
+
+      // 📥 Load user's tabs from backend after successful login
+      console.log('🔄 Login successful, loading tabs from backend...')
+      await loadTabsFromBackend()
 
       setFadeOut(true)
       setTimeout(() => navigate('/'), 500)
-    } catch {
+    } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: 'Login failed. Please try again.',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Login failed. Please try again.',
         isLoading: false,
       }))
     }

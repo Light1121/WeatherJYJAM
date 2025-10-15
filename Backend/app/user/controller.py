@@ -1,5 +1,7 @@
-from flask import request
+import datetime
+from flask import request, jsonify
 from flask_restx import Resource, Namespace
+from flask_jwt_extended import create_access_token, jwt_required, current_user
 from sqlalchemy.exc import IntegrityError
 
 from app.user.service import UserService
@@ -101,9 +103,16 @@ class LoginApi(Resource):
         if not user:
             api.abort(401, 'Invalid credentials')
         
+        # Create JWT token
+        access_token = create_access_token(
+            identity=user.uid,
+            expires_delta=datetime.timedelta(days=30)
+        )
+        
         return {
             'success': True,
             'message': 'Login successful',
+            'access_token': access_token,
             'user': to_dict(user)
         }
 
@@ -120,18 +129,17 @@ class LogoutApi(Resource):
 
 @meapi.route('/')
 class MeApi(Resource):
+    @jwt_required()
     def get(self):
-        """Get current user profile (dummy)"""
+        """Get current user profile"""
         return {
-            'user': {
-                'name': 'dummy_user',
-                'email': 'dummy@example.com'
-            }
+            'user': current_user.to_dict()
         }
 
 
 @meapi.route('/setting')
 class MySettingApi(Resource):
+    @jwt_required()
     def get(self):
         """Get current user's setting (dummy)"""
         return {
@@ -142,6 +150,7 @@ class MySettingApi(Resource):
             }
         }
 
+    @jwt_required()
     def put(self):
         """Update current user's setting (dummy)"""
         data = request.get_json() or {}
@@ -154,12 +163,14 @@ class MySettingApi(Resource):
 
 @meapi.route('/avatar')
 class MeAvatarApi(Resource):
+    @jwt_required()
     def get(self):
         """Get current user avatar (dummy)"""
         return {
             'avatar_url': 'https://example.com/avatar.png'
         }
 
+    @jwt_required()
     def post(self):
         """Upload current user avatar (dummy)"""
         return {

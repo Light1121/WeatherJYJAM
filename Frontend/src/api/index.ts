@@ -4,5 +4,7 @@
  */
 
 export * from './config'
+export * from './auth'
+export * from './tabs'
 export * from './search'
 export * from './weather'

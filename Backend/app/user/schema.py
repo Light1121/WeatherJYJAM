@@ -29,7 +29,6 @@ class UserResponse(UserBase):
 
 class UserProfileBase(BaseModel):
     """Base user profile schema"""
-    color: Optional[List[str]] = None
     favour_tabs: Optional[str] = None
     pic: Optional[str] = None
 
@@ -41,7 +40,6 @@ class UserProfileCreate(UserProfileBase):
 
 class UserProfileUpdate(BaseModel):
     """Schema for updating user profile (all fields optional)"""
-    color: Optional[List[str]] = None
     favour_tabs: Optional[str] = None
     pic: Optional[str] = None
 

@@ -223,7 +223,7 @@ const Map: FC = () => {
       >
         <ZoomController />
         <MapViewController />
-        <ScaleControl position="topright" imperial={true} metric={true} />
+        <ScaleControl position="bottomright" imperial={true} metric={true} />
         <WeatherLayers apiKey={API_KEY} />
         <MapPins />
         <MapLegend />

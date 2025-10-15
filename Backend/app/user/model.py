@@ -54,7 +54,6 @@ class UserProfile(db.Model):
     uid: Mapped[str] = mapped_column(String(36), ForeignKey('users.uid'), primary_key=True)
     
     # Profile fields
-    color: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)  # JSON string of list
     favour_tabs: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)  # tab id reference
     pic: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)  # picture URL or path
     
@@ -68,7 +67,6 @@ class UserProfile(db.Model):
         """Convert model to dictionary"""
         return {
             'uid': self.uid,
-            'color': self.color,
             'favour_tabs': self.favour_tabs,
             'pic': self.pic,
         }

@@ -40,20 +40,6 @@ const Input = styled.input`
   }
 `
 
-const Select = styled.select`
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-family: 'Instrument Sans', sans-serif;
-  background-color: #fffffff6;
-
-  &:focus {
-    outline: none;
-    border-color: #007acc;
-  }
-`
-
 const FileInput = styled.input`
   width: 100%;
   padding: 0.75rem;
@@ -97,7 +83,6 @@ const ProfileSettings: React.FC = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [colorScale, setColorScale] = useState('default')
 
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -115,10 +100,6 @@ const ProfileSettings: React.FC = () => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
-  }
-
-  const handleColorScaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setColorScale(e.target.value)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -174,16 +155,6 @@ const ProfileSettings: React.FC = () => {
           />
         </FormField>
 
-        {/* Color Scale */}
-        <FormField>
-          <Label>Color Scale:</Label>
-          <Select value={colorScale} onChange={handleColorScaleChange}>
-            <option value="default">Default</option>
-            <option value="warm">Warm</option>
-            <option value="cool">Cool</option>
-            <option value="grayscale">Grayscale</option>
-          </Select>
-        </FormField>
         <ButtonContainer>
           <SubmitButton type="submit">Save Changes</SubmitButton>
         </ButtonContainer>
