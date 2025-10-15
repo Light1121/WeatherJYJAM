@@ -4,7 +4,7 @@
  */
 
 // Toggle between local development and production
-const USE_LOCAL = true // Set to true for local development
+const USE_LOCAL = false // Set to true for local development
 
 const LOCAL_API_URL = 'http://127.0.0.1:2333'
 const PRODUCTION_API_URL = 'https://weatherjyjam-production.up.railway.app'
