@@ -9,7 +9,7 @@ const ButtonContainer = styled.div`
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 900;
+  z-index: 10000;
   display: flex;
   align-items: center;
   gap: 12px;

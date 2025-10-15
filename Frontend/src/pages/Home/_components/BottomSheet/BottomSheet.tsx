@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { styled } from 'styled-components'
 import useBottomSheet from './_hooks/useBottomSheet'
 import WeatherStats from './WeatherStats'
+import { usePinContext } from '@/_components/ContextHooks/usePinContext'
 
 const BottomSheetWrapper = styled.div`
   position: absolute;
@@ -62,6 +63,14 @@ const ScrollableContent = styled.div`
 
 const BottomSheet: FC = () => {
   const { isOpen, toggle } = useBottomSheet(false)
+  const { locationOnePin, locationTwoPin } = usePinContext()
+
+  // Don't show bottom sheet if no pins are selected
+  const hasAnyPin = locationOnePin !== null || locationTwoPin !== null
+
+  if (!hasAnyPin) {
+    return null
+  }
 
   return (
     <BottomSheetWrapper>

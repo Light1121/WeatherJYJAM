@@ -9,24 +9,27 @@ import {
   TabsProvider,
   PinProvider,
   ControlPanelProvider,
+  AuthProvider,
 } from './_components/ContextHooks'
 import { TabsPinIntegration } from './_components/ContextHooks/TabsPinIntegration' // Re-enabled with fixes
 
 const App: FC = () => (
-  <TabsProvider>
-    <PinProvider>
-      <ControlPanelProvider>
-        <TabsPinIntegration />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/details" element={<Details />} />
-        </Routes>
-      </ControlPanelProvider>
-    </PinProvider>
-  </TabsProvider>
+  <AuthProvider>
+    <TabsProvider>
+      <PinProvider>
+        <ControlPanelProvider>
+          <TabsPinIntegration />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/details" element={<Details />} />
+          </Routes>
+        </ControlPanelProvider>
+      </PinProvider>
+    </TabsProvider>
+  </AuthProvider>
 )
 
 export default App
