@@ -1,6 +1,5 @@
 import type { FC } from 'react'
 import { styled } from 'styled-components'
-import { Dropdown } from '@/_components'
 import { TemperatureBar, WindBar, HumidityBar } from '@/_components'
 import { useNavigate } from 'react-router-dom'
 import { usePinContext } from '@/_components/ContextHooks/usePinContext'
@@ -8,7 +7,7 @@ import { useControlPanelContext } from '@/_components/ContextHooks/useControlPan
 import type { WeatherData } from '@/_components/ContextHooks/contexts'
 
 const Spacer = styled.div`
-  height: 40px;
+  height: 10px;
 `
 const HeaderRow = styled.div`
   display: flex;
@@ -38,61 +37,10 @@ const BarsRow = styled.div`
   gap: 12px;
 `
 
-const PastGrid = styled.div`
-  display: grid;
-  font-family: 'Instrument Sans', sans-serif;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 20px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
-`
-
 const SectionTitle = styled.h4`
   margin: 4px 0;
   font-size: 16px;
   font-family: 'Instrument Sans', sans-serif;
-`
-
-const Filters = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 6px 0 2px;
-`
-
-const FilterButton = styled.button`
-  height: 36px;
-  font-family: 'Instrument Sans', sans-serif;
-  padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #f6f7f9;
-  color: #23272a;
-  cursor: pointer;
-  font-size: 14px;
-`
-
-const Menu = styled.ul`
-  list-style: none;
-  font-family: 'Instrument Sans', sans-serif;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-`
-
-const MenuItem = styled.li`
-  font-size: 14px;
-  font-family: 'Instrument Sans', sans-serif;
-  padding: 6px 8px;
-  border-radius: 6px;
-  cursor: default;
-
-  &:hover {
-    background: #f3f3f7;
-  }
 `
 
 const GraphButton = styled.button<{ tall?: boolean }>`
@@ -101,7 +49,7 @@ const GraphButton = styled.button<{ tall?: boolean }>`
   padding: 8px;
   border: 1px solid #007acc;
   border-radius: 10px;
-  min-height: ${(props) => (props.tall ? '120px' : '220px')};
+  min-height: ${(props) => (props.tall ? '10px' : '20px')};
   color: #007acc;
   background-color: #f6fcff;
   font-size: 14px;
@@ -124,14 +72,6 @@ const TwoColumn = styled.div`
     gap: 16px;
   }
 `
-const PastTwoColumn = styled.div`
-  display: flex;
-  gap: 32px;
-  @media (max-width: 900px) {
-    flex-direction: column;
-    gap: 16px;
-  }
-`
 const NoDataMessage = styled.div`
   display: flex;
   align-items: flex-start;
@@ -141,6 +81,36 @@ const NoDataMessage = styled.div`
   color: #666;
   font-family: 'Instrument Sans', sans-serif;
   font-size: 16px;
+`
+
+const LoadingSpinner = styled.div`
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  color: #666;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
 `
 
 interface WeatherStatsProps {
@@ -163,22 +133,36 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
   const barStyle = getBarStyle()
 
   // Helper function to render weather bars with individual styling
-  const renderWeatherBars = (weatherData: WeatherData) => (
-    <>
-      <TemperatureBar
-        valuePosition={Math.max(0, Math.min(100, weatherData.temperature + 45))}
-        customStyle={barStyle}
-      />
-      <WindBar
-        valuePosition={Math.max(0, Math.min(100, weatherData.windSpeed + 35))}
-        customStyle={barStyle}
-      />
-      <HumidityBar
-        valuePosition={Math.max(0, Math.min(100, weatherData.humidity))}
-        customStyle={barStyle}
-      />
-    </>
-  )
+  const renderWeatherBars = (weatherData: WeatherData) => {
+    if (weatherData.isLoading) {
+      return (
+        <LoadingContainer>
+          <LoadingSpinner />
+          <span>Loading weather data...</span>
+        </LoadingContainer>
+      )
+    }
+
+    return (
+      <>
+        <TemperatureBar
+          valuePosition={Math.max(
+            0,
+            Math.min(100, weatherData.temperature + 45),
+          )}
+          customStyle={barStyle}
+        />
+        <WindBar
+          valuePosition={Math.max(0, Math.min(100, weatherData.windSpeed + 35))}
+          customStyle={barStyle}
+        />
+        <HumidityBar
+          valuePosition={Math.max(0, Math.min(100, weatherData.humidity))}
+          customStyle={barStyle}
+        />
+      </>
+    )
+  }
 
   return (
     <>
@@ -221,59 +205,15 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
 
               <Spacer />
 
-              <PastGrid>
+              <div>
                 <SectionTitle>Past Weather Report</SectionTitle>
-
-                <Filters>
-                  <Dropdown
-                    variant="light"
-                    trigger={(toggle) => (
-                      <FilterButton onClick={toggle}>Year</FilterButton>
-                    )}
-                  >
-                    <Menu>
-                      <MenuItem>2024</MenuItem>
-                      <MenuItem>2023</MenuItem>
-                      <MenuItem>2022</MenuItem>
-                    </Menu>
-                  </Dropdown>
-
-                  <Dropdown
-                    variant="ink"
-                    trigger={(toggle) => (
-                      <FilterButton onClick={toggle}>Month</FilterButton>
-                    )}
-                  >
-                    <Menu>
-                      <MenuItem>January</MenuItem>
-                      <MenuItem>February</MenuItem>
-                      <MenuItem>March</MenuItem>
-                      <MenuItem>April</MenuItem>
-                      <MenuItem>May</MenuItem>
-                      <MenuItem>June</MenuItem>
-                      <MenuItem>July</MenuItem>
-                      <MenuItem>August</MenuItem>
-                      <MenuItem>September</MenuItem>
-                      <MenuItem>October</MenuItem>
-                      <MenuItem>November</MenuItem>
-                      <MenuItem>December</MenuItem>
-                    </Menu>
-                  </Dropdown>
-                </Filters>
-
-                <BarsRow>
-                  {hasLocationOne &&
-                    locationOnePin?.weatherData &&
-                    renderWeatherBars(locationOnePin.weatherData)}
-                  {hasLocationTwo &&
-                    locationTwoPin?.weatherData &&
-                    renderWeatherBars(locationTwoPin.weatherData)}
-                </BarsRow>
-
-                <GraphButton onClick={handleViewDetails}>
+                <GraphButton
+                  onClick={handleViewDetails}
+                  style={{ width: '100%', marginTop: '12px' }}
+                >
                   Click to view detailed graphs
                 </GraphButton>
-              </PastGrid>
+              </div>
             </>
           )}
         </>
@@ -322,79 +262,7 @@ const WeatherStats: FC<WeatherStatsProps> = ({ isExpanded = true }) => {
               >
                 Past Weather Report
               </SectionTitle>
-              <PastTwoColumn>
-                {/* Location 1 Past */}
-                <div style={{ flex: 1 }}>
-                  <Filters>
-                    <Dropdown
-                      variant="light"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Year</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>2024</MenuItem>
-                        <MenuItem>2023</MenuItem>
-                        <MenuItem>2022</MenuItem>
-                      </Menu>
-                    </Dropdown>
-                    <Dropdown
-                      variant="ink"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Month</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>January</MenuItem>
-                        <MenuItem>February</MenuItem>
-                        <MenuItem>March</MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Filters>
-                  {locationOnePin.weatherData && (
-                    <BarsRow>
-                      {renderWeatherBars(locationOnePin.weatherData)}
-                    </BarsRow>
-                  )}
-                </div>
-
-                {/* Location 2 Past */}
-                <div style={{ flex: 1 }}>
-                  <Filters>
-                    <Dropdown
-                      variant="light"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Year</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>2024</MenuItem>
-                        <MenuItem>2023</MenuItem>
-                        <MenuItem>2022</MenuItem>
-                      </Menu>
-                    </Dropdown>
-                    <Dropdown
-                      variant="ink"
-                      trigger={(toggle) => (
-                        <FilterButton onClick={toggle}>Month</FilterButton>
-                      )}
-                    >
-                      <Menu>
-                        <MenuItem>January</MenuItem>
-                        <MenuItem>February</MenuItem>
-                        <MenuItem>March</MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Filters>
-                  {locationTwoPin.weatherData && (
-                    <BarsRow>
-                      {renderWeatherBars(locationTwoPin.weatherData)}
-                    </BarsRow>
-                  )}
-                </div>
-              </PastTwoColumn>
               <GraphButton
-                tall
                 onClick={handleViewDetails}
                 style={{ width: '100%', marginTop: '16px' }}
               >

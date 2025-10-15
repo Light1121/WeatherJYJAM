@@ -6,6 +6,7 @@ export interface WeatherData {
   windSpeed: number
   humidity: number
   description: string
+  isLoading?: boolean
 }
 
 export interface PinData {

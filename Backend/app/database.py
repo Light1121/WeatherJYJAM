@@ -56,7 +56,14 @@ def init_db(app):
 
     use_cloud_sql = os.getenv("USE_CLOUD_SQL", "true").lower() == "true"
 
+    print("\n" + "="*60)
     if use_cloud_sql:
+        instance_name = os.getenv("INSTANCE_CONNECTION_NAME", "N/A")
+        db_name = os.getenv("DB_NAME", "N/A")
+        print("🌐 DATABASE: Google Cloud SQL (MySQL)")
+        print(f"   Instance: {instance_name}")
+        print(f"   Database: {db_name}")
+        
         engine = connect_with_connector()
         app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://"
         app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": engine.raw_connection}
@@ -65,7 +72,12 @@ def init_db(app):
         if not os.path.isabs(db_path):
             db_path = os.path.abspath(db_path)
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        print("💾 DATABASE: Local SQLite")
+        print(f"   Path: {db_path}")
+        
         app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
+    
+    print("="*60 + "\n")
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
