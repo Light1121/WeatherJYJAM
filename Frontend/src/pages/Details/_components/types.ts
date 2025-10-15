@@ -8,6 +8,8 @@ interface RawWeatherEntry {
   Avg_Wind_Speed: number
 }
 
+
+
 interface TimeRangeSliderProps {
   minYear?: number
   maxYear?: number

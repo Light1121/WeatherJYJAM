@@ -7,7 +7,10 @@ from flask_restx import Api
 
 from app.database import init_db
 from app.user.controller import api as userapi
+from app.user.controller import meapi as meapi
 from app.weather.controller import api as weatherapi
+from app.tabs.controller import api as tabsapi
+from app.search.controller import api as searchapi
 
 load_dotenv("./.env.local")
 
@@ -32,6 +35,9 @@ def create_app():
 
     # Register blueprint
     api.add_namespace(userapi)
+    api.add_namespace(meapi)
+    api.add_namespace(tabsapi)
+    api.add_namespace(searchapi)
     api.add_namespace(weatherapi)
     app.register_blueprint(api_bp)
 
