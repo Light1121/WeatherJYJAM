@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
+import { useSearch } from './_hooks'
 
 const Container = styled.div<{ width: number }>`
   position: absolute;
@@ -29,44 +30,67 @@ const ResultItem = styled.div`
   }
 `
 
+const LoadingText = styled.div`
+  padding: 12px 0;
+  color: #666;
+  text-align: center;
+`
+
 interface SearchDropdownProps {
   query: string
-  onSelect: (loc: { id: number; title: string; subtitle: string }) => void
+  onSelect: (loc: { title: string; subtitle: string }) => void
   inputWidth: number
 }
-
-const dummyResults = [
-  { id: 1, title: 'Sydney, Australia', subtitle: 'New South Wales' },
-  { id: 2, title: 'Melbourne, Australia', subtitle: 'Victoria' },
-  { id: 3, title: 'Brisbane, Australia', subtitle: 'Queensland' },
-  { id: 4, title: 'Perth, Australia', subtitle: 'Western Australia' },
-  { id: 5, title: 'Adelaide, Australia', subtitle: 'South Australia' },
-]
 
 const SearchDropdown: FC<SearchDropdownProps> = ({
   query,
   onSelect,
   inputWidth,
 }) => {
-  const results = dummyResults.filter((r) =>
-    r.title.toLowerCase().includes(query.toLowerCase()),
-  )
+  const { results, loading, error } = useSearch(query)
+
+  if (loading) {
+    return (
+      <Container width={inputWidth}>
+        <LoadingText>Searching...</LoadingText>
+      </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <Container width={inputWidth}>
+        <LoadingText>{error}</LoadingText>
+      </Container>
+    )
+  }
 
   if (results.length === 0) {
-    return <Container width={inputWidth}>No search results</Container>
+    return (
+      <Container width={inputWidth}>
+        <LoadingText>No stations found</LoadingText>
+      </Container>
+    )
   }
 
   return (
     <Container width={inputWidth}>
-      {results.map((r) => (
-        <ResultItem
-          key={r.id}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => onSelect(r)}
-        >
-          {r.title} - {r.subtitle}
-        </ResultItem>
-      ))}
+      {results.map((result, index) => {
+        // Split "Station Name, State" format
+        const parts = result.split(', ')
+        const title = parts[0] || result
+        const subtitle = parts[1] || ''
+
+        return (
+          <ResultItem
+            key={`${result}-${index}`}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => onSelect({ title, subtitle })}
+          >
+            {result}
+          </ResultItem>
+        )
+      })}
     </Container>
   )
 }

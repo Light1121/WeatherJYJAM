@@ -20,8 +20,16 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
-    creds_info = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
-    credentials = service_account.Credentials.from_service_account_info(creds_info)
+    if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and os.path.exists(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")):
+        credentials = service_account.Credentials.from_service_account_file(
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+        )
+    elif "SERVICE_ACCOUNT_JSON" in os.environ:
+        creds_info = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
+        credentials = service_account.Credentials.from_service_account_info(creds_info)
+    else:
+        credentials = None
+    
     connector = Connector(ip_type=ip_type, credentials=credentials)
 
     def getconn() -> pymysql.connections.Connection:
