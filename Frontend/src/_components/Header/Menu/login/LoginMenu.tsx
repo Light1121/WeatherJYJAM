@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAuthContext } from '../../../ContextHooks/hooks'
 import { ConfirmModal } from '../../../Sidebar/ConfirmModal'
-import defaultUserImg from '../../../_assets/defualtuser.jpg'
+import defaultUserImg from '../../../../_assets/defualtuser.jpg'
 
 const MenuItemContainer = styled.div<{ $flex?: boolean }>`
   background-color: white;
@@ -138,10 +138,7 @@ const LoginMenu: FC<LoginMenuProps> = ({ onItemClick }) => {
             onClick={onItemClick}
             $isActive={location.pathname === '/profile'}
           >
-              <ProfileImagePlaceholder
-                src={defaultUserImg}
-                alt="User Avatar"
-              />
+            <ProfileImagePlaceholder src={defaultUserImg} alt="User Avatar" />
             <span>{user?.name ? `${user.name}'s profile` : 'Profile'}</span>
           </ProfileButton>
         </MenuItemContainer>
