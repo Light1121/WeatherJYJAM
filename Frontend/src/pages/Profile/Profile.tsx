@@ -5,6 +5,7 @@ import { FullScreenLayout, MainLayout } from '../../_components'
 import FavouriteTabs from './_components/FavouriteTabs'
 import ProfileSettings from './_components/ProfileSettings'
 import { useAuthContext } from '@/_components/ContextHooks/hooks'
+import defaultUserImg from '../../_assets/defualtuser.jpg'
 
 const ProfileContainer = styled.div`
   flex: 1;
@@ -86,10 +87,7 @@ const Profile: FC = () => {
       <MainLayout>
         <ProfileContainer>
           <UserSection>
-            <ProfileImagePlaceholder
-              src="/src/_assets/defualtuser.jpg"
-              alt="User Avatar"
-            />
+            <ProfileImagePlaceholder src={defaultUserImg} alt="User Avatar" />
             <UserInfo>
               <WelcomeText>Hello, {user?.name || 'Guest'}</WelcomeText>
               <EmailText>{user?.email || 'Not logged in'}</EmailText>
