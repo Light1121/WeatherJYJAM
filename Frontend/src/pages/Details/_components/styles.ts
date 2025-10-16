@@ -197,16 +197,26 @@ const Track = styled.div<{ background: string }>`
 // `;
 
 const Thumb = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isDragged',
-})<{ isDragged: boolean }>`
+  shouldForwardProp: (prop) => prop !== 'isDragged' && prop !== 'isLeft',
+})<{ isDragged: boolean; isLeft: boolean }>`
   height: 24px;
   width: 24px;
   border-radius: 50%;
-  background-color: ${({ isDragged }) => (isDragged ? '#005fa3' : '#007acc')};
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  border: 2px solid ${({ isDragged }) => (isDragged ? '#005fa3' : '#007acc')};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: ${({ isDragged }) => (isDragged ? '#005fa3' : '#007acc')};
   &:hover {
-    transform: ${({ isDragged }) => (isDragged ? 'scale(1.5)' : 'scale(1.2)')};
+    transform: ${({ isDragged }) => (isDragged ? 'scale(1.3)' : 'scale(1.1)')};
+  }
+  &::before {
+    content: '${({ isLeft }) => (isLeft ? '<' : '>')}';
   }
 `
 

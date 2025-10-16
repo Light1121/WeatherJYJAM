@@ -1,6 +1,5 @@
 import type { FC } from 'react'
 import styled from 'styled-components'
-import { useSearch } from './_hooks'
 import type { StationResult } from '@/api'
 
 const Container = styled.div<{ width: number }>`
@@ -38,18 +37,20 @@ const LoadingText = styled.div`
 `
 
 interface SearchDropdownProps {
-  query: string
   onSelect: (result: StationResult) => void
   inputWidth: number
+  results: StationResult[]
+  loading: boolean
+  error: string | null
 }
 
 const SearchDropdown: FC<SearchDropdownProps> = ({
-  query,
   onSelect,
   inputWidth,
+  results,
+  loading,
+  error,
 }) => {
-  const { results, loading, error } = useSearch(query)
-
   if (loading) {
     return (
       <Container width={inputWidth}>

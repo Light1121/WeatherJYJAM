@@ -6,6 +6,7 @@ import SearchDropdown from './SearchDropdown'
 import AIdropdown from './AIdropdown'
 import SearchSwitch from './SearchSwitch'
 import { usePinContext } from '../../ContextHooks/hooks'
+import { useSearch } from './_hooks'
 import type { StationResult } from '@/api'
 
 const Wrapper = styled.div`
@@ -57,6 +58,12 @@ const SearchBar: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null)
   const { addPin } = usePinContext()
 
+  const {
+    results: searchResults,
+    loading: searchLoading,
+    error: searchError,
+  } = useSearch(query)
+
   //Update width dynamically based on focus
   useEffect(() => {
     setInputWidth(focused ? 750 : 550)
@@ -99,10 +106,23 @@ const SearchBar: FC = () => {
     setShowDropdown(false)
     console.log('Selected location:', result)
 
-    // 如果有坐标，添加 pin 到地图
     if (result.lat !== null && result.lon !== null) {
       const position = new LatLng(result.lat, result.lon)
       await addPin(position)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+
+      if (mode === 'search') {
+        if (showDropdown && query.trim() && searchResults.length > 0) {
+          handleSelect(searchResults[0])
+        }
+      } else if (mode === 'ai') {
+        handleAskAI()
+      }
     }
   }
 
@@ -117,6 +137,7 @@ const SearchBar: FC = () => {
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onKeyDown={handleKeyDown}
       />
 
       <ToggleSlot>
@@ -126,9 +147,11 @@ const SearchBar: FC = () => {
       {/* Search Dropdown */}
       {mode === 'search' && showDropdown && query && (
         <SearchDropdown
-          query={query}
           inputWidth={inputWidth}
           onSelect={handleSelect}
+          results={searchResults}
+          loading={searchLoading}
+          error={searchError}
         />
       )}
 
