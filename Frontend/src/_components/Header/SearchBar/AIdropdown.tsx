@@ -29,13 +29,15 @@ const ButtonRow = styled.div`
 `
 
 const AIButton = styled.button`
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
   border: none;
   background-color: #007acc;
   color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 100px;
 
   &:hover {
     background-color: #005f99;
@@ -78,12 +80,10 @@ const AIdropdown: FC<AIDropdownProps> = ({
   return (
     <Container width={inputWidth} onMouseDown={(e) => e.preventDefault()}>
       {aiState === 'idle' && (
-        <>
+        <ButtonRow>
           <TextBlock>{aiDescription}</TextBlock>
-          <ButtonRow>
-            <AIButton onClick={onAskAI}>Ask AI</AIButton>
-          </ButtonRow>
-        </>
+          <AIButton onClick={onAskAI}>Ask AI</AIButton>
+        </ButtonRow>
       )}
       {aiState === 'loading' && (
         <>
@@ -98,6 +98,7 @@ const AIdropdown: FC<AIDropdownProps> = ({
         <>
           <TextBlock>{renderAIContent(aiResponse)}</TextBlock>
           <ButtonRow>
+            <div></div>
             <AIButton onClick={onClear}>Clear</AIButton>
           </ButtonRow>
         </>

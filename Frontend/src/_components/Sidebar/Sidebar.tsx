@@ -19,9 +19,9 @@ const slideIn = keyframes`
 
 const SidebarWrapper = styled.div<{ $isOpen: boolean }>`
   position: fixed;
-  top: 0;
+  top: 100px;
   left: 0;
-  height: 100vh;
+  height: calc(100vh - 100px);
   width: ${({ $isOpen }) => ($isOpen ? '280px' : '0px')};
   background: linear-gradient(180deg, #ffffff 0%, #f8fafb 100%);
   box-shadow: ${({ $isOpen }) =>
@@ -37,13 +37,14 @@ const SidebarWrapper = styled.div<{ $isOpen: boolean }>`
 
 const ToggleButtonWrapper = styled.div<{ $isOpen: boolean }>`
   position: fixed;
-  top: 16px;
-  left: ${({ $isOpen }) => ($isOpen ? '280px' : '16px')};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  top: 100px;
+  left: ${({ $isOpen }) => ($isOpen ? '280px' : '0px')};
+  width: 32px;
+  height: 60px;
+  border-radius: ${({ $isOpen }) => ($isOpen ? '0 8px 8px 0' : '0 8px 8px 0')};
   background: #ffffff;
   border: 1px solid #d1d5db;
+  border-left: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,6 +53,7 @@ const ToggleButtonWrapper = styled.div<{ $isOpen: boolean }>`
   transition:
     all 0.3s ease,
     left 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background: #f3f4f6;
@@ -173,8 +175,20 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </SidebarFooter>
       </SidebarWrapper>
 
-      {/* Circular toggle button */}
+      {/* Bookmark-style toggle button */}
       <ToggleButtonWrapper $isOpen={isOpen} onClick={onToggle}>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+        </svg>
         {isOpen ? '‹' : '›'}
       </ToggleButtonWrapper>
 

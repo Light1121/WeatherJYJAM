@@ -35,10 +35,10 @@ const Details: FC = () => {
 
   // ---------- Year Range State ----------
   const [yearRanges, setYearRanges] = useState<Array<[number, number]>>([
-    [2025, 2025], // Graph 0
-    [2025, 2025], // Graph 1
-    [2025, 2025], // Graph 2
-    [2025, 2025], // Graph 3
+    [2015, 2025], // Graph 0
+    [2015, 2025], // Graph 1
+    [2015, 2025], // Graph 2
+    [2015, 2025], // Graph 3
   ])
 
   // Slider onChange handler

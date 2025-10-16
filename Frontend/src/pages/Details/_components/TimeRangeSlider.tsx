@@ -84,6 +84,7 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
           <Thumb
             {...props}
             isDragged={isDragged || dragging}
+            isLeft={index === 0}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             key={index}
